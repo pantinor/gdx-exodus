@@ -1,0 +1,113 @@
+<weapons>
+    <weapon type="NONE" name="Hands" abbr="HND" range="1" dmin="4" dmax="4" />
+    <weapon type="DAGGER" name="Dagger" abbr="DAG" range="16" dmin="4" dmax="7" losewhenranged="true" />
+    <weapon type="MACE" name="Mace" abbr="MAC" range="1" dmin="4" dmax="10">
+        <constraint canuse="false" class="all" />
+        <constraint canuse="true" class="paladin" />
+        <constraint canuse="true" class="barbarian" />
+        <constraint canuse="true" class="lark" />
+        <constraint canuse="true" class="fighter" />
+        <constraint canuse="true" class="ranger" />
+        <constraint canuse="true" class="thief" />
+        <constraint canuse="true" class="cleric" />
+        <constraint canuse="true" class="druid" />
+        <constraint canuse="true" class="illusionist" />
+    </weapon>
+    <weapon type="SLING" name="Sling" abbr="SLN" range="16" dmin="4" dmax="13">
+        <constraint canuse="false" class="all" />
+        <constraint canuse="true" class="paladin" />
+        <constraint canuse="true" class="barbarian" />
+        <constraint canuse="true" class="lark" />
+        <constraint canuse="true" class="fighter" />
+        <constraint canuse="true" class="ranger" />
+        <constraint canuse="true" class="thief" />
+    </weapon>
+    <weapon type="AXE" name="Axe" abbr="AXE" range="1" dmin="4" dmax="16">
+        <constraint canuse="false" class="all" />
+        <constraint canuse="true" class="paladin" />
+        <constraint canuse="true" class="barbarian" />
+        <constraint canuse="true" class="lark" />
+        <constraint canuse="true" class="fighter" />
+        <constraint canuse="true" class="ranger" />
+        <constraint canuse="true" class="thief" />
+    </weapon>
+    <weapon type="BOW" name="Bow" abbr="BOW" range="16" dmin="4" dmax="19">
+        <constraint canuse="false" class="all" />
+        <constraint canuse="true" class="paladin" />
+        <constraint canuse="true" class="barbarian" />
+        <constraint canuse="true" class="lark" />
+        <constraint canuse="true" class="fighter" />
+        <constraint canuse="true" class="ranger" />
+        <constraint canuse="true" class="thief" />
+    </weapon>
+    <weapon type="SWORD" name="Sword" abbr="SWD" range="1" dmin="4" dmax="22">
+        <constraint canuse="false" class="all" />
+        <constraint canuse="true" class="paladin" />
+        <constraint canuse="true" class="barbarian" />
+        <constraint canuse="true" class="lark" />
+        <constraint canuse="true" class="fighter" />
+        <constraint canuse="true" class="ranger" />
+        <constraint canuse="true" class="thief" />
+    </weapon>
+    <weapon type="SWORD_2H" name="2-Handed Sword" abbr="SWD2H" range="1" dmin="4" dmax="25">
+        <constraint canuse="false" class="all" />
+        <constraint canuse="true" class="paladin" />
+        <constraint canuse="true" class="barbarian" />
+        <constraint canuse="true" class="lark" />
+        <constraint canuse="true" class="fighter" />
+        <constraint canuse="true" class="ranger" />
+    </weapon>
+    <weapon type="AXE_P2" name="Axe +2" abbr="AX+2" range="1" dmin="4" dmax="28">
+        <constraint canuse="false" class="all" />
+        <constraint canuse="true" class="paladin" />
+        <constraint canuse="true" class="barbarian" />
+        <constraint canuse="true" class="lark" />
+        <constraint canuse="true" class="fighter" />
+        <constraint canuse="true" class="ranger" />
+    </weapon>
+    <weapon type="BOW_P2" name="Bow +2" abbr="BW+2" range="16" dmin="4" dmax="31">
+        <constraint canuse="false" class="all" />
+        <constraint canuse="true" class="paladin" />
+        <constraint canuse="true" class="barbarian" />
+        <constraint canuse="true" class="lark" />
+        <constraint canuse="true" class="fighter" />
+        <constraint canuse="true" class="ranger" />
+    </weapon>
+    <weapon type="SWORD_P2" name="Sword +2" abbr="SW+2" range="1" dmin="4" dmax="34">
+        <constraint canuse="false" class="all" />
+        <constraint canuse="true" class="paladin" />
+        <constraint canuse="true" class="barbarian" />
+        <constraint canuse="true" class="lark" />
+        <constraint canuse="true" class="fighter" />
+        <constraint canuse="true" class="ranger" />
+    </weapon>
+    <weapon type="GLOVES" name="Gloves" abbr="GLO" range="1" dmin="4" dmax="37">
+        <constraint canuse="false" class="all" />
+        <constraint canuse="true" class="paladin" />
+        <constraint canuse="true" class="barbarian" />
+        <constraint canuse="true" class="lark" />
+        <constraint canuse="true" class="fighter" />
+    </weapon>
+    <weapon type="AXE_P4" name="Axe +4" abbr="AX+4" range="1" dmin="4" dmax="40">
+        <constraint canuse="false" class="all" />
+        <constraint canuse="true" class="paladin" />
+        <constraint canuse="true" class="barbarian" />
+        <constraint canuse="true" class="lark" />
+        <constraint canuse="true" class="fighter" />
+    </weapon>
+    <weapon type="BOW_P4" name="Bow +4" abbr="BW+4" range="16" dmin="4" dmax="43">
+        <constraint canuse="false" class="all" />
+        <constraint canuse="true" class="paladin" />
+        <constraint canuse="true" class="barbarian" />
+        <constraint canuse="true" class="lark" />
+        <constraint canuse="true" class="fighter" />
+    </weapon>
+    <weapon type="SWORD_P4" name="Sword +4" abbr="SW+4" range="1" dmin="4" dmax="46">
+        <constraint canuse="false" class="all" />
+        <constraint canuse="true" class="paladin" />
+        <constraint canuse="true" class="barbarian" />
+        <constraint canuse="true" class="lark" />
+        <constraint canuse="true" class="fighter" />
+    </weapon>
+    <weapon type="EXOTIC" name="Exotic Weapon" abbr="EXO" range="1" dmin="4" dmax="49" />
+</weapons>

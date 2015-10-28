@@ -1,0 +1,38 @@
+<armors>
+    <armor type="NONE" name="Skin" defense="96" />
+    <armor type="CLOTH" name="Cloth" defense="128" />
+    <armor type="LEATHER" name="Leather" defense="144">
+        <constraint canuse="false" class="all" />
+        <constraint canuse="true" class="fighter" />
+        <constraint canuse="true" class="ranger" />
+        <constraint canuse="true" class="paladin" />
+        <constraint canuse="true" class="cleric" />
+        <constraint canuse="true" class="barbarian" />
+        <constraint canuse="true" class="thief" />
+        <constraint canuse="true" class="illusionist" />
+    </armor>
+    <armor type="CHAIN" name="Chain Mail" defense="160">
+        <constraint canuse="false" class="all" />
+        <constraint canuse="true" class="fighter" />
+        <constraint canuse="true" class="ranger" />
+        <constraint canuse="true" class="paladin" />
+        <constraint canuse="true" class="cleric" />
+    </armor>
+    <armor type="PLATE" name="Plate Mail" defense="176">
+        <constraint canuse="false" class="all" />
+        <constraint canuse="true" class="fighter" />
+        <constraint canuse="true" class="ranger" />
+        <constraint canuse="true" class="paladin" />
+    </armor>
+    <armor type="CHAIN_P2" name="Chain Mail +2" defense="192">
+        <constraint canuse="false" class="all" />
+        <constraint canuse="true" class="fighter" />
+        <constraint canuse="true" class="ranger" />
+    </armor>
+    <armor type="PLATE_P2" name="Plate Mail +2" defense="208">
+        <constraint canuse="false" class="all" />
+        <constraint canuse="true" class="fighter" />
+        <constraint canuse="true" class="ranger" />
+    </armor>
+    <armor type="EXOTIC" name="Exotic Armour" defense="248" />
+</armors>

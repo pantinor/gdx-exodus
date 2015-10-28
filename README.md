@@ -1,2 +1,5 @@
-# gdx-exodus
-LIBGDX port of Ultima 3 Exodus
+gdx-exodus
+=========
+
+A fun personal project to port Ultima 3 Exodus using LIBGDX.
+

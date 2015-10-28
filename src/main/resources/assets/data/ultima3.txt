@@ -1,0 +1,1575 @@
+
+
+                        Ultima III
+                          Exodus
+
+
+                      The Third Age
+                            of
+                          Darknes
+
+THE ADVENTURE
+
+	With the fall of Mondain and Minax, peace had flowed 
+like molten honey around all of Sosaria. Everywhere, Lord 
+British's subjects were happy and prosperous. A great cancer 
+had been exorcised from the world body. The People were 
+cleansed again, and there was much rejoining in the towns. 
+Even the Orcs had disappeared from sight after the fall of 
+Minax's castle, as chronicled in Ultima II. Twenty years the 
+peace lasted. Twenty years is also the time needed for an 
+infant to become a person. 
+	From the ruins of Minax's castle has come several 
+fragments of a manuscript which hints at a dark secret. There 
+appears to have been an unholy alliance between Mondain 
+and his young apprentice, Minax. Something  had fructified 
+from that union, but whether that something was of Man, 
+Monster, or Daemon, the manuscript fragments were eerily 
+silent. What had become of the hell-born prodigy? No clues 
+existed.
+	Time passed, and the omens began to be troubled. 
+Comets clashed across the sky and rumbles were heard deep 
+in the ground. Then one day, in a fiery birth of molten lava, 
+an island rose up in the middle of the ocean. None could 
+approach it for the heat and steam were too great. Some 
+drunken sailors claimed to have had a glimpse of the island 
+when the steam was momentarily blown away by a strong 
+wind. They swore that a castle existed in the middle of that 
+inferno, but thou knows how reliable is the word of a drunken 
+sailor.
+	Then, the sweet flowing rhythm of country life was 
+shattered. Orc drums began to pulsate through the hills and 
+mountains, and the horrible raids began. The outlying 
+settlements all moved in to the safety of the village fortresses 
+Shortly thereafter, a Pirate Fleet appeared suddenly, and 
+commerce was swept from the seas. An evil power was rising 
+in the West, and all the earth groaned to its flexing. When 
+tales emerged that the Great Earth Serpent had risen from it's 
+long slumber at the bottom of the ocean, people began to cry 
+that the End of the World was at hand.
+	Lord British sent his most trusted and talented advisor 
+out to uncover the facts behind these wild rumors. Weeks 
+passed, then a shattered man was found wandering in the 
+groves outside the castle. Some terrible sight had blasted his 
+reasoning. He just kept repeating, "From the depth of 
+Hell...He comes for vengeance." He/ she/it was, remained 
+unclear. The spread of its evil powers, however, was very 
+clear. Lord British sent out a Call for all of the Heroes of the 
+People to rally. That is why thou are here today. Thou heard 
+the Call and answered it.
+	Thy task before thee is not easy. Evil walks the land 
+openly, attacking all travelers. Thou and thy companions will 
+need to grow stronger rapidly if thy Party is to survive. Seek 
+among the ancient paths for long forgotten Truths and 
+Powers.
+	One possible clue as to the identity of thy nemesis has 
+been discovered. A derelict merchant ship was recently towed 
+into port. No crewmen were aboard, alive or dead. Everyone 
+has vanished, as if plucked by some evil force off the boat. 
+The only thing found was a word written in blood on the 
+deck: E X O D U S.
+
+
+Exodus: Ultima III
+
+	Welcome back, oh illustrious adventurers! Long has 
+been thy sojourn in this strange realm, though 'tis a fitting 
+respite for great heroes. Glorious are the names of those 
+adventurers who slew the mighty Wizard Mondain and his 
+evil consort Minax. Lord British's minstrels still sing thy 
+praises for the epic battles waged in the overthrowing of those 
+two crimson necromancers. The chronicles of Ultima I and 
+Ultima II bear witness to thine effects on behalf of the good 
+subjects of the realm of Sosaria.
+	The time of thy rest is now o'er. Thou wouldst not be 
+here if thou hadst not heard the distant braying of the war 
+horns, or felt in thy blood the cry of kinsmen in dire peril. 
+Thou art Called, and from such a Calling none of the People 
+may turn aside. It is thy duty and thy destiny.
+
+
+PREPARING FOR THY JOURNEY
+
+	Gather close while thou art briefed on what changes 
+hast transpired since last thou guested forth. A new, much 
+larger Siege Perilous has been discovered. The gateway will 
+now hold four adventurers instead of just one. Two paths thus 
+radiate out before thee. Thou may choose to venture forth 
+alone, in hopes of recruiting retainers once thou arrives in 
+Sosaria. Or, thou may gather together up to three other 
+adventurers of the People who rest here, and sally forth with 
+them at thy side. Bare is the back who hast not kin to protect 
+it! Decide quickly, the horns seem louder.
+	Some ritual preparation is needed before thy journey 
+can begin. First, study what is contained within this square 
+pouch. It is thy key to open the gateway. Guard it well, lest 
+harm befall thy party. Before examining the disk even once, 
+you MUST follow the arcane rituals described on the back 
+page of the player reference card.
+	Enclosed in thy pouch is also a rare cloth map, a 
+reference card, and two eldritch manuscripts. Unless thou art 
+trained in mystical matters, open not these two books upon 
+destruction of thy soul! Both of these ancient books were 
+presumed lost for many centuries. By means of portentous 
+visions, Lord British's advisers were led to their ancient 
+resting places. The manuscripts contain very powerful lore 
+whose time has come to be used again. It is said that the 
+wheel of the heavens now heralds a great conflict, and that 
+even the Great Earth Snake will rise from the watery depths. 
+The dreams of the Wise are thus disturbed these days. Great 
+evil walks the land again.
+	The map of Sosaria is, alas, incomplete. The great 
+cartographer, Hawkwind, was gravely wounded by a roving 
+band of Brigands before he could finish the map. None of the 
+towns, castles, dungeons, or other special places are shown. 
+You will have to use pins or markers to indicate where each 
+lies, as you find them. It is rumored that much lies hidden, 
+just out of sight.
+
+The reference card contains the alphabetical commands. 
+While the functions of most commands are obvious, several 
+have subtleties:
+
+Cast (C)    When chosen, thee will be asked for thy character's number (1-4) 
+            and, for some professions, whether the spell will be W/C 
+            (Wizard/Cleric). Then the rank of the spell will be requested.
+Fire (F)    Has a range of three squares. Any enemy killed with ship's cannon
+            yield no treasure! Watch out, Pirate Ships fire back.
+Join Gold (J) Pools all the Party's gold to one character. Useful for buying
+            special items or services that are expensive.
+Look (L)    Is particularly useful before entering unknown places or terrain.
+Negate Time (N) Is the trademark of a Master Thief. When the proper item is 
+            found and used, time stops around the thief for several turns.
+            This allows an audacious thief to steal vast treasures and escape
+            the treasure's guardians.
+Other (O)   Allows regular adventure verb commands in special situations 
+            or places. Such a phrase might be (Kiss) Princess, or (Jump) 
+            cliff.
+Peer (P)    With the aid of a special item, thou can gain an overview of 
+            where the Party is located. On the surface, the map is of the 
+            entire world. In a town or castle, the map shows all the inside 
+            areas. When used in a dungeon, all of that level is visible. Even 
+            the ladders, doors, and special objects are shown.
+Yell (Y)    Allows words to be screamed over a distance. Very useful when being
+            chased by a dragon. Yell, (Open) gate!
+
+  Now that everything has been studied, and whomever of the People thou
+couldst muster has been assembled, it is time to begin the ritual. First
+insert the disk marked Program Side into thy machine, and, with all 
+gathered around the machine, activate the power. Shortly, a 
+viewport is opened through the gateway. Kinsman engaged in 
+moral combat with a dark creature can be seen. Suddenly the 
+battle ends. You are too late to help, but never too late to 
+avenge. Follow closely the instructions shown on thy living 
+machine. All adventurers must now gather around the 
+machine. Total concentration among the party is necessary 
+for the gateway of the Siege Perilous to open. A moment of 
+transition is experienced, then...
+
+
+THROUGH THE GATEWAY
+After the darkness of transition clears from thine eyes, a 
+sample view of Sosaria appears. After a moment's inspection, 
+press (SPACE BAR). Thou are now offered three choices:
+
+-- Return to the view
+-- Organize a Party
+-- Journey onward
+
+Only, the first letter of any option need be used to select that 
+option.
+
+Return to the view offers reflection upon the realm's 
+features.
+
+Organize a Party is where thou shouldst begin. 
+Thou art presented with a long list of options:
+
+-- Examine the Register
+-- Create a Character
+-- Form a Party
+-- Disperse a Party
+-- Terminate a Character
+-- Main Menu
+
+Journey Onward begins the adventure!
+
+The first order of business is the defining of 
+characters and the formation of an adventure Party:
+
+Examine the Register: Displays the name and classification 
+of each type of character. The first three letters 
+before each name give the character's Sex, Race, and 
+Profession. The fourth letter states the health of the 
+character: G= Good, P = Poisoned, D = Dead, A = 
+Ashes. If the character is already part of a party, a 
+diamond will appear next to their name.
+
+ Create a Character allows the adventurer to develop 
+kinsfolk or retainers. Each character reflects the 
+personality of it's creator, so choose the following 
+carefully.
+
+1. Assign a number from 1-20.
+2. Name the character, up to 13 letters may be used.
+3. Sex: Male, Female, or Other (M, F, or O).
+4. Race: Choose from among the five races of the People - Human, Elf,
+   Dwarf, Bobbit, and Fuzzy. (See Table 1)
+5. Type: The profession of the character. Choose among - Fighter, Cleric,
+   Wizard, Thief, Paladin, Barbarian, Lark, Illusionist, Druid, Alchemist,
+   and Ranger. (See Table 2)
+6. Attributes: 50 points are available to be divided among the four
+   attributes - Strength, Dexterity, Intelligence, and Wisdom. Strength
+   is important for fighting. Dexterity grants speed and cleverness.
+   Intelligence controls Mage spells, while Wisdom imparts Cleric power.
+   (Refer to Table 2 to see the requirements for each profession). No
+   less than 5 may be assigned to any single attribute, and no more
+   than 25. If the wrong values are used, the character disappears 
+   and must be reinstated.
+ 
+Form a Party by selecting up to four members. Check with 
+the register, and use the number next to the character 
+wanted. A Party stays together until it is disbanded.
+
+Disperse a Party disbands the adventure party, and returns 
+the members to the register for reassignment. 
+
+Terminate a Character clears the character permanently 
+from the register. This would be done if the 
+character proves unable to perform properly, and 
+needs to be removed from the register to make room 
+for another character.
+Main Menu returns the Party to the primary option list. Here 
+can be chosen Journey Onward to begin the Quest!
+
+TABLE 1 - Maximum Attainable Attributes 
+Race    Strength     Dexterity    Intelligence    Wisdom
+Human      75           75            75            75
+Elf        75           99            75            50
+Dwarf      99           75            50            75
+Bobbit     75           50            75            99
+Fuzzy      25           99            99            75
+
+
+TABLE 2 - Characteristics of each Profession
+
+
+Type       Weapons Armour  Spell Type   Spell Attribute/Special
+Fighter      All     All     None       None
+Cleric      Mace    Chain  Prayers      Wisdom
+Wizard      Dagger  Cloth  Sorcery      Intelligence
+Thief       Sword   Leather  None       Steal and Disarm Traps
+Paladin      All    Plate  Prayers      Half Wisdom
+Barbarian    All   Leather   None       Some Steal and Disarm
+Lark         All    Cloth  Sorcery      Half Intelligence
+Illusionist  Mace  Leather Prayers      Half Wisdom, Some                                       S&D
+Druid        Mace   Cloth    Both       Greater of Both Halfs*
+Alchemist   Dagger  Cloth  Sorcery      Half Int., some S&D
+Ranger    +2 Sword +2 Plate  Both       Lesser of Both Halfs,Some Steal 
+                                        and Disarm
+*Druids regain their magic points faster than other 
+characters.
+
+MAGIC:
+
+Each character, that is allowed magic, has a 
+maximum Magic Point level, which is displayed with the 
+Party statistics. A Cleric with a Wisdom attribute of 25, will 
+have an maximum Magic Point level of 25. If thou art a 
+Ranger whose Intelligence is 15, and whose Wisdom is 10, 
+then thou will be able to only cast second rank, (B), spells. 
+Thy costs a different amount of energy to cast. A character 
+replenishes that energy at a rate of one point per turn on the 
+surface, and one point every four turns in a town or dungeon. 
+Druids regain two points per turn, which is quite an 
+advantage. Initial character races must be chosen carefully, or 
+thy characters may never develop enough mystical force 
+within them to succeed on thy quest.
+Having chosen thy companions, and formed a Party, 
+a few last words of advice. The situation on Sosaria is 
+worsening rapidly. The darkness of evil hangs like a pallor 
+over the Lord British's realm.
+
+MOVEMENT:
+
+Without the special items that can be Peered into, a 
+party can now only see that part of their surroundings as is 
+not obstructed from view. Anything out of direct sight is 
+shown blank. Trees, mountains, walls, and other such barriers 
+will block their vision. This new viewpoint may seem 
+somewhat confusing at first, but it rapidly becomes familiar. 
+Remember to check out each part of an area carefully. Many 
+things are hidden just out of sight.
+Movement outside dungeons is different from inside 
+dungeons. Outside, the direction keys (Refer to Player 
+Reference Card), move the party North, South, East, and 
+West. In the dungeons, the same keys are used, but they move 
+the party Forward, Retreat, Turn Right, and Turn Left 
+respectively.
+
+COMBAT:
+
+As thou dost travel in a party, so doth the monsters. 
+When combat is joined, a special combat screen appears. On 
+this new screen, each member of the adventure Party is shown 
+separately, as is each monster. Each player may individually 
+control their character duri9ng combat, moving, fighting, and 
+casting spells. Beware, the monsters are permitted to attack 
+on the diagonals, while a character can only attack 
+horizontally or vertically. Watch out for monster formations 
+where two or three of them can attack a character at once in a 
+crossfire. Few can survive long against such a withering 
+assault. To Attack, (A), or Cast, ( C), a spell against a 
+monster when it is thy character's turn, thou must give a 
+direction for thine attack to be launched. If a Fighter wishes 
+to attack an obnoxious Orc that is next to him on the right, he 
+can swing his sword by typing (A), then (East Direction). One 
+can almost hear the thunk of steel against the Orc's foul hide. 
+Bows and spells can be used very effectively across the entire 
+battlefield. Be careful of thy Dagger, though. It is considered 
+thrown if the enemy is more than a square away. Many a 
+Wizard has been slain by being overeager in combat and 
+throwing thy Dagger away. Each time a monster dies, the 
+character who struck the fatal blow receives experience points 
+for the deed. When a player accumulates enough experience 
+points, thou will automatically rise in levels.
+Thou shouldst consider all parties on the surface as 
+being malevolent. All the good citizens of Sosaria dwell 
+within the towns and castle. Any part encountered on the 
+surface, or in a dungeon is thus an enemy. If thou art strong 
+enough, attack immediately. It thou art new, or suffering from 
+grievous wounds, consider trying to run away. Once a combat 
+is joined, only one survivor emerges.
+
+CHESTS:
+
+When a monster group is vanquished on land, a treasure chest 
+will usually be left behind. Some chests have much treasure 
+in them, while others may be empty. Many of the chests both 
+above ground and below ground are trapped. Each a Clerical 
+"APPAR UNEM" spell must be cast to disarm the trap, or a 
+Thief must attempt to disarm the chest. Some of the traps 
+include: Acid (injures only the character opening the chest), 
+Poison (same), Bomb (destroys the contents of the chest and 
+hurts everyone in party), and Gas Trap (affects the entire 
+party).
+
+DUNGEONS:
+
+The dungeons have, of late, become particularly treacherous 
+and deadly. Explore carefully and slowly. Map everything. 
+Secret doors abound throughout the different dungeons. 
+Magical winds howl down the corridors, blowing out all light. 
+If thou walks slowly, glimpses of faint mystic writings may be 
+noticed periodically. Recently a rumor has surfaced of an 
+apparition that haunts a deep level of a hidden dungeon. 
+There also exist many traps and pitfalls for the unwary. A 
+thief is an excellent choice to have in a party. If the party puts 
+the Thief in front of the Party, he will have an excellent 
+chance of spotting traps, before the party trips them. Many 
+strange and wonderful places are hidden within different 
+dungeons, such as fountains. Some fountains are beneficial, 
+while others are poisonous. Always drink carefully at a 
+fountain.
+
+
+TRANSPORTATION:
+
+Most of thy Party's progress will be on foot. If thou 
+art fortunate, thou couldst capture some of the wild horses 
+that roam the plains. Travel on horseback is much faster than 
+on foot.
+Ships are very scarce. The Pirate fleet has sunk most 
+of the regular ships. When thou hast a ship, thou needst to 
+maneuver it. To sail a ship, one must learn the ways of the 
+winds. Thy ship may not sail against a wind, but must tack 
+around it. Watch out for sudden shifts in the wind for the 
+wind is a fickle elemental force.
+The greatest transport are the hidden Moon gates. 
+They are similar, but less powerful, to the Siege Perilous that 
+hast brought thy Party hither. Passing through a Moon Gate 
+when it is active will teleport thy Party to hidden powers. 
+Access to many glens of the old knowledge are restricted by 
+the Moon Gates. No creature of the Dark can ever break 
+through the wards that protect them. The coming and going 
+of the Moon Gates is somehow related to the twin Moons, 
+Trammel and Felucaa, that grace out skies. The cartographer, 
+Hawkwind, was supposedly greatly excited about a discovery 
+concerning the true nature of the Moon Gates, when he was 
+attacked. The success of thy quest may well hinge on thou 
+solving this ancient mystery. 
+At the top of thy screen, the phases of the twin 
+moons, Trammel and Felucca are represented by numerals as 
+follows:
+
+        0 - New Moon                4 - Full Moon
+        1 - Crescent waxing         5 - Gibbous waning
+        2 - First Quarter           6 - Last Quarter
+        3 - Gibbous waxing          7 - Crescent waning
+
+
+LAST MINUTE COUNSEL:
+
+When thou enters the plains of Sosaria, thou art 
+stark naked without a weapon in thy hands. Immediately 
+Wear, (W), thy cloth armour and Ready, ( R), thy Dagger 
+before doing anything. Quickly look for a town and enter it. 
+Inside the town, thy purses of gold will buy better weapons 
+and armor. Thy party's ability to survive depends as much on 
+the quality of its equipment as on the quality of it's leader. 
+Forget not to obtain enough Food. Towns are widely 
+scattered, and starvation is always so unpleasant to watch.
+If ever these occurs a need to just rest in one place 
+until a certain time, thou may repeatedly hit (SPACE BAR). 
+This does not do anything but pass time rapidly. Of course, 
+remember that the monsters are still moving and that food is 
+being consumed quickly.
+Despite one's finest efforts and diligence, it is not 
+possible to complete thy adventure on a single foray. Do not 
+be dismayed, all that has been accomplished is not lost. As 
+Lord British's champions, thou art aided by his great Wizard. 
+Every time thou enters or leaves a place, the state of thy souls 
+is reflected in the great mirror than hands in Lord British's 
+chamber that he might view thy progress. When thy party 
+Journeys Onward next time, the Wizard will invoke a mighty 
+spell and Restore Game automatically. Thy party will resume 
+adventuring at the last place visited, or the last location thou 
+used the command Quit (Q).
+Thou art now as prepared as possible to face the 
+trials of thy quest. Drink deep of the fellowship of thy 
+companions, for the morrow may bring thy parting. Now, 
+from the Main Menu, Journey onward (J). May the Gods of 
+the People grant thou victory.
+
+
+THE REALM OF SOSARIA
+
+This be a digest of town shops, citizens and monsters. Refer 
+to it often, especially the monster section - KNOW THINE 
+ENEMY!
+
+TOWN SHOPS:
+
+The Weapons Shop Buy and sell superbly hand-crafted 
+weapons. Each weapon is guaranteed not 
+to break for 1,000 fights, or thy next of 
+kin gets double thou purchase price back. 
+
+The Armory 	Buy fine armour, or trade in captured 
+booty for gold. Please not that anytime 
+thou dost sell armour or weapons, thou 
+needst to requiem thyself afterwards.
+
+The Grocery 	While the typical fare here wouldst never 
+be considered gourmet, the food does not 
+spoil on long adventures.
+
+The Guild Shop The Thieves Guild offers, at a high price, 
+tools of their trade. The guild shops are 
+difficult to locate as most towns have 
+driven them out.
+
+The Pub 	Relax from a hard campaign and enjoy a 
+cold draught. Bartenders head strange 
+rumors some times. A few pieces of gold 
+may loosen a tongue. Remember though, 
+gossip is rarely totally truthful.
+
+The Healers	In remote areas may be found Healer 
+Kiosks. Their restorative powers can be 
+purchased, although the tariff is steep.
+
+The Stable 	In two towns the fine horses of Lord 
+British may be purchased. However, they 
+are only sold in lots that match the 
+number of the party, so they are quite 
+expensive.
+
+The Oracle	In secluded sections of some towns dwell 
+gifted Oracles. With their vision they can 
+provide much understanding of the 
+occurrences in the world around thee. 
+Knowledge is a costly thing, so bring a 
+heavy purse. 
+
+CITIZENS:
+
+Merchants - The mainstay of Sosaria's prosperity. They 
+operate the shops in town to the benefit of all. Some 
+are not very clever, and a sharp Thief is in thy Party, 
+then a chest or two might be stolen from under the 
+Merchant's nose. If thy Thief is caught stealing, the 
+entire town guard will assault thee.
+
+Guards - They resemble big bouncers at tough bars - all 
+brawn and no brains. If a crime is detected within a 
+town, or Lord British's castle, each Guard will 
+pursue thee to the boundaries of the place. Most 
+Guards are very difficult to overcome, but rumors 
+have been circulating that some Guards are not 
+completely honest.
+
+Jesters - They entertain Lord British with their antics. 
+Occasionally they even harass visitors.
+
+Player Type - Any of the regular Player types may appear in 
+the towns and castle. Speak to all of them, some hold 
+valuable clues to the locations of hidden items.
+
+Monster Type - Very rarely are renegade monsters seen in 
+towns. These monsters no longer serve the Dark, but 
+now serve Light.
+
+Lord British - The august ruler over all the People. Widely 
+regarded as a fair ruler, he will richly reward those 
+who serve by his side.
+MONSTERS: LAND
+
+Orcs - Goblins -Trolls - These three creatures of evil are the 
+result of long ago mutations wrong by magic. As 
+they were created by magic, so can a wizard's spell 
+dispel them from this plane.
+
+Skeletons - Ghouls - Zombies - All Undead creatures are an 
+abomination before the light of Truth. A Cleric with 
+thy Party can Turn these Undead creatures.
+
+Player Types - Any of the regular Player types may have 
+fallen under the spell of Darkness and now serve 
+their evil Masters.
+
+Thieves - Cutpurses - Brigands - These are the worst of the 
+human trash that pollute the countryside. Thieves 
+can steal any weapon or armour that thou hadst, 
+except for those with which though art equipped. 
+The Brigands man the Pirate Ships and fiercely 
+control the oceans.
+
+Giants - Golems - Titans - These creatures have no special 
+attributes, but their huge size makes them very 
+formidable opponents. Watch out for the of their 
+War Hammers.
+
+Pinchers - Bradles - Snatchs - Any bite from these creatures 
+is poisonous. If a character is bitten, only a Prayer or 
+a Healer, can cure the poison that is running in thy 
+character's vein. Every step the character takes, 
+lowers the character's hit level by one. If thou art far 
+from a Healer, thou dost travel with a walking dead 
+man.
+
+Gargoyles - Manes - Daemons - Be very careful dealing with 
+these minor daemonic legions. They can hurl 
+powerful magic attacks across the arena at thee, 
+inflicting great damage.
+
+Griffins - Wyverns - Dragons - These creatures can hurl 
+mystical Fireballs at thy Party from afar. They are 
+the only creatures that can wreck havoc upon thee 
+when not in Conflict Mode. Any Party luckless 
+enough to venture within three squares of one of 
+these creatures will be subject to an awesome attack. 
+The Great Dragons can destroy a Party before the 
+Party ever engages in combat with the Dragon!
+
+Devils - Orcus - Balrons - It thou attempts to overcome these 
+mighty warriors of the Dark, then thou hadst best be 
+protected by all means possible. Anything less will 
+mean thy instant destruction. These archfoes are so 
+filled with evil, that they can hurl poisoned magic 
+bolts from across the arena. The slightest hit may 
+poison thy character and sap their vitality.
+
+MONSTERS: SEA
+
+Pirate Ships - Be extremely cautious when one of these ships 
+is sighted if thou art on land. A Pirate Ship can fire 
+it's cannons at thee three squares away. If the shot 
+hits, all members of thy Party take damage. Most 
+beginning Parties cannot sustain more than a few 
+shots before the Party is wiped out. If the Pirate Ship 
+stays offshore, shelling thee, nothing can be done to 
+get him. If, however, he touches the coast, thou 
+couldst attack him.
+
+Sea Serpents - Small cousins of the Great Earth Snake, these 
+creatures can destroy an entire ship. In conflict 
+mode, they can hurl magic across water, making it 
+hard to fight them.
+
+Man-O-Wars - These are the most feared of all the denizens 
+of the oceans. Their long giant tentacles are 
+poisonous, and they hurl magic. Because of their 
+nature, Man-O-Wars can take vast punishment 
+without dying. A Party attacked by such as these has 
+a very slim chance for survival. 
+
+
+
+                        The Book
+                           of
+                       Amber Runes
+
+                Welcome O Pilgrim:
+
+                Take up and guard this 
+                book of arcane runes; it 
+                contains the tools of thy 
+                new power. No longer art 
+                thou an Initiate of the 
+                Fifth Circle. Thine old 
+                book of Jade Runes holds 
+                no power here. Surviving 
+                the spiritual 
+                transfiguration of the 
+                Great Stygian Abyss hath 
+                earned for thee the 
+                Mantle of Adept of the 
+                Sixth Circle. Few indeed 
+                have the strength or skill 
+                to cross the Abyss.
+                Study and use wisely the 
+                powerful knowledge 
+                contained herein. Their 
+                careful use will enable 
+                thee to succeed in any 
+                quest. Squandering their 
+                strength will bring about 
+                thy ruin.
+                May thou live and grow 
+                wise in interesting times!
+
+                                        The Druid Selzhanik,
+                                        Arch Mage, keeper of the
+                                        Ninth Circle
+
+A. RESPOND
+There was a time, long ago, when the lands were free of the 
+wretched creatures known as Orcs, Goblins, and Trolls. These 
+creatures did not evolve naturally, but rather are the magical 
+mutations performed by demented magicians. Now these 
+creatures have prospered through many generations and their 
+horrors are well known.
+Have with thy person a staff of Yew, preferably cut 
+from a hard and fine grained sapling. If Orcs, Goblins, or 
+Trolls threaten thy party, raise thy staff before them and 
+speak the name of this Rune of dispelling. By casting this 
+Rune, thou shalt be attempting to dispel the magic which is 
+part of their inner being.
+
+B. MITTAR
+Place upon thy palm and close in a strong fist any small 
+projectile of wood or stone. Strike it once upon thy breast, 
+while chanting the incantation of Mittar: 
+
+MANJI MULA NESPON LEVI MITTAR NOPSEN ALUM 
+CAVI
+
+Hurl this talisman toward thine enemy. Magic in the form of 
+a shimmering sphere of iridescent light will spring from thy 
+hand to strike thy foe. The magic contained therein will enter 
+his body and disrupt his life force.
+Depending on the skill and concentration invested in 
+its conjuring, this spell can deliver the blow of an insolent 
+child or a stalwart knight.
+
+C. LORUM
+Before entering any dungeon, cave, or even houses with 
+unsteady lanterns, be sure that thou hast propertied a goodly 
+supply of Lorum dust. This is easily done by collecting the 
+fine dust from a spider's bath which has been warmed by 
+strong sun for many hours. Gather the dust into a chamois 
+bag and seal the sun's energy within it by singing these 
+words:
+
+OBREY URICUM OBLA SUM
+
+To release the energy, chant these same words in reverse 
+order and cast a small portion of dust into the air. A warm, 
+soft, magical light of short duration will be produced.
+
+D. DOR ACRON
+Very useful when one desires to bypass a particularly 
+bothersome portion of a dungeon. Dor Acron is cast with the 
+air of the left forepaw of a badger. Store the paw with care, 
+for if it is damaged in any way, which should hinder the 
+badger's movement, thy way will be similarly impeded.
+Having made these preparations, when thou desires 
+to enact the augury, gather thy party into a ring. While 
+holding the paw, chant this ancient rhyme:
+
+LIEDLAN SPULGER IDSKRIN
+GRUEN BEAST TRENTLE BAN
+
+When this spell is cast, the mage and his companions will be 
+transported to the next lower level of inhabitation.
+
+
+E. SUR ACRON
+This rune is closely related to Dor Acron, direction being the 
+only difference in effect. In this case the dried wing of a bird 
+is needed. The bird must be shot through the breast with an 
+arrow, whilst in flight. Thread the wing on a leather thong 
+and tie it to the tip of thy staff.
+Once again, gather thy party into a ring and while 
+holding the wing intone this verse of magical movement:
+
+LIEDLAN SPULGER IDSTRIN
+FAUN BEAST FENTRI CHEM
+
+As the words are chanted thy party will be lifted through the 
+floor above thee to the dungeon's next higher level.
+
+F. FULGAR
+This incantation is a powerful weapon in battle. It requires a 
+golden rod wrapped with iron and a vial of magical water 
+collected from a meadow pond at the very moment lightning 
+touches its surface. Keep the vial sealed until battle is nigh. 
+Then touch the rod to the vial and level it at thy foe whilst 
+shouting these words:
+
+FLAMIN FLEETIS PONDI
+
+All of the energy will be conducted through the golden rod, 
+and a fiery ball will spin a searing path toward thine enemy. 
+It will unfailingly strike him with a force strong enough to 
+kill most common men and cause great damage to beasts of 
+greater strength.
+
+G. DAG ACRON
+This incantation requires that a pattern of rays extending 
+from a common origin be drawn on the ground whilst the 
+following chant is recited:
+
+DAG FULNUS ACRON
+FRIEDA ACRON BOONT
+
+As each ray is drawn a member of thy party will disappear 
+and then with the final stroke thee too shall vanish. In the 
+next moment at some random location on the terrestrial plan, 
+each of the members of thy part and finally thyself will 
+appear.
+This run can only be used on the Sosarian surface. It 
+will always take thee someplace, but thy destination is a 
+matter of speculation.
+
+H. MENTAR
+In order to cast this most terrifying spell, an oak gall must be 
+collected of the sort most often found on ancient trees in dark 
+and gloomy forest folds. Dip the oak gall in molten wax while 
+chanting this verse from the tome of Mantar:
+
+ZANBAR LEECHEN 
+CERDI MENTAR
+
+Then, when battle is upon thee, crush the oak gall within thy 
+hand. As the gall collapses, a blue ball of screaming horror 
+will fly toward thine enemy. It will invade his mind, and 
+irreparably corrupt his mental process, in direct proportion to 
+thine own intelligence.
+
+
+
+
+I. Dag Lorum
+This spell is similar in effect, but more enduring that Lorum. 
+Place a golden dagger in strong sunlight until it is got enough 
+to burn skin. Then scrape it heavily against a stone until a 
+golden dust is produced. As the dust  collects on the stone, 
+change these words and gather the dust into a silken bag:
+
+OBRUM URICA OBLA SUM
+URICA MANI SUM LEVI
+
+When the need for extended illumination arises, hold the 
+silken bag and shake it. A small portion of the bust will 
+release it's energy in the form of an enduring, golden, 
+shimmering light.
+
+J. FAL DIVI
+The ability to cast a clerical spell is a great power indeed. Fal 
+Divi will open before thee a tremendous range of power 
+otherwise inaccessible to the sixth circle. The performance of 
+this invocation is not a simple task, and often does not 
+succeed.
+Sprinkle thy body with holy water and slowly chant 
+the prayer of Fal Divi:
+
+FAL DIVI DOM MI NEA
+FAL DIVI REQUI SEM
+
+Refer to the Cleric's Book and do as the spell therein requires. 
+If this prayer is properly chanted, unto thee will come the 
+power to use any of the supplications of the Cleric's Book.
+
+
+
+                        Beyond this page 
+                        lie the advanced 
+                        spells of the Sixth 
+                        Circle. Do not 
+                        venture too soon 
+                        into the dark 
+                        range of these 
+                        spells. Until thou 
+                        hast not only 
+                        conquered the 
+                        Stygian Abyss, 
+                        but also can use 
+                        it's power at thy 
+                        will, the force of 
+                        these runes will 
+                        be beyond thy 
+                        skill.
+
+                        When the shadow 
+                        of death has 
+                        grown familiar to 
+                        thy sight and 
+                        thou hast learned 
+                        the mastery of 
+                        magic, then at 
+                        last these spells 
+                        will be thine.
+                        
+                        Before these 
+                        spells thy foes 
+                        will cower, but 
+                        take heed to use 
+                        them wisely, for 
+                        they shall be 
+                        earned at great 
+                        expense.
+
+
+K. NOXUM
+This spell is the first of the multi-pronged attacks, and can be 
+of great aid when thou art attacked by a large band of 
+formidable foes.
+When the two moons of Sosaria are new, travel to 
+the entrance of the dungeon of fire. Gather some of the 
+volcanic ash which is abundant there. On the same night, mix 
+this with herbs of cinnamon and ginseng in equal proportion.
+The use of this magical mixture requires that thou 
+speak the Rune of Noxum before hurling the ashen mix 
+toward thine enemies:
+
+NOXUM MENTON
+LANU FLAMA
+
+As thou dost, it will catch flame and rush at thy foes, 
+thwarting each with a devastating blow.
+
+L. DECORP
+The sun hath made it's consecutive cycles and thou hast 
+gained great experience in magic. Thy skill and power have 
+now reached the sphere of direct magical determination.
+With the intonation of this spell, though dost draw 
+on the magical force of all life and focus it upon thy foe.
+Sing the song of Decorp and the air will shake with 
+the war of magic rushing to thy command. Upon whomever 
+thou shalt indicate, the Magic shall descent, and their life 
+shall be extinguished - always and completely:
+
+NON CRONO DI VANI
+PAS NUMEN TI SONI
+
+M. ALTAIR
+Until this time thou hast enacted thy Runic power to bring 
+magic into this world. Now, as an advanced Adept of the 
+Assembly of the Sixth Circle, thou may use the magic of this 
+world to move beyond it.
+First, gather a fistful of sand, and while repeating the 
+enchantment of Altair let it flow from thy hand onto the 
+ground:
+
+ALT MAN FUL MINAR
+LAE FIN CRIM BONTAIR
+
+As it falls, time itself will slow and finally stop, allowing thy 
+party to move freely in this suspended state. The world will be 
+temporarily frozen and at the mercy of thy will.
+
+N. DAG MENTAR
+Dag Mentar is a powerful multi-pronged conjuration that will 
+wreck havoc among thy foes in a manner worthy of it's 
+advanced rating. On the darkest night of the summer, trap an 
+owl, old and wise. Sacrifice the owl upon a stone altar, 
+keeping only its eyes. Enchant them with the following verse:
+
+FENDI MENTAR DIVI
+CREMBI MENTAR BONI
+
+When battle is nigh, repeat the stanzas until the heaviness of 
+magic in the air becomes oppressive to the labor of thy lungs. 
+Smash the eyes between thy hands. Thy foes will be struck a 
+savage blow with damage directly related to thine 
+intelligence.
+
+O. NECORP
+On the night of a full moon, acquire the liver of one who is 
+dying of the black rot. Hang the organ deep within the forest 
+to dry, and allow six fortnights and a day to pass. Grind it 
+into a fine powder while chanting these words:
+
+DON CORPUS MIEDA FUTZ
+RIEDA DON NEMI
+
+Store the powder in several small vials. When the need arises, 
+throw a vial above the heads of thine enemy's party. It will 
+magically shatter, releasing the loathsome rot upon their 
+company. They will be quickly transformed into putrid 
+vestiges of their former beings, with little strength left for 
+battle.
+
+P.
+This exorcism has no name, for the words should never be 
+written or spoken - save the occasion when life is to be 
+banished unto the Realm of Night. This most powerful 
+invocation carries the name of the Dark One. 
+The enactment of this Run requires thine utmost 
+concentration. With a staff of yew, trace upon the ground the 
+protective pentagram. Light a candle at the point most 
+generally in the direction of thine enemies. Cast some sulphur 
+dust into the flame and speak the name of the Evil One. All 
+foes who hear this utterance shall be dashed violently into 
+certain destruction, possessing no more life than the stones 
+upon which they lie.
+
+
+
+
+
+
+
+                        The Ancient Liturgy
+                                of
+                               Truth
+
+
+                        Know ye that the 
+                        Ancient Liturgy of Truth 
+                        hath been in the care of 
+                        our sect of 3000 years. 
+                        Never, through the 
+                        passing of each 
+                        generation, hath out 
+                        sacred custodianship been 
+                        betrayed. We now enjoin 
+                        thee, guard well the 
+                        secrets held within these 
+                        pages. For thee, they shall 
+                        be an immeasurable 
+                        blessing, but if they are 
+                        revealed to one of the 
+                        unenlightened, great harm 
+                        could befall him. The 
+                        proper use of the 
+                        supplications contained 
+                        within this manuscript will 
+                        be thine aid in combating 
+                        the evils of this world.
+                        The supplications 
+                        herein are listed in 
+                        ascending order of power. 
+                        Most of the will be 
+                        unusable until thou hast 
+                        trod many paths and 
+                        gained great wisdom. If 
+                        thou devotes thy whole 
+                        being to these Truths, the 
+                        power to perform actual 
+                        miracles will be granted 
+                        thee. As thou art exalted 
+                        enough to be close to the 
+                        One, The power even over 
+                        life and death may be 
+                        thine. Take heed that thou 
+                        dost not use these 
+                        precious gifts in a 
+                        frivolous manner, but for 
+                        the betterment of the 
+                        order.
+                        Receive now my 
+                        blessing through the dark 
+                        veil of time. Know always 
+                        that within thyself Truth 
+                        was discovered, and that 
+                        this Truth forms the basis 
+                        of unyielding power.
+
+                                                The Prophet
+                                                Alizarkanon
+
+A. PONTORI
+Evil takes many forms throughout Sosaria, and some of the 
+most evil are the Undead. Skeletons, ghouls, and zombies 
+roam free in dungeons, forests and open terrain. Although 
+they are formidable opponents in battle, there is a basic 
+weakness in their essence. These servants of evil are vestiges 
+of former living beings now inhabited by an evil force.
+If thou shall encounter undead creatures, raise thy 
+ankh of truth before them. If thou dost stand strong in the 
+spirit of Good, evil shall be dispelled from their beings and 
+only their rotting corpses shall remain.
+
+B. APPAR UNEM
+Often the chest which thou shalt find along thy journeys will 
+contain a trap, the intent of which is to damage thee and thy 
+party. Since thou dost have the innate ability to know the true 
+nature of evil, thou can overcome this difficulty.
+To open a chest with no risk of injury to thyself or 
+thy party, pour a few drops of holy water into the lock and 
+invoke the air of the One who is all truth by raising the holy 
+ankh over the chest. It will open freely and allow thee to 
+grasp it's inner treasures. 
+
+C. SANCTU
+Thy powers for healing will be often needed. The healing of 
+minor wounds can be accomplished with this simple 
+supplication. Through the channel which thy selfless devotion 
+creates in thee, Truth and forces of Good can act directly in 
+this world.
+Merely lay thy hand upon the one who is to be 
+healed, and his wounds will be mended beneath thy touch. In 
+the beginning thine ability will be limited, but with thine 
+other powers, thy capacity to act as a healer will grow and be 
+strengthened by experience.
+
+D. LUMINAE
+The powers of thine enlightenment shall gradually unfold 
+before thee. Resting at thy hand is the ability to enchant 
+objects in a manner which will make them glow. Whilst 
+holding thy staff aloft, repeat the name of this enchantment. 
+Doing so, the power of the Truths within thee will cause thy 
+staff to glow with a soft blue light.
+Realize, however, that this light will no be long 
+sustained. For the power brought through thee unto thy staff 
+will slowly radiate away and soon will dim and fade.
+
+E. REC SU
+Part of thine enlightenment is the realization that there are no 
+boundaries. When this truth is known unto thee, the material 
+world is far less limiting that ordinarily supported.
+As thou descendth deeper and deeper into the bowels 
+of the earth, though shall likewise be descending into greater 
+evil. Being thyself of a good nature, this tends to give thee a 
+natural buoyancy, as if in water. Speak the name of this 
+supplication whilst touching thy staff to the ceiling of a 
+dungeon passage. This will cause the ceiling to become 
+translucent; thee and thy party will freely float to the next 
+higher dungeon level.
+
+F. REC DU
+The range of thine ability for spiritual movement is not 
+limited to ascension. Far below the earth's surface, and far 
+below the deepest recesses of the deepest dungeon, flow the 
+molten streams and rivers which feed the earth's core. Here 
+also resides The Great Evil. Due to thy natural buoyancy, 
+downward travel is somewhat more difficult and less 
+desirable than upward. If thou must descent into evil, speak 
+the name of this supplication whilst tapping thy staff upon the 
+floor. The floor will become translucent; thee and thy party 
+will slowly sink to the next lower dungeon level.
+
+
+G. LIB REC
+This is the most difficult of the spiritual movements. The 
+planar motion allowed here must begin within a dungeon 
+chamber.
+Lib Rec differs from the two previous supplications 
+in the following way: Instead of the earth allowing thy 
+physical form to pass, now thy form itself shall become 
+translucent. As thou dost fade in one location thou shalt 
+slowly appear in another.
+To initiate this motion, speak the name of this 
+invocation whilst circling thy staff above thy head. As thou 
+stoppeth the spinning staff so wilt thy journey stop. 
+
+H. ALCORT
+Alcort is a specialized form of healing. Poison is a horror all 
+beings fear for with it comes almost certain death. Only with 
+the assistance of the divine power can thou halt the ravages of 
+this great evil.
+With thy touch, the poison coursing in the veins of 
+thy companion shall be transformed into a life-giving fluid 
+which soothes the body and brings peace unto the soul.
+Thou can rest confident that thou hast delivered one from the 
+grasp of poison. This power has been promised by the One 
+whose covenant has never been broken.
+
+I. SEQUITU
+Occasionally during journeys unto the lower depths of the 
+subterranean, thy party may run into great trouble. This could 
+be the death or near death of a party member, starvation 
+besieging thy entire party, or becoming lost with little hope of 
+finding thy way.
+This supplication is the beseechment of the greater 
+Truth to aid the weary traveler in escaping his rocky tomb. If 
+thou raiseth thy holy ankh into the air and cryeth out the 
+name of this invocation, thee and thy companions shall rise 
+forth from the depths, guided by the divine truth unto the 
+Sosarian surface.
+
+J. SOMINAE
+Thine enlightenment hath expanded and will continue to 
+unfold like the star-filled heavens above.
+The first light which thy Truth created for thee was 
+wondrous indeed, and luminance of this sort will continue to 
+be of great service to thee. Yet in order to fulfill some greater 
+needs, more enduring illumination is required.
+If thou dost now meditate on this enchantment, thine 
+entire self will radiate with the light of Truth. Know that even 
+this light cannot be sustained indefinitely, for it doth draw 
+from thine own inner force.
+
+K. SANTU MANI
+The grasses have grown and seeded many times since thy 
+journey began. Thou hast trod many paths and gained much 
+wisdom. Thou hast now the power to perform actual miracles. 
+To take one who has been shredded by an opponent's sword, 
+quivering on the threshold of death, and restore him to life; 
+this miracle is now thine.
+Prepare a small tin of fine scented oil and ask this it 
+be blessed with the perfection and holiness of truth. Anoint 
+the wounds with the oil, allowing it to penetrate deeply. 
+Before thine eyes the flesh will draw together and be restored, 
+and the blood will once again begin to flow through his veins.
+
+L. VIEDA
+If thou should lose thy way, either in the gloomy crevices of a 
+dungeon, or in a dark forbidding forest, the miracle of Vieda 
+can light thy way. Meditate on thy need for guidance for a 
+goodly time, and when thou dost feel sufficiently purified, rub 
+a small quantity of Holy water onto thine eyelids.
+If thou hast meditated sufficiently, the greater Truths 
+shall miraculously unfold before thine eyes. Whether thou art 
+in a dungeon or on the surface, a vision of thy current 
+surroundings will come to thee.
+
+
+M. EXCUUN
+Occasionally thee and thy companions will be set upon by 
+creatures of great might and evil. Opposing these foes can be 
+a difficult task at best. The liturgy of Truth provides also for 
+this need.
+Should thy party encounter an evil foe of great 
+strength thou may wish to call upon the miracle of Excuun. 
+By holding the holy ankh of Truth in the direction of thy foe 
+and speaking the name of this great miracle, thou can direct 
+the pure light of the holy force of Truth at thy foe, and the life 
+within on of thy foes shall cease.
+
+N. SURMANDUM
+This enlightenment hath led thee to step beyond almost every 
+limitation of this earth. It is now within thy power to step into 
+the realm of death and draw one who has been there engulfed 
+back into the world of life.
+Release thy spirit and allow it to venture into the 
+very shadow of death, touching the spirit of the one who 
+slumbers there. Lead thy poor companion back from the 
+shadow of death and life will once again be his. If, however, 
+thy companion's strength of will not strong enough to make 
+the return journey, the backlash from this failed miracle will 
+turn his body to ashes.
+
+O. ZXKUQYB
+The letters which head this page represent the second words 
+of anti-creation. They are the words which release the fury of 
+Truth upon the world. No entire word is ever written, for 
+should even the letters which represent their sounds be 
+brought together on a page, the release of power would cause 
+destruction of untold magnitude.
+If thou should encounter a situation so evil as to 
+require their use, speak them softly only to the air beside thee. 
+Most of thy foes will be struck down with a force so strong it 
+will end this life, and all other potential lives within them.
+
+P. ANJU SERMANI
+Once a body hath turned to ash, the soul which once 
+inhabited it is sent on to it's next life. It therefore takes a 
+miracle of enormous magnitude to reclaim it.
+Realize first that the spirit must leave another body 
+and another life in order to return to thee. If thou perceives 
+that the need for the return of thy companion is so great as to 
+be willing to give five marks of thy wisdom in sacrifice, then 
+beseech the One who is Truth and Wisdom. Allow a tear from 
+each of thine eyes to fall upon the ashes. As thy tears mix 
+with the ashes, so shall they reconstitute before thee, and life 
+shall be restored.
+
+
+
+                        
+
+                        EXODUS:
+                      ULTIMA III
+
+                    PLAYER REFERENCE 
+                         CARD
+
+                    by Lord British
+
+COMMANDS
+A)	Attack: Attempts to damage foe with "ready 
+        weapons." Must be followed by indicating the 
+        direction for the attack.
+
+B)	Board: Mount a horse or board a frigate.
+
+C)	Cast: Cast a magic spell.  Must be followed by the 
+        player number (except during combat), spell type 
+        (W/C) when needed, and the spell letter.
+
+D)	Descend: Climb down a ladder to the next lower 
+        dungeon level.
+
+E)	Enter: Enter a town, castle, dungeon or other 
+        landmark.
+
+F)	Fire: Discharge a ship's cannons (after boarding) in 
+        direction indicated.
+
+G)	Get Chest: Open chest.  Must be followed by the 
+        number of the player who will search for traps, open 
+        the chest and acquire its contents.
+
+H)	Hand Equipment: Trades equipment between two 
+        players.  Followed by prompts to determine what is 
+        to be exchanged.
+
+1)	Ignite a Torch: Lights a given player's torch.
+
+J)	Join gold: Gives all gold in party to player indicated.
+
+K)	Klimb: Climb up a ladder in a dungeon.
+
+L)	Look: Identifies an object in a specified direction.
+
+M)	Modify Order: Exchanges the positions of any two 
+        players within the party.
+
+N)	Negate Time: Stops time for all outside of the party.  
+        Requires a special item.
+
+O)	Other Command: Enter any command desired 
+        during game play.
+
+P)	Peer at a Gem: Shows players a bird's eye view of a 
+        town, castle, dungeon level, or the outside world.  
+        One viewing per gem.
+
+Q)	Quit (and save to disk): Use command to stop 
+        playing (from the outside world only) and save your 
+        progress to disk.  You can resume the game from 
+        this point.
+
+R)	Ready Weapon: Equip yourself with a specific 
+        weapon for use in combat.
+
+S)	Steal: Used to steal chests from behind store 
+        counters.  Success depends on skill.
+
+T)	Transact: Use to talk to townspeople or trade with 
+        merchants.
+
+U)	Unlock: Open doors if you have the key.  Must be 
+        followed by direction to door and the player whose 
+        key is to be used.  One use per key.
+
+V)	Volume: Toggles sound effects on and off.
+
+W)	Wear Armor: Outfits player with specified an-nor if 
+        owned.
+
+X)	X-it: Leave behind or dismount your current 
+        transport and travel on foot.
+
+Y)	Yell: Allows player to yell any word desired.
+
+Z)	Ztats: Displays your vital statistics, possessions, and 
+        spells.
+
+Spacebar) Pass one game turn without taking any action.  
+        Food is consumed.
+
+In the upper left hand corner of the Z)tats box is the 
+character's name, followed by sex, Race, Profession, and 
+attribute point totals.  Displayed just below that is their status 
+(Good, Dead, Poisoned, or Ashes).
+Their possessions - gold, food, keys, gems, torches, 
+powders - are shown adjacent to the status box.  The 
+character's experience, level, Magic Points, Hit Points, and 
+Maximum Hit Points total are shown directly below the status 
+box.  Any Cards, or Marks which the character may have 
+found during their adventure are listed in the lower left hand 
+corner of the Z)tats box.  
+The remaining boxes are reserved for listing the 
+different types of Armour, and Weapons which the character 
+owns.  In addition to listing the different type of Armour you 
+want to wear, and which Weapon you wish to Ready for that 
+character.  To do so, simply move the pointer to the desired 
+weapon/armour, and click on it.  The selected item will then 
+be highlighted (provided it is legal for that character to use.)
+
+
+CREATING A CHARACTER:
+First. select Organize a Party from the main menu.  Next you 
+must select Create a Character from the Party Organization 
+Menu.  This will bring up the player creation screen.  The 
+figure below shows the player creation screen.  To select the 
+character race, sex, and profession, simply move the pointer 
+to the appropriate box with the mouse, and click on it.  The 
+character JACOBEAN below has been selected as a Male, 
+Fuzzy, Wizard.  To distribute the 30 remaining attribute 
+points use the mouse to click on either the decrease arrow (<--
+) or the increase arrow (-->) surrounding each of the four 
+attribute point totals.  The number of points left to distribute 
+is displayed after the word "Points".
+Clicking on the Cancel box will clear all of the entereis that 
+were made for that character and return you to the Party 
+Organization menu.
+When you are satisfied with your choices, click on the Save 
+box.  This will save your character's attributes to disk and 
+replace the Empty space on the Register with your character's 
+name.
+
+FORMING A PARTY
+Up to four characters may be placed into the current party.  
+This is done by first selecting Form a Party from the Party 
+Organization Menu.  This will display the character register.  
+To the left of each character name and type is the party status 
+of that character.  A diamond next to the character indicates 
+that the character is not in a party.  Clicking on a character's 
+name will select/deselect that character.  When you are 
+satisfied with your party selection, click on the Exit box to 
+return to the Party Organization Menu.
+
+DISPERSING THE PARTY:
+Selecting Disperse a Party from the Party Organization Menu 
+will clear all characters from the formed party and clear the 
+map of Sosaria to its original state by removing all the 
+monsters, ships, chests, etc.  Disperse a Party will not, 
+however, reset the movement counter that keeps track of the 
+number of moves that have been made in your game.
+
+TERMINATING A CHARACTER:
+If you wish to delete a character from your register select 
+Terminate a Character from the Party Organization Menu.  
+This will display the current register of characters.  Clicking 
+on the character's name will bring up a dialog box asking you 
+to confirm your decision to terminate that character.  Click on 
+the Okay box to confirm, then on the Exit box to return to the 
+Party Organization Menu.
+
+PLAYING THE GAME
+As you move about the world of Sosaria, note that your party 
+is represented by a single icon.  Once you enter combat you 
+will see all of your characters (which will flash when it is 
+each character's turn to take an action.)  There are two ways 
+to control the party's movement:
+
+1.	Use the four movement keys indicated in the section 
+        DIRECTION OF MOVEMENT KEYS.rpage2
+2.	Click directly on the play window to move the party 
+        in the direction indicated by the cursor arrow.
+
+Depending on your party's current location, there is a default 
+command which is activated by clicking directly on your 
+party icon in the play window.  The default commands are:
+
+In Towne:     Transact;
+On Surface:   Attack;
+In Combat:    Attack;
+On a Frigate: Fire Cannon;
+On a Chest:   Get Chest;
+On a Horse or Boat: Board;
+On Towne, Castle, or Dungeon Entrances: Enter;
+
+Whenever you are asked "Which Character?" by the game, 
+you may indicate either by typing the number (1-4) of the 
+character, or by pointing and clicking on the appropriate 
+character window at the right of the play screen.
+
+ULTIMA III Walkthrough
+
+
+The Walkthrough 
+
+Here is the basic walkthrough of the game. It is actually pretty 
+simple.  Check out the following pages for more detailed tips 
+and clues. 
+
+1.	Find the Marks. - There are four marks (Mark of 
+        Kings, Force, Fire, and Snake). They are all found in 
+        dungeons. All four characters must have all four 
+        marks. 
+2.	"Pray" in the Circle of Light to get the word: 
+        EVOCARE. You need this to access Castle Death. 
+3.	"Dig" on Islands to get Exotic Armor and Weapons. 
+4.	Get the Cards from the Shrines on Ambrosia. Take a 
+        ship through the Whirlpool, and "Search" all of the 
+        Shrines. 
+5.	Go to the 8th level of the Dungeon of Time and talk 
+        to the Time Lord to get the Order of the Cards. 
+        (From Left to Right: Love, Sol, Moons, Death) 
+6.	Take a ship to the Silver Snake. "Yell" EVOCARE. 
+7.	Enter Castle Death and find Exodus (four boxes in 
+        the North side of the Castle). 
+8.	"Insert" the cards into Exodus in the order told by 
+        the Time Lord. 
+
+That's it! The hardest parts of the game is raising money(for 
+food and attributes), and finding a ship( to go to Ambrosia 
+and Castle Death). 
+
+General Hints 
+
+* Always use 4 players. Despite what the manual says, you 
+can't recruit from the Game. There are no advantages to 
+playing with less and many disadvantages. 
+ 
+* Note the pluses and minuses of each player type. For 
+instance, either a Bobbit or Fuzzy would be a good druid, 
+because the druid's magical ability is based on half of the 
+mental skill (wisdom/intelligence) you have more points on. 
+Druids recover magic points twice as fast as other players, 
+which is handy when you need several cure spells quickly. A 
+Rangers advantage is the powerful weapons they can use and 
+their limited ability to steal & disarm chests. Their weakness, 
+is in their magic ability. A Dwarf or Elf would make a bad 
+Ranger because either would have a maximum of only 25 
+magic points. 
+ 
+* Manage resources carefully. Keep a close eye on gold and 
+attribute points. Don't try to buy more attribute points then a 
+player type is capable of having because you will lose the 
+gold, but the attribute will not be increased. Don't use the 
+<J>oin gold command if your group has collectively more 
+than 9999 pieces. The counter will just cycle around. 
+ 
+* Don't spend a lot of gold on armor. Get Exotic Armor as 
+quickly as possible on an isle near the towne of Grey. The isle 
+is in the bay which is at the Southeast quadrant of the 
+continent of Sosaria. Use <O>ther to DIG. 
+ 
+* Exotic Weapons are found the same way by digging On an 
+isle near the towne of Fawn which is located on the group of 
+islands at the just north of Sosaria, northwest of the castle of 
+Lord British. 
+ 
+* Exotic Weapons are absolutely essential to fighting your 
+way through the castle Death to reach Exodus but are not the 
+most effective weapons elsewhere because they have no long 
+distance ability. Outfit each player that is capable of wielding 
+distance weapons with the best possible. Even a sling is better 
+than an Exotic sword if you defeat your foe before he gets 
+within striking range. 
+
+
+* Increasing player attributes is done in the shrines of 
+Ambrosia which can be reached by entering the whirlpool 
+while at sea. Use <O>ther to SEARCH each of the four 
+shrines to get the cards. <E>nter to raise attributes. 
+ 
+* To get a leg up with new players, join all gold and materials 
+from 4 new characters to a single player and save the game. 
+Reboot. Disperse the party and delete the 3 players that now 
+have nothing. Create 3 new ones to go with your fourth. The 
+extra gold makes starting out a bit easier. Avoid starting a 
+game with 4 brand new players whenever possible or learn to 
+handle death. 
+ 
+* All players need dexterity and Strength but Wisdom and 
+Intelligence are only for magic users. Players that use prayer 
+spells require Wisdom but not Intelligence. Sorcerers are the 
+opposite. Exceptions are, Druids that use half of whatever 
+mental skill you have more of (so max out your best), and 
+Rangers, who use half of the lesser (max out your worst and 
+match it with the other). 
+ 
+* You will obtain hit points automatically when you talk to 
+Lord British as your experience increases (this is done by 
+defeating monsters). You can get up to 550, unless you have 
+the Mark of Kings, in which case you can get up to 2550. 
+ 
+* If your party gets poisoned near Castle Britannia anyone 
+with the clerical skills to cure and don't want to spend the 
+gold at a healer, you will find a curing fountain almost 
+immediately inside the Dungeon of Fire, hidden in the alcove 
+directly south of the towne of Britain. 
+ 
+* Completing the game requires LOTS of gold for powerful 
+weapons, attributes and useful items like keys, gems and 
+powders. You would probably never acquire enough gold to 
+purchase all you need, but there is a shortcut. Death Gulch on 
+large island to the east of Sosaria is a treasure trove of wealth. 
+If you have a thief with good dexterity and all of your players 
+have the marks of Fire and Force you can clean up by stealing 
+all the chests you find within it. If you have no powerful 
+fighters, you may want to bring along a lot of powders to 
+freeze time while you run outside to safety. Use the <O>ther 
+command to BRIBE guards to get out of your way. Enter 
+without a key by going through the maze to the south of the 
+towne entrance. 
+
+* Dawn is deep within the forest and only appears when both 
+moons are in the new phase. Start at moon gate #4 
+(southernmost part of Sosaria, west of Montor West). Go 
+right from here until you can emerge from the small area 
+locked in with mountains by going north. From there, go 6 
+steps north and 2 west, then wait for the new moon cycle (or 
+west 8, south 35 from castle Britannia). 
+ 
+* Yew is hidden deep in the Mountains to the west of castle 
+Britannia. Enter the pass on the west side of the mountainous 
+area going east toward the castle. 
+ 
+* Devil Guard is in a hidden mountain lake area and is 
+accessible only by using moon gates 3, 5 & 8. 
+ 
+* The Castle Death is located on an island to the southwest of 
+the Sosarian continent. To pass the silver snake, you must 
+have the Mark of the Snake and <Y>ell EVOCARE. 
+ 
+* Although it may seem obvious, now is a good time to 
+explain the marks. You get them by touching the hot metal 
+rods that are found in the dungeons. Unlike the cards, ALL of 
+your players should hold all four of the marks. The mark of 
+Fire allows you to walk unharmed through fire and lava, 
+which may be necessary to get some of the hints. The mark of 
+Force, similarly allows you to walk through force fields that 
+are sometimes used to protect gold. The mark of the Snake 
+allows you to pass the silver snake if you know the magic 
+word. and finally, the mark of Kings will cause Your hit 
+points to be raised to a maximum of 2550 as you gain in 
+experience. 
+ 
+* Be advised that ships are very hard to come by in Ultima 
+III, since most of your travels will be on land, you will have to 
+leave any boats you may have acquired from time to time. 
+Because of their relative scarcity, you don't want them parked 
+anywhere in the open, because they will be destroyed if the 
+whirlpool comes along. The best way to leave them and be 
+assured that you will be able to find them later is to park them 
+on the other side of the silver snake and exit via the moon 
+gate. If you wish, you can even fill up this entire waterway 
+with boats and eventually be able to walk right into the castle 
+Death from entrance at the moon gate. 
+
+
+* In spite of the scarcity of ships, it will often be to your 
+advantage to park one between the mainland of Sosaria and 
+the island where the towne of Death Gulch is located. 
+Because of the convoluted water ways around here, you can 
+often leave a boat at this location for a long time before it is 
+swallowed by the whirlpool and it is very convenient to just 
+walk across the boat and gain access to the place where all the 
+gold is. It is also handy to have a boat waiting near castle 
+Britannia. Even given this advantage though, I would not 
+place one there unless I had at least one reserve boat parked 
+in the safe area near castle Death. 
+ 
+* After approaching Exodus, use the <O>ther command to 
+INSERT the cards of Love, then Sol, then Moons, then Death 
+one at a time, from left to right.

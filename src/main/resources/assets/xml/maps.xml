@@ -1,0 +1,80 @@
+<maps>
+    <!-- world map -->
+    <map id="0" type="world" fname="sosaria.ult" width="64" height="64" levels="1" borderbehavior="wrap" music="OUTSIDE">
+	
+        <portal x="45" y="18" destmapid="1" startx="32" starty="61" />
+        <portal x="10" y="53" destmapid="2" startx="32" starty="62" />
+        <portal x="46" y="19" destmapid="3" startx="2" starty="32" />
+        <portal x="34" y="16" destmapid="4" startx="2" starty="32" />
+        <portal x="6" y="13" destmapid="5" startx="2" starty="32"  />
+        <portal x="7" y="44" destmapid="6" startx="5" starty="32" />
+        <portal x="18" y="31" destmapid="7" startx="2" starty="32" />
+        <portal x="49" y="58" destmapid="8" startx="2" starty="32" />
+        <portal x="47" y="58" destmapid="9" startx="2" starty="32" />
+        <portal x="37" y="53" destmapid="11" startx="2" starty="32" />
+        <portal x="56" y="31" destmapid="10" startx="5" starty="32" />
+        <portal x="30" y="2" destmapid="12" startx="2" starty="32" />
+		
+        <portal x="56" y="6" destmapid="14" startx="32" starty="62" />
+        <portal x="46" y="7" destmapid="15" startx="32" starty="62" />
+        <portal x="9" y="28" destmapid="16" startx="32" starty="62" />
+        <portal x="49" y="34" destmapid="17" startx="32" starty="62" />
+        <portal x="19" y="57" destmapid="18" startx="32" starty="62" />
+        <portal x="58" y="44" destmapid="19" startx="32" starty="62" />
+        <portal x="58" y="30" destmapid="20" startx="32" starty="62" />
+
+        <moongate name="newmoon" phase="0" x="7" y="8" d1="0" d2="1" d3="2" />
+        <moongate name="crescentwax" phase="1" x="57" y="46" d1="3" d2="4" d3="5" />
+        <moongate name="firstquarter" phase="2" x="15" y="27" d1="6" d2="7" d3="0" />
+        <moongate name="gibbouswax" phase="3" x="36" y="58" d1="1" d2="2" d3="3" />
+        <moongate name="fullmoon" phase="4" x="15" y="29" d1="4" d2="5" d3="6" />
+        <moongate name="gibbouswan" phase="5" x="12" y="55" d1="7" d2="0" d3="1" />
+        <moongate name="lastquarter" phase="6" x="31" y="31" d1="2" d2="3" d3="4" />
+        <moongate name="crescentwan" phase="7" x="58" y="31" d1="5" d2="6" d3="7" />
+	
+        <label name="balloon" x="64" y="64" />
+
+    </map>
+	
+    <map id="1" type="city" fname="british.ult" width="64" height="64" levels="1" borderbehavior="exit" music="FANFARE">
+    </map>
+	
+    <map id="2" type="city" fname="exodus.ult" width="64" height="64" levels="1" borderbehavior="exit" music="EXODUS">
+    </map>
+	
+    <map id="3" type="city" fname="lcb.ult" width="64" height="64" levels="1" borderbehavior="exit" music="TOWNS">
+    </map>
+	
+    <map id="4" type="city" fname="yew.ult" width="64" height="64" levels="1" borderbehavior="exit" music="TOWNS">
+    </map>
+	
+    <map id="5" type="city" fname="moon.ult" width="64" height="64" levels="1" borderbehavior="exit" music="TOWNS">
+    </map>
+	
+    <map id="6" type="city" fname="grey.ult" width="64" height="64" levels="1" borderbehavior="exit" music="TOWNS">
+    </map>
+	
+    <map id="7" type="city" fname="devil.ult" width="64" height="64" levels="1" borderbehavior="exit" music="EXODUS">
+    </map>
+	
+    <map id="8" type="city" fname="montor_e.ult" width="64" height="64" levels="1" borderbehavior="exit" music="TOWNS">
+    </map>
+	
+    <map id="9" type="city" fname="montor_w.ult" width="64" height="64" levels="1" borderbehavior="exit" music="TOWNS">
+    </map>
+	
+    <map id="10" type="city" fname="death.ult" width="64" height="64" levels="1" borderbehavior="exit" music="EXODUS">
+    </map>
+	
+    <map id="11" type="city" fname="dawn.ult" width="64" height="64" levels="1" borderbehavior="exit" music="TOWNS">
+    </map>
+	
+    <map id="12" type="city" fname="fawn.ult" width="64" height="64" levels="1" borderbehavior="exit" music="TOWNS">
+    </map>
+	
+    <map id="13" type="city" fname="ambrosia.ult" width="64" height="64" levels="1" borderbehavior="exit" music="CASTLES">
+    </map>
+
+
+	
+</maps>
