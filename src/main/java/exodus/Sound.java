@@ -45,7 +45,11 @@ public enum Sound {
     DUNGEON("Dungeon.mp3", true, 0.1f),
     COMBAT("Combat.mp3", true, 0.1f),
     ALIVE("Alive.mp3", true, 0.1f),
-    CASTLES("Castles.mp3", true, 0.1f);
+    CASTLES("Castles.mp3", true, 0.1f),
+    
+    M1("music1.ogg", true, 0.1f),
+    M2("music2.ogg", true, 0.1f),
+    M3("music3.ogg", true, 0.1f);
 
     String file;
     boolean looping;

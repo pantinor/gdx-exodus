@@ -117,12 +117,19 @@ public class StartScreen implements Screen, Constants {
         seq1.addAction(Actions.run(animator));
         stage.addAction(Actions.forever(seq1));
 
-        Exodus.music = Sounds.play(Sound.SPLASH, Exodus.musicVolume);
     }
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+
+        if (Exodus.playMusic) {
+            if (Exodus.music != null) {
+                Exodus.music.stop();
+            }
+            Sound snd = Sound.SPLASH;
+            Exodus.music = Sounds.play(snd, Exodus.musicVolume);
+        }
 
     }
 

@@ -86,3 +86,66 @@ down-disabled
   orig: 40, 40
   offset: 0, 0
   index: -1
+x-up
+  rotate: false
+  xy: 160, 0
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: -1
+x-down
+  rotate: false
+  xy: 160, 40
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: -1
+x-disabled
+  rotate: false
+  xy: 160, 80
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: -1
+left-arrow-up
+  rotate: false
+  xy: 200, 0
+  size: 10, 30
+  orig: 10, 30
+  offset: 0, 0
+  index: -1
+left-arrow-down
+  rotate: false
+  xy: 210, 0
+  size: 10, 30
+  orig: 10, 30
+  offset: 0, 0
+  index: -1
+left-arrow-disabled
+  rotate: false
+  xy: 220, 0
+  size: 10, 30
+  orig: 10, 30
+  offset: 0, 0
+  index: -1
+right-arrow-up
+  rotate: false
+  xy: 230, 0
+  size: 10, 30
+  orig: 10, 30
+  offset: 0, 0
+  index: -1
+right-arrow-down
+  rotate: false
+  xy: 240, 0
+  size: 10, 30
+  orig: 10, 30
+  offset: 0, 0
+  index: -1
+right-arrow-disabled
+  rotate: false
+  xy: 250, 0
+  size: 10, 30
+  orig: 10, 30
+  offset: 0, 0
+  index: -1

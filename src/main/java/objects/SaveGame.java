@@ -170,7 +170,7 @@ public class SaveGame implements Constants {
     public static class CharacterRecord {
 
         public String name = null;
-
+        public int portaitIndex = 11+2*16;
         public int markKings;
         public int markSnake;
         public int markFire;
@@ -264,8 +264,7 @@ public class SaveGame implements Constants {
                 dos.writeByte(qtyWeapons[t.ordinal()]);
             }
 
-            dos.writeByte(0);
-            dos.writeByte(0);
+            dos.writeShort(portaitIndex);
             dos.writeByte(0);
             dos.writeInt(0);
 
@@ -331,8 +330,7 @@ public class SaveGame implements Constants {
                 qtyWeapons[t.ordinal()] = dis.readByte();
             }
 
-            dis.readByte();
-            dis.readByte();
+            portaitIndex = dis.readShort();
             dis.readByte();
             dis.readInt();
 

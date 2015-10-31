@@ -65,15 +65,17 @@ public class Exodus extends Game {
     public static CreatureSet creatures;
     //public static VendorClassSet vendorClassSet;
     public static TextureAtlas standardAtlas;
-    
+
     public static TextureRegion magicHitTile;
     public static TextureRegion hitTile;
     public static TextureRegion missTile;
     public static TextureRegion corpse;
-    
+
     public static Animation explosionLarge;
     public static Animation explosion;
     public static Animation cloud;
+
+    public static TextureRegion[] faceTiles = new TextureRegion[13 * 16];
 
     public static void main(String[] args) {
 
@@ -91,10 +93,10 @@ public class Exodus extends Game {
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.classpath("assets/fonts/lindberg.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        
+
         parameter.size = 16;
         font = generator.generateFont(parameter);
-        
+
         parameter.size = 10;
         smallFont = generator.generateFont(parameter);
 
@@ -131,25 +133,32 @@ public class Exodus extends Game {
 
             backGround = new Texture(Gdx.files.classpath("assets/graphics/frame.png"));
 
+            TextureRegion[][] trs = TextureRegion.split(new Texture(Gdx.files.classpath("assets/graphics/Portraits.gif")), 56, 64);
+            for (int row = 0; row < 13; row++) {
+                for (int col = 0; col < 16; col++) {
+                    faceTiles[row * 16 + col] = trs[row][col];
+                }
+            }
+
             standardAtlas = new TextureAtlas(Gdx.files.classpath("assets/graphics/latest-atlas.txt"));
 
             hitTile = standardAtlas.findRegion("hit_flash");
             magicHitTile = standardAtlas.findRegion("magic_flash");
             missTile = standardAtlas.findRegion("miss_flash");
             corpse = standardAtlas.findRegion("corpse");
-            
+
             TextureAtlas tmp = new TextureAtlas(Gdx.files.classpath("assets/graphics/explosion-atlas.txt"));
             Array<TextureAtlas.AtlasRegion> ar = tmp.findRegions("expl");
             explosion = new Animation(.2f, ar);
-            
+
             tmp = new TextureAtlas(Gdx.files.classpath("assets/graphics/Exp_type_B.atlas"));
             ar = tmp.findRegions("im");
             explosionLarge = new Animation(.1f, ar);
-            
+
             tmp = new TextureAtlas(Gdx.files.classpath("assets/graphics/cloud-atlas.txt"));
             ar = tmp.findRegions("cloud");
             cloud = new Animation(.2f, ar);
-            
+
             baseTileSet = (TileSet) Utils.loadXml("assets/xml/tileset-base.xml", TileSet.class);
             baseTileSet.setMaps();
 
@@ -158,7 +167,6 @@ public class Exodus extends Game {
 
             //vendorClassSet = (VendorClassSet) Utils.loadXml("vendor.xml", VendorClassSet.class);
             //vendorClassSet.init();
-
             weapons = (WeaponSet) Utils.loadXml("assets/xml/weapons.xml", WeaponSet.class);
             armors = (ArmorSet) Utils.loadXml("assets/xml/armors.xml", ArmorSet.class);
             creatures = (CreatureSet) Utils.loadXml("assets/xml/creatures.xml", CreatureSet.class);
@@ -175,7 +183,7 @@ public class Exodus extends Game {
         //setScreen(new GameScreen(this));
         setScreen(startScreen);
     }
-    
+
     private static Texture fillRectangle(int width, int height, Color color) {
         Pixmap pix = new Pixmap(width, height, Pixmap.Format.RGBA8888);
         pix.setColor(color);

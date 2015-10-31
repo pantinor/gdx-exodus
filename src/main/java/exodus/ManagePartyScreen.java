@@ -10,12 +10,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -36,16 +36,19 @@ public class ManagePartyScreen implements Screen, Constants {
     Batch batch;
     BitmapFont font;
     Texture bkgnd;
+    Texture bkgnd2;
 
     List<RosterIndex> registry;
     List<PartyIndex> partyFormation;
 
-    private final Table buttonTable;
+    ImageButton apply;
+    ImageButton clear;
+    ImageButton add;
+    ImageButton remove;
+    
+    ImageButton iconLeft, partyIconLeft;
+    ImageButton iconRight, partyIconRight;
 
-    TextButton apply;
-    TextButton clear;
-    TextButton add;
-    TextButton remove;
     TextButton save;
     TextButton cancel;
 
@@ -57,6 +60,8 @@ public class ManagePartyScreen implements Screen, Constants {
     SelectBox<Profession> profSelect;
     SelectBox<ClassType> raceSelect;
     SelectBox<SexType> sexSelect;
+    
+    int pidx = 11+2*16;
 
     private static final String EMPTY = "<empty>";
 
@@ -72,11 +77,11 @@ public class ManagePartyScreen implements Screen, Constants {
         font.setColor(Color.WHITE);
 
         bkgnd = new Texture(Gdx.files.classpath("assets/graphics/roster.png"));
+        bkgnd2 = new Texture(Gdx.files.classpath("assets/graphics/manage.png"));
 
         try {
             saveGame.read(PARTY_SAV_BASE_FILENAME);
         } catch (Exception e) {
-            //none
         }
 
         PartyIndex[] mbrs = new PartyIndex[4];
@@ -121,15 +126,46 @@ public class ManagePartyScreen implements Screen, Constants {
         registry = new List<>(skin);
         registry.setItems(recs);
 
-        this.buttonTable = new Table(skin);
-        this.buttonTable.defaults().pad(10);
+        Skin imgBtnSkin = new Skin(Gdx.files.classpath("assets/skin/imgBtn.json"));
 
-        apply = new TextButton("Apply to Slot", skin, "wood");
-        clear = new TextButton("Clear Slot", skin, "wood");
-        add = new TextButton("Add to Party", skin, "wood");
-        remove = new TextButton("Remove from Party", skin, "wood");
+        apply = new ImageButton(imgBtnSkin, "left");
+        clear = new ImageButton(imgBtnSkin, "clear");
+        add = new ImageButton(imgBtnSkin, "right");
+        remove = new ImageButton(imgBtnSkin, "left");
         cancel = new TextButton("Cancel", skin, "wood");
         save = new TextButton("Save", skin, "wood");
+        iconLeft = new ImageButton(imgBtnSkin, "sm-arr-left");
+        iconRight = new ImageButton(imgBtnSkin, "sm-arr-right");
+        partyIconLeft = new ImageButton(imgBtnSkin, "sm-arr-left");
+        partyIconRight = new ImageButton(imgBtnSkin, "sm-arr-right");
+        
+        apply.setX(348);
+        apply.setY(Exodus.SCREEN_HEIGHT - 150);
+
+        clear.setX(348);
+        clear.setY(Exodus.SCREEN_HEIGHT - 200);
+
+        add.setX(348);
+        add.setY(Exodus.SCREEN_HEIGHT - 450);
+
+        remove.setX(348);
+        remove.setY(Exodus.SCREEN_HEIGHT - 500);
+
+        save.setX(512);
+        save.setY(Exodus.SCREEN_HEIGHT - 42);
+
+        cancel.setX(712);
+        cancel.setY(Exodus.SCREEN_HEIGHT - 42);
+        
+        iconLeft.setX(750);
+        iconLeft.setY(Exodus.SCREEN_HEIGHT - 175);
+        iconRight.setX(825);
+        iconRight.setY(Exodus.SCREEN_HEIGHT - 175);
+        
+        partyIconLeft.setX(770);
+        partyIconLeft.setY(Exodus.SCREEN_HEIGHT - 684);
+        partyIconRight.setX(770+75);
+        partyIconRight.setY(Exodus.SCREEN_HEIGHT - 684);
 
         apply.addListener(new ChangeListener() {
             @Override
@@ -158,6 +194,9 @@ public class ManagePartyScreen implements Screen, Constants {
                 sel.health = 150;
                 sel.food = 150;
                 sel.gold = 150;
+                sel.portaitIndex = pidx;
+
+                Sounds.play(Sound.TRIGGER);
             }
         });
 
@@ -166,6 +205,7 @@ public class ManagePartyScreen implements Screen, Constants {
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
                 registry.getSelected().character = new CharacterRecord();
                 registry.getSelected().character.name = EMPTY;
+                Sounds.play(Sound.TRIGGER);
             }
         });
 
@@ -185,6 +225,7 @@ public class ManagePartyScreen implements Screen, Constants {
                     }
                 }
                 partyFormation.getSelected().character = rsel;
+                Sounds.play(Sound.TRIGGER);
             }
         });
 
@@ -217,6 +258,7 @@ public class ManagePartyScreen implements Screen, Constants {
                 } else {
                     partyFormation.getSelected().character = new CharacterRecord();
                     partyFormation.getSelected().character.name = EMPTY;
+                    Sounds.play(Sound.TRIGGER);
                 }
             }
         });
@@ -234,7 +276,6 @@ public class ManagePartyScreen implements Screen, Constants {
                         }
                         ri.character.write(dos);
                     }
-
                     saveGame.players[0] = partyFormation.getItems().get(0).character;
                     saveGame.players[1] = partyFormation.getItems().get(1).character;
                     saveGame.players[2] = partyFormation.getItems().get(2).character;
@@ -245,11 +286,9 @@ public class ManagePartyScreen implements Screen, Constants {
                         }
                     }
                     saveGame.write(PARTY_SAV_BASE_FILENAME);
-
                 } catch (Exception e) {
-
                 }
-
+                Sounds.play(Sound.TRIGGER);
                 mainGame.setScreen(returnScreen);
             }
         });
@@ -260,26 +299,56 @@ public class ManagePartyScreen implements Screen, Constants {
                 mainGame.setScreen(returnScreen);
             }
         });
-
-        buttonTable.add(apply).width(150);
-        buttonTable.add(clear).width(150);
-        buttonTable.add(add).width(150);
-        buttonTable.add(remove).width(150);
-        buttonTable.add(cancel).width(150);
-        buttonTable.add(save).width(150);
-
-        buttonTable.setX(Exodus.SCREEN_WIDTH / 2);
-        buttonTable.setY(Exodus.SCREEN_HEIGHT - 24);
+        
+        iconLeft.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeListener.ChangeEvent event, Actor actor) {
+                pidx--;
+                if (pidx < 0) {
+                    pidx = 0;
+                }
+            }
+        });
+        
+        iconRight.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeListener.ChangeEvent event, Actor actor) {
+                pidx++;
+                if (pidx > 13*16-3) {
+                    pidx = 13*16-3;
+                }
+            }
+        });
+        
+        partyIconLeft.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeListener.ChangeEvent event, Actor actor) {
+                partyFormation.getSelected().character.portaitIndex --;
+                if (partyFormation.getSelected().character.portaitIndex < 0) {
+                    partyFormation.getSelected().character.portaitIndex = 0;
+                }
+            }
+        });
+        
+        partyIconRight.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeListener.ChangeEvent event, Actor actor) {
+                partyFormation.getSelected().character.portaitIndex ++;
+                if (partyFormation.getSelected().character.portaitIndex > 13*16-3) {
+                    partyFormation.getSelected().character.portaitIndex = 13*16-3;
+                }
+            }
+        });
 
         ScrollPane sp1 = new ScrollPane(partyFormation, skin);
-        sp1.setX(304);
-        sp1.setY(320);
+        sp1.setX(496);
+        sp1.setY(264);
         sp1.setWidth(224);
         sp1.setHeight(96);
 
         ScrollPane sp2 = new ScrollPane(registry, skin);
-        sp2.setX(64);
-        sp2.setY(Exodus.SCREEN_HEIGHT - 512);
+        sp2.setX(80);
+        sp2.setY(Exodus.SCREEN_HEIGHT - 528);
         sp2.setWidth(160);
         sp2.setHeight(448);
 
@@ -298,7 +367,7 @@ public class ManagePartyScreen implements Screen, Constants {
         sexSelect.setItems(SexType.values());
         sexSelect.setSelected(SexType.MALE);
 
-        int x = 404;
+        int x = 604;
         nameField.setX(x);
         strEdit.setX(x);
         dexEdit.setX(x);
@@ -308,7 +377,7 @@ public class ManagePartyScreen implements Screen, Constants {
         raceSelect.setX(x);
         sexSelect.setX(x);
 
-        int y = Exodus.SCREEN_HEIGHT - 84;
+        int y = Exodus.SCREEN_HEIGHT - 112;
         nameField.setY(y);
         sexSelect.setY(y -= 28);
         raceSelect.setY(y -= 28);
@@ -332,7 +401,16 @@ public class ManagePartyScreen implements Screen, Constants {
         stage.addActor(raceSelect);
         stage.addActor(sexSelect);
 
-        stage.addActor(buttonTable);
+        stage.addActor(apply);
+        stage.addActor(remove);
+        stage.addActor(clear);
+        stage.addActor(save);
+        stage.addActor(cancel);
+        stage.addActor(add);
+        stage.addActor(iconLeft);
+        stage.addActor(iconRight);
+        stage.addActor(partyIconLeft);
+        stage.addActor(partyIconRight);
         stage.addActor(sp1);
         stage.addActor(sp2);
 
@@ -341,20 +419,27 @@ public class ManagePartyScreen implements Screen, Constants {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+
+        if (Exodus.playMusic) {
+            if (Exodus.music != null) {
+                Exodus.music.stop();
+            }
+            Sound snd = Sound.M2;
+            Exodus.music = Sounds.play(snd, Exodus.musicVolume);
+        }
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 0);
+        Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        CharacterRecord sel = this.registry.getSelected().character;
-
         batch.begin();
+        batch.draw(bkgnd2, 0, 0);
         batch.draw(bkgnd, 0, 0);
 
-        int viewY = Exodus.SCREEN_HEIGHT - 72;
-        int x = 304;
+        int viewY = Exodus.SCREEN_HEIGHT - 96;
+        int x = 504;
 
         font.draw(batch, "Name: ", x, viewY);
         font.draw(batch, "Sex: ", x, viewY -= 28);
@@ -381,9 +466,13 @@ public class ManagePartyScreen implements Screen, Constants {
         font.draw(batch, wi + "", x + 250, viewY -= 28);
 
         font.setColor(Color.WHITE);
+        
+        batch.draw(Exodus.faceTiles[pidx],x+260,Exodus.SCREEN_HEIGHT - 190);
 
-        viewY = Exodus.SCREEN_HEIGHT - 560;
-        x = 64;
+        CharacterRecord sel = this.registry.getSelected().character;
+
+        viewY = Exodus.SCREEN_HEIGHT - 590;
+        x = 90;
 
         font.draw(batch, "Name: " + sel.name, x, viewY);
         font.draw(batch, "Sex: " + sel.sex.toString(), x, viewY -= 18);
@@ -393,17 +482,53 @@ public class ManagePartyScreen implements Screen, Constants {
         font.draw(batch, "Weapon: " + sel.weapon.toString(), x, viewY -= 24);
         font.draw(batch, "Armour: " + sel.armor.toString(), x, viewY -= 18);
 
-        viewY = Exodus.SCREEN_HEIGHT - 560;
-        x = 64 + 200;
+        viewY = Exodus.SCREEN_HEIGHT - 590;
+        x = 90 + 135;
 
         font.draw(batch, "Strength: " + sel.str, x, viewY);
         font.draw(batch, "Dexterity: " + sel.dex, x, viewY -= 18);
         font.draw(batch, "Intelligence: " + sel.intell, x, viewY -= 18);
         font.draw(batch, "Wisdom: " + sel.wis, x, viewY -= 18);
-        font.draw(batch, "Hit Points: " + (sel.health & 0xff), x, viewY -= 24);
-        font.draw(batch, "Experience: " + (sel.exp & 0xff), x, viewY -= 18);
-        font.draw(batch, "Food: " + (sel.food & 0xff), x, viewY -= 18);
-        font.draw(batch, "Gold: " + (sel.gold & 0xff), x, viewY -= 18);
+        font.draw(batch, "Hit Points: " + sel.health, x, viewY -= 42);
+        font.draw(batch, "Experience: " + sel.exp, x, viewY -= 18);
+
+        viewY = Exodus.SCREEN_HEIGHT - 590;
+        x = 90 + 250;
+
+        font.draw(batch, "Food: " + sel.food, x, viewY);
+        font.draw(batch, "Gold: " + sel.gold, x, viewY -= 18);
+        
+        batch.draw(Exodus.faceTiles[sel.portaitIndex],x+30,Exodus.SCREEN_HEIGHT - 704);
+
+        sel = this.partyFormation.getSelected().character;
+
+        viewY = Exodus.SCREEN_HEIGHT - 590;
+        x = 504;
+
+        font.draw(batch, "Name: " + sel.name, x, viewY);
+        font.draw(batch, "Sex: " + sel.sex.toString(), x, viewY -= 18);
+        font.draw(batch, "Race: " + sel.race.toString(), x, viewY -= 18);
+        font.draw(batch, "Type: " + sel.profession.toString(), x, viewY -= 18);
+        font.draw(batch, "Status: " + sel.status.toString(), x, viewY -= 18);
+        font.draw(batch, "Weapon: " + sel.weapon.toString(), x, viewY -= 24);
+        font.draw(batch, "Armour: " + sel.armor.toString(), x, viewY -= 18);
+
+        viewY = Exodus.SCREEN_HEIGHT - 590;
+        x = 504 + 135;
+
+        font.draw(batch, "Strength: " + sel.str, x, viewY);
+        font.draw(batch, "Dexterity: " + sel.dex, x, viewY -= 18);
+        font.draw(batch, "Intelligence: " + sel.intell, x, viewY -= 18);
+        font.draw(batch, "Wisdom: " + sel.wis, x, viewY -= 18);
+        font.draw(batch, "Hit Points: " + sel.health, x, viewY -= 42);
+        font.draw(batch, "Experience: " + sel.exp, x, viewY -= 18);
+
+        viewY = Exodus.SCREEN_HEIGHT - 590;
+        x = 504 + 250;
+
+        font.draw(batch, "Food: " + sel.food, x, viewY);
+        font.draw(batch, "Gold: " + sel.gold, x, viewY -= 18);
+        batch.draw(Exodus.faceTiles[sel.portaitIndex],x+30,Exodus.SCREEN_HEIGHT - 704);
 
         batch.end();
 
