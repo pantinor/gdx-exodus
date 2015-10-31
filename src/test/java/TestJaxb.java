@@ -68,7 +68,7 @@ public class TestJaxb {
             sg.players[x] = avatar;
         }
 
-        sg.write(Constants.PARTY_SAV_BASE_FILENAME);
+        //sg.write(Constants.PARTY_SAV_BASE_FILENAME);
 
         //sg.write("test.sav");
     }

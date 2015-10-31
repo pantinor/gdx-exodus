@@ -23,9 +23,12 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.AnimatedTiledMapTile;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -39,7 +42,7 @@ import util.UltimaTiledMapLoader;
  *
  * @author Paul
  */
-public class StartScreen implements Screen, InputProcessor, Constants {
+public class StartScreen implements Screen, Constants {
 
     float time = 0;
     Batch batch;
@@ -52,6 +55,9 @@ public class StartScreen implements Screen, InputProcessor, Constants {
     BitmapFont font;
     IntroAnim animator = new IntroAnim();
     TiledMap splashMap;
+
+    TextButton manage;
+    TextButton journey;
 
     public StartScreen(Exodus main) {
         this.mainGame = main;
@@ -70,34 +76,66 @@ public class StartScreen implements Screen, InputProcessor, Constants {
 
         batch = new SpriteBatch();
 
+        manage = new TextButton("Manage Party", Exodus.skin, "wood");
+        manage.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeListener.ChangeEvent event, Actor actor) {
+                Sounds.play(Sound.TRIGGER);
+                mainGame.setScreen(new ManagePartyScreen(mainGame, StartScreen.this, Exodus.skin));
+            }
+        });
+        manage.setX(330);
+        manage.setY(Exodus.SCREEN_HEIGHT - 410);
+        manage.setWidth(150);
+        manage.setHeight(25);
+
+        journey = new TextButton("Journey Onward", Exodus.skin, "wood");
+        journey.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeListener.ChangeEvent event, Actor actor) {
+                Sounds.play(Sound.TRIGGER);
+                if (!Gdx.files.internal(PARTY_SAV_BASE_FILENAME).file().exists()) {
+                    //state = State.ASK_NAME;
+                } else {
+                    mainGame.setScreen(new GameScreen(mainGame));
+                    stage.clear();
+                }
+
+            }
+        });
+        journey.setX(530);
+        journey.setY(Exodus.SCREEN_HEIGHT - 410);
+        journey.setWidth(150);
+        journey.setHeight(25);
+
         stage = new Stage();
-        //stage.addActor(init);
-        //stage.addActor(journey);
+        stage.addActor(manage);
+        stage.addActor(journey);
 
         SequenceAction seq1 = Actions.action(SequenceAction.class);
         seq1.addAction(Actions.delay(.2f));
         seq1.addAction(Actions.run(animator));
         stage.addAction(Actions.forever(seq1));
 
-        Gdx.input.setInputProcessor(new InputMultiplexer(this, stage));
-
         Exodus.music = Sounds.play(Sound.SPLASH, Exodus.musicVolume);
     }
 
     @Override
     public void show() {
+        Gdx.input.setInputProcessor(stage);
+
+    }
+
+    @Override
+    public void hide() {
     }
 
     @Override
     public void render(float delta) {
         time += Gdx.graphics.getDeltaTime();
 
+        Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        float x = Exodus.SCREEN_WIDTH / 2 - 320;
-        float y = 100;
-        float width = 640;
-        float height = 50;
 
         camera.update();
 
@@ -106,10 +144,9 @@ public class StartScreen implements Screen, InputProcessor, Constants {
 
         batch.begin();
         batch.draw(title, 0, 0);
-        font.draw(batch, "From the detphs of hell...", 320, Exodus.SCREEN_HEIGHT - 364);
-        font.draw(batch, "...he comes for VENGEANCE!", 320, Exodus.SCREEN_HEIGHT - 396);
-        font.draw(batch, "LIBGDX Conversion by Paul Antinori", 300, 84);
-        font.draw(batch, "Copyright 1983 Lord British", 350, 48);
+        font.draw(batch, "From the depths of hell...he comes for VENGEANCE!", 200, Exodus.SCREEN_HEIGHT - 352);
+        font.draw(batch, "LIBGDX Conversion by Paul Antinori", 300, 64);
+        font.draw(batch, "Copyright 1983 Lord British", 350, 32);
         batch.end();
 
         stage.act();
@@ -131,51 +168,7 @@ public class StartScreen implements Screen, InputProcessor, Constants {
     }
 
     @Override
-    public void hide() {
-    }
-
-    @Override
     public void dispose() {
-    }
-
-    @Override
-    public boolean keyDown(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        return false;
     }
 
     private class IntroAnim implements Runnable {

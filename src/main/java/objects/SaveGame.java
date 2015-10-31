@@ -169,7 +169,7 @@ public class SaveGame implements Constants {
 
     public static class CharacterRecord {
 
-        public String name = "";
+        public String name = null;
 
         public int markKings;
         public int markSnake;
@@ -205,15 +205,19 @@ public class SaveGame implements Constants {
         public int[] qtyArmors = new int[ArmorType.values().length];
 
         public int write(LittleEndianDataOutputStream dos) throws Exception {
-
-            String paddedName = StringUtils.rightPad(name, 16);
-
-            byte[] nameArray = paddedName.getBytes();
-            for (int i = 0; i < 16; i++) {
-                if (nameArray[i] == 32) {
-                    nameArray[i] = 0;
+            if (name == null || name.length() < 1) {
+                for (int i = 0; i < 16; i++) {
+                    dos.writeByte(0);
                 }
-                dos.writeByte(nameArray[i]);
+            } else {
+                String paddedName = StringUtils.rightPad(name, 16);
+                byte[] nameArray = paddedName.getBytes();
+                for (int i = 0; i < 16; i++) {
+                    if (nameArray[i] == 32) {
+                        nameArray[i] = 0;
+                    }
+                    dos.writeByte(nameArray[i]);
+                }
             }
 
             dos.writeByte(markKings);
@@ -234,12 +238,12 @@ public class SaveGame implements Constants {
             dos.writeByte(race.ordinal());
             dos.writeByte(profession.ordinal());
             dos.writeByte(sex.ordinal());
-            dos.writeByte(mana);
-            dos.writeByte(health);
-            dos.writeByte(maxHealth);
-            dos.writeByte(exp);
-            dos.writeByte(food);
-            dos.writeByte(gold);
+            dos.writeShort(mana);
+            dos.writeShort(health);
+            dos.writeShort(maxHealth);
+            dos.writeShort(exp);
+            dos.writeShort(food);
+            dos.writeShort(gold);
             dos.writeByte(gems);
             dos.writeByte(keys);
             dos.writeByte(powder);
@@ -261,8 +265,8 @@ public class SaveGame implements Constants {
             }
 
             dos.writeByte(0);
-            dos.writeInt(0);
-            dos.writeInt(0);
+            dos.writeByte(0);
+            dos.writeByte(0);
             dos.writeInt(0);
 
             return 1;
@@ -301,10 +305,10 @@ public class SaveGame implements Constants {
             race = ClassType.get(dis.readByte());
             profession = Profession.get(dis.readByte());
             sex = SexType.get(dis.readByte());
-            mana = dis.readByte();
-            health = dis.readByte();
-            maxHealth = dis.readByte();
-            exp = dis.readByte();
+            mana = dis.readShort();
+            health = dis.readShort();
+            maxHealth = dis.readShort();
+            exp = dis.readShort();
             food = dis.readShort();
             gold = dis.readShort();
             gems = dis.readByte();
@@ -328,8 +332,8 @@ public class SaveGame implements Constants {
             }
 
             dis.readByte();
-            dis.readInt();
-            dis.readInt();
+            dis.readByte();
+            dis.readByte();
             dis.readInt();
 
             return 1;
