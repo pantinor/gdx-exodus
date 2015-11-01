@@ -73,8 +73,7 @@ public class ManagePartyScreen implements Screen, Constants {
         this.batch = new SpriteBatch();
         this.returnScreen = rs;
 
-        font = Exodus.font;//new BitmapFont(Gdx.files.classpath("assets/fonts/BellMT_16.fnt"));
-        font.setColor(Color.WHITE);
+        font = Exodus.font;
 
         bkgnd = new Texture(Gdx.files.classpath("assets/graphics/roster.png"));
         bkgnd2 = new Texture(Gdx.files.classpath("assets/graphics/manage.png"));

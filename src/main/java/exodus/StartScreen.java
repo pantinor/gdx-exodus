@@ -33,8 +33,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import static exodus.Constants.PARTY_SAV_BASE_FILENAME;
 import java.io.IOException;
 import java.io.InputStream;
+import objects.SaveGame;
 import objects.Tile;
 import org.apache.commons.io.IOUtils;
 import util.UltimaTiledMapLoader;
@@ -55,10 +57,11 @@ public class StartScreen implements Screen, Constants {
     Texture title;
     IntroAnim animator = new IntroAnim();
     TiledMap splashMap;
-
+    
+    TextButton manual;
     TextButton manage;
     TextButton journey;
-    
+
     BitmapFont ultimaFont;
     BitmapFont exodusFont;
 
@@ -66,13 +69,13 @@ public class StartScreen implements Screen, Constants {
         this.mainGame = main;
 
         title = new Texture(Gdx.files.classpath("assets/graphics/splash.png"));
-        
+
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.classpath("assets/fonts/ultima.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
         parameter.size = 96;
         ultimaFont = generator.generateFont(parameter);
-        
+
         exodusFont = new BitmapFont(Gdx.files.classpath("assets/fonts/exodus.fnt"));
 
         UltimaTiledMapLoader loader = new UltimaTiledMapLoader(Maps.SOSARIA, Exodus.standardAtlas, 19, 6, tilePixelWidth, tilePixelHeight);
@@ -83,6 +86,19 @@ public class StartScreen implements Screen, Constants {
         viewPort = new ScreenViewport(camera);
 
         batch = new SpriteBatch();
+        
+        manual = new TextButton("Book", Exodus.skin, "wood");
+        manual.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeListener.ChangeEvent event, Actor actor) {
+                Sounds.play(Sound.TRIGGER);
+                mainGame.setScreen(new BookScreen(mainGame, StartScreen.this, Exodus.skin));
+            }
+        });
+        manual.setX(220);
+        manual.setY(Exodus.SCREEN_HEIGHT - 410);
+        manual.setWidth(150);
+        manual.setHeight(25);
 
         manage = new TextButton("Manage Party", Exodus.skin, "wood");
         manage.addListener(new ChangeListener() {
@@ -92,7 +108,7 @@ public class StartScreen implements Screen, Constants {
                 mainGame.setScreen(new ManagePartyScreen(mainGame, StartScreen.this, Exodus.skin));
             }
         });
-        manage.setX(330);
+        manage.setX(410);
         manage.setY(Exodus.SCREEN_HEIGHT - 410);
         manage.setWidth(150);
         manage.setHeight(25);
@@ -103,20 +119,31 @@ public class StartScreen implements Screen, Constants {
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
                 Sounds.play(Sound.TRIGGER);
                 if (!Gdx.files.internal(PARTY_SAV_BASE_FILENAME).file().exists()) {
-                    //state = State.ASK_NAME;
+                    mainGame.setScreen(new ManagePartyScreen(mainGame, StartScreen.this, Exodus.skin));
                 } else {
-                    mainGame.setScreen(new GameScreen(mainGame));
-                    stage.clear();
+                    SaveGame saveGame = new SaveGame();
+                    try {
+                        saveGame.read(PARTY_SAV_BASE_FILENAME);
+                    } catch (Exception e) {
+                    }
+                    SaveGame.CharacterRecord r = saveGame.players[0];
+                    if (r == null || r.name.length() < 1) {
+                        mainGame.setScreen(new ManagePartyScreen(mainGame, StartScreen.this, Exodus.skin));
+                    } else {
+                        mainGame.setScreen(new GameScreen(mainGame));
+                        stage.clear();
+                    }
                 }
 
             }
         });
-        journey.setX(530);
+        journey.setX(600);
         journey.setY(Exodus.SCREEN_HEIGHT - 410);
         journey.setWidth(150);
         journey.setHeight(25);
 
         stage = new Stage();
+        stage.addActor(manual);
         stage.addActor(manage);
         stage.addActor(journey);
 

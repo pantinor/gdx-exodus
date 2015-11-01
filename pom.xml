@@ -86,18 +86,7 @@
             <version>6.8.7</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.8.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.junrar</groupId>
-            <artifactId>junrar</artifactId>
-            <version>0.7</version>
-            <scope>test</scope>
-        </dependency>
+
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -121,7 +110,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>ultima.Ultima4</mainClass>
+                            <mainClass>exodus.Exodus</mainClass>
                         </manifest>
 
                     </archive>
@@ -140,7 +129,7 @@
 
                     <archive>
                         <manifest>
-                            <mainClass>ultima.Ultima4</mainClass>
+                            <mainClass>exodus.Exodus</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
