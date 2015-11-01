@@ -4,34 +4,26 @@ import java.util.List;
 
 //import objects.Party;
 //import objects.Party.PartyMember;
-
 import org.apache.commons.collections.iterators.ReverseListIterator;
 
 import exodus.Constants.StatusType;
-import exodus.Constants.TransportContext;
 import exodus.Exodus;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.utils.Align;
 import exodus.Party;
 import exodus.Party.PartyMember;
+import objects.SaveGame.CharacterRecord;
 
 public class LogDisplay {
 
     final List<String> logs = new FixedSizeArrayList<>(20);
-    final BitmapFont font;
 
     static final int LOG_AREA_WIDTH = 256;
-    static final int LOG_AREA_TOP = 384;
-
-    static final int LOG_X = 736;
-    
-    public LogDisplay(BitmapFont font) {
-        this.font = font;
-    }
+    static final int LOG_AREA_TOP = 396;
+    static final int LOG_X = 740;
 
     public void append(String s) {
         synchronized (logs) {
@@ -65,44 +57,49 @@ public class LogDisplay {
 
     public void render(Batch batch, Party party) {
 
-        float y = Exodus.SCREEN_HEIGHT - 48;
+        float y = Exodus.SCREEN_HEIGHT - 32 - 75;
         for (int i = 0; i < party.getMembers().size(); i++) {
             PartyMember pm = party.getMember(i);
 
-            String s = (i + 1) + " - " + pm.getPlayer().name;
-            String d = pm.getPlayer().health + "" + pm.getPlayer().status.getId();
-
-            font.setColor(i == party.getActivePlayer() ? new Color(.35f, .93f, 0.91f, 1) : Color.WHITE);
+            Exodus.smallFont.setColor(Color.WHITE);
             if (pm.getPlayer().status == StatusType.POISONED) {
-                font.setColor(Color.GREEN);
+                Exodus.smallFont.setColor(Color.GREEN);
             }
             if (pm.getPlayer().status == StatusType.COLD) {
-                font.setColor(Color.CYAN);
+                Exodus.smallFont.setColor(Color.CYAN);
             }
             if (pm.getPlayer().status == StatusType.DEAD) {
-                font.setColor(Color.GRAY);
+                Exodus.smallFont.setColor(Color.DARK_GRAY);
             }
+            
+            batch.draw(Exodus.faceTiles[pm.getPlayer().portaitIndex], LOG_X + 3, y + 5);
+            
+            CharacterRecord r = pm.getPlayer();
 
-            font.draw(batch, s, LOG_X + 8, y);
-            font.draw(batch, d, LOG_X + 8 + 110, y);
-
-            y = y - 24;
+            String d = r.name.toUpperCase() + "  " + r.sex.toString() + " " + r.race.toString() + " " + r.profession.toString();
+            Exodus.smallFont.draw(batch, d, LOG_X + 64, y + 65);
+            d = "HEALTH: " + pm.getPlayer().health + " " + pm.getPlayer().status.getId() + "  LEVEL: " + pm.getPlayer().getLevel() + "  EXP: " + pm.getPlayer().exp;
+            Exodus.smallFont.draw(batch, d, LOG_X + 64, y + 45);
+            d = "GOLD: " + pm.getPlayer().gold + " FOOD: " + pm.getPlayer().food;
+            Exodus.smallFont.draw(batch, d, LOG_X + 64, y + 25);
+            
+            y -= 77;
 
         }
 
-        font.setColor(Color.WHITE);
-        y = 32;
+        Exodus.smallFont.setColor(Color.WHITE);
+        y = 44;
 
         synchronized (logs) {
             ReverseListIterator iter = new ReverseListIterator(logs);
             while (iter.hasNext()) {
                 String next = (String) iter.next();
-                GlyphLayout layout = new GlyphLayout(font, next, Color.WHITE, LOG_AREA_WIDTH - 8, Align.left, true);
+                GlyphLayout layout = new GlyphLayout(Exodus.font, next, Color.WHITE, LOG_AREA_WIDTH - 8, Align.left, true);
                 y += layout.height + 10;
                 if (y > LOG_AREA_TOP) {
                     break;
                 }
-                font.draw(batch, layout, LOG_X + 8, y);
+                Exodus.font.draw(batch, layout, LOG_X + 8, y);
             }
         }
     }

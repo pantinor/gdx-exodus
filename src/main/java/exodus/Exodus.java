@@ -48,9 +48,11 @@ public class Exodus extends Game {
 
     public static LogDisplay hud;
     public static Texture backGround;
+    
     public static BitmapFont font;
     public static BitmapFont smallFont;
-
+    public static BitmapFont largeFont;
+    
     public static StartScreen startScreen;
     public static Skin skin;
 
@@ -91,17 +93,17 @@ public class Exodus extends Game {
     @Override
     public void create() {
 
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.classpath("assets/fonts/lindberg.ttf"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.classpath("assets/fonts/gnuolane.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
-        parameter.size = 16;
+        parameter.size = 18;
         font = generator.generateFont(parameter);
 
-        parameter.size = 10;
+        parameter.size = 16;
         smallFont = generator.generateFont(parameter);
 
         parameter.size = 24;
-        BitmapFont fontLarger = generator.generateFont(parameter);
+        largeFont = generator.generateFont(parameter);
 
         generator.dispose();
 
@@ -109,7 +111,7 @@ public class Exodus extends Game {
         skin.remove("default-font", BitmapFont.class);
         skin.add("default-font", font, BitmapFont.class);
         skin.add("journal", font, BitmapFont.class);
-        skin.add("death-screen", fontLarger, BitmapFont.class);
+        skin.add("death-screen", largeFont, BitmapFont.class);
 
         Label.LabelStyle ls = skin.get("default", Label.LabelStyle.class);
         ls.font = font;
@@ -127,7 +129,7 @@ public class Exodus extends Game {
         TextField.TextFieldStyle tfs = skin.get("default", TextField.TextFieldStyle.class);
         tfs.font = font;
 
-        hud = new LogDisplay(font);
+        hud = new LogDisplay();
 
         try {
 

@@ -781,19 +781,19 @@ public interface Constants {
 
     public enum StatusType {
 
-        GOOD('G'),
-        POISONED('P'),
-        COLD('C'),
-        ASH('A'),
-        DEAD('D');
+        GOOD("G"),
+        POISONED("P"),
+        COLD("C"),
+        ASH("A"),
+        DEAD("D");
         
-        private char id;
+        private String id;
 
-        private StatusType(char id) {
-            id = id;
+        private StatusType(String id) {
+            this.id = id;
         }
 
-        public char getId() {
+        public String getId() {
             return id;
         }
 

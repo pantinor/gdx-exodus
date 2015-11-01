@@ -280,11 +280,15 @@ public class ManagePartyScreen implements Screen, Constants {
                     saveGame.players[1] = partyFormation.getItems().get(1).character;
                     saveGame.players[2] = partyFormation.getItems().get(2).character;
                     saveGame.players[3] = partyFormation.getItems().get(3).character;
+                    int numberInParty = 0;
                     for (CharacterRecord r : saveGame.players) {
                         if (r.name.equals(EMPTY)) {
                             r.name = null;
+                        } else {
+                            numberInParty ++;
                         }
                     }
+                    saveGame.numberInParty = numberInParty;
                     saveGame.write(PARTY_SAV_BASE_FILENAME);
                 } catch (Exception e) {
                 }
@@ -348,9 +352,9 @@ public class ManagePartyScreen implements Screen, Constants {
 
         ScrollPane sp2 = new ScrollPane(registry, skin);
         sp2.setX(80);
-        sp2.setY(Exodus.SCREEN_HEIGHT - 528);
+        sp2.setY(Exodus.SCREEN_HEIGHT - 528 - 16);
         sp2.setWidth(160);
-        sp2.setHeight(448);
+        sp2.setHeight(464);
 
         nameField = new TextField("", skin);
         strEdit = new Slider(5, 25, 1, false, skin);

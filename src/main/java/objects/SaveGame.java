@@ -162,6 +162,11 @@ public class SaveGame implements Constants {
         } catch (Exception e) {
 
         }
+        
+        if (partyX == 0 && partyY == 0) {
+            partyX = 47;
+            partyY = 20;
+        }
 
         dis.close();
 

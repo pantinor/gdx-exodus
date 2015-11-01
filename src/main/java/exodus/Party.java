@@ -27,8 +27,12 @@ public class Party extends Observable implements Constants {
     public Party(SaveGame sg) {
         this.saveGame = sg;
 
-        for (int i = 0; i < saveGame.numberInParty; i++) {
-            members.add(new PartyMember(this, saveGame.players[i]));
+        for (CharacterRecord r : saveGame.players) {
+            if (r.name == null || r.name.length() < 1) {
+                //none
+            } else {
+                members.add(new PartyMember(this, r));
+            }
         }
 
     }
@@ -68,14 +72,9 @@ public class Party extends Observable implements Constants {
     }
 
     /**
-     * 0x10-ship facing west 
-     * 0x11-ship facing north 
-     * 0x12-ship facing east
-     * 0x13-ship facing south 
-     * 0x14-horse facing west 
-     * 0x15-horse facing east
-     * 0x18-balloon 
-     * 0x1f-on foot
+     * 0x10-ship facing west 0x11-ship facing north 0x12-ship facing east
+     * 0x13-ship facing south 0x14-horse facing west 0x15-horse facing east
+     * 0x18-balloon 0x1f-on foot
      *
      * @param transport
      */
@@ -310,7 +309,7 @@ public class Party extends Observable implements Constants {
             }
         }
     }
-    
+
     public void applyEffect(PartyMember pm, TileEffect effect) throws PartyDeathException {
         switch (effect) {
             case NONE:
@@ -502,7 +501,7 @@ public class Party extends Observable implements Constants {
             if (i >= 16) {
                 return false;
             }
-            
+
             //check if they are going bare hands
             if (i == 0) {
                 //take off the old and put it in inventory
@@ -528,7 +527,7 @@ public class Party extends Observable implements Constants {
 //            if (!wt.getWeapon().canUse(player.klass)) {
 //                return false;
 //            }
-                        
+
             //take off the old and put it in inventory
             if (player.weapon.ordinal() != 0) {
                 player.qtyWeapons[player.weapon.ordinal()]++;
@@ -540,11 +539,11 @@ public class Party extends Observable implements Constants {
         }
 
         public boolean wearArmor(int i) {
-            
+
             if (i >= 8) {
                 return false;
             }
-            
+
             //check if they are going naked
             if (i == 0) {
                 //take off the old and put it in inventory
@@ -554,23 +553,23 @@ public class Party extends Observable implements Constants {
                 player.armor = ArmorType.NONE;
                 return true;
             }
-            
+
             //check if they are already wearing it
             if (player.armor.ordinal() == i) {
                 return true;
             }
-            
+
             //check if it is in the inventory
             if (player.qtyArmors[i] <= 0) {
                 return false;
             }
-            
+
             //check if they can wear it
             ArmorType at = ArmorType.get(i);
 //            if (!at.getArmor().canUse(player.profession)) {
 //                return false;
 //            }
-            
+
             //take off the old and put it in inventory
             if (player.armor.ordinal() != 0) {
                 player.qtyArmors[player.armor.ordinal()]++;
@@ -580,7 +579,6 @@ public class Party extends Observable implements Constants {
             player.qtyArmors[i]--;
             return true;
         }
-
 
         public boolean applyDamage(int damage, boolean combatRelatedDamage) throws PartyDeathException {
             int newHp = player.health;
@@ -627,7 +625,6 @@ public class Party extends Observable implements Constants {
         return false;
     }
 
-
     public void endTurn(MapType mapType) throws PartyDeathException {
 
         saveGame.moves++;
@@ -653,7 +650,7 @@ public class Party extends Observable implements Constants {
             if (!member.isDisabled() && member.player.mana < member.player.getMaxMana()) {
                 member.player.mana++;
             }
-            
+
             if (member.player.food == 0) {
                 member.applyDamage(1, false);
                 setChanged();
@@ -667,7 +664,6 @@ public class Party extends Observable implements Constants {
 //                saveGame.shiphull = 50;
 //            }
 //        }
-        
     }
 
     public Context getContext() {
