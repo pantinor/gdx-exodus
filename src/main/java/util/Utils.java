@@ -5,8 +5,17 @@
  */
 package util;
 
+import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -23,6 +32,7 @@ import exodus.Sounds;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import javax.xml.bind.JAXBContext;
@@ -30,7 +40,10 @@ import javax.xml.bind.Unmarshaller;
 import objects.BaseMap;
 import objects.Creature;
 import objects.Drawable;
+import objects.Moongate;
 import objects.Person;
+import objects.PersonRole;
+import objects.Portal;
 import objects.ProjectileActor;
 import objects.Tile;
 import objects.TileSet;
@@ -124,74 +137,81 @@ public class Utils implements Constants {
             return;
         }
 
-        InputStream is = ClassLoader.class.getResourceAsStream("/assets/data/" + fname);
-        byte[] bytes = IOUtils.toByteArray(is);
+        if (fname.endsWith("tmx")) {
+            setTilesFromTMX(map, Maps.get(map.getId()), fname, ts);
+        } else {
 
-        Tile[] tiles = new Tile[map.getWidth() * map.getHeight()];
+            InputStream is = ClassLoader.class.getResourceAsStream("/assets/data/" + fname);
+            byte[] bytes = IOUtils.toByteArray(is);
 
-        if (map.getType() == MapType.world || map.getType() == MapType.city) {
+            Tile[] tiles = new Tile[map.getWidth() * map.getHeight()];
 
-            int pos = 0;
-            for (int y = 0; y < map.getHeight(); y++) {
-                for (int x = 0; x < map.getWidth(); x++) {
-                    int index = (bytes[pos] & 0xff) / 4;
-                    pos++;
-                    Tile tile = ts.getTileByIndex(index);
-                    if (tile == null) {
-                        System.out.println("Tile index cannot be found: " + index + " using index 37 for black space.");
-                        tile = ts.getTileByIndex(37);
+            if (map.getType() == MapType.world || map.getType() == MapType.city) {
+
+                int pos = 0;
+                for (int y = 0; y < map.getHeight(); y++) {
+                    for (int x = 0; x < map.getWidth(); x++) {
+                        int index = (bytes[pos] & 0xff) / 4;
+                        pos++;
+                        Tile tile = ts.getTileByIndex(index);
+                        if (tile == null) {
+                            System.out.println("Tile index cannot be found: " + index + " using index 37 for black space.");
+                            tile = ts.getTileByIndex(37);
+                        }
+
+                        tiles[x + y * map.getWidth()] = tile;
                     }
+                }
 
-                    tiles[x + y * map.getWidth()] = tile;
+                //doors
+                for (int y = 0; y < map.getHeight(); y++) {
+                    for (int x = 0; x < map.getWidth(); x++) {
+                        Tile tile = tiles[x + y * map.getWidth()];
+                        Tile left = x > 0 ? tiles[(x - 1) + y * map.getWidth()] : null;
+                        Tile right = x < map.getWidth() - 1 ? tiles[(x + 1) + y * map.getWidth()] : null;
+                        if (tile.getIndex() == 46 && (left != null && left.getRule() != TileRule.signs) && (right != null && right.getRule() != TileRule.signs)) {
+                            tiles[x + y * map.getWidth()] = ts.getTileByName("locked_door");
+                        }
+                    }
+                }
+
+                //ambrosia doors
+                if (map.getId() == Maps.AMBROSIA.getId()) {
+                    tiles[34 + 5 * map.getWidth()] = ts.getTileByName("locked_door");
+                    tiles[35 + 5 * map.getWidth()] = ts.getTileByName("locked_door");
+                    tiles[36 + 5 * map.getWidth()] = ts.getTileByName("locked_door");
+                }
+
+                if (map.getType() == MapType.city) {
+                    setPeople(map, tiles, bytes, ts);
+                }
+
+                if (map.getType() == MapType.world) {
+                    //set a moongate tile to grass here
+                    tiles[15 + 29 * map.getWidth()] = ts.getTileByIndex(1);
+                }
+
+            } else if (map.getType() == MapType.combat) {
+
+                int pos = 0;
+                for (int y = 0; y < map.getHeight(); y++) {
+                    for (int x = 0; x < map.getWidth(); x++) {
+                        int index = (bytes[pos] & 0xff) / 4;
+                        pos++;
+                        Tile tile = ts.getTileByIndex(index);
+                        if (tile == null) {
+                            System.out.println("Tile index cannot be found: " + index + " using index 37 for black space.");
+                            tile = ts.getTileByIndex(37);
+                        }
+                        tiles[x + y * map.getWidth()] = tile;
+                    }
                 }
             }
 
-            //doors
-            for (int y = 0; y < map.getHeight(); y++) {
-                for (int x = 0; x < map.getWidth(); x++) {
-                    Tile tile = tiles[x + y * map.getWidth()];
-                    Tile left = x > 0 ? tiles[(x - 1) + y * map.getWidth()] : null;
-                    Tile right = x < map.getWidth() - 1 ? tiles[(x + 1) + y * map.getWidth()] : null;
-                    if (tile.getIndex() == 46 && (left != null && left.getRule() != TileRule.signs) && (right != null && right.getRule() != TileRule.signs)) {
-                        tiles[x + y * map.getWidth()] = ts.getTileByName("locked_door");
-                    }
-                }
-            }
+            map.setTiles(tiles);
 
-            //ambrosia doors
-            if (map.getId() == Maps.AMBROSIA.getId()) {
-                tiles[34 + 5 * map.getWidth()] = ts.getTileByName("locked_door");
-                tiles[35 + 5 * map.getWidth()] = ts.getTileByName("locked_door");
-                tiles[36 + 5 * map.getWidth()] = ts.getTileByName("locked_door");
-            }
-
-            if (map.getType() == MapType.city) {
-                setPeople(map, tiles, bytes, ts);
-            }
-
-            if (map.getType() == MapType.world) {
-                //set a moongate tile to grass here
-                tiles[15 + 29 * map.getWidth()] = ts.getTileByIndex(1);
-            }
-
-        } else if (map.getType() == MapType.combat) {
-
-            int pos = 0x40;
-            for (int y = 0; y < map.getHeight(); y++) {
-                for (int x = 0; x < map.getWidth(); x++) {
-                    int index = bytes[pos] & 0xff;
-                    pos++;
-                    Tile tile = ts.getTileByIndex(index);
-                    if (tile == null) {
-                        System.out.println("Tile index cannot be found: " + index + " using index 37 for black space.");
-                        tile = ts.getTileByIndex(37);
-                    }
-                    tiles[x + y * map.getWidth()] = tile;
-                }
-            }
         }
 
-        map.setTiles(tiles);
     }
 
     public static void setPeople(BaseMap map, Tile[] tiles, byte[] bytes, TileSet ts) {
@@ -296,6 +316,85 @@ public class Utils implements Constants {
         }
 
         map.setPeople(people);
+    }
+
+    public static void setTilesFromTMX(BaseMap map, Maps id, String tmxFile, TileSet ts) {
+        
+        Tile[] tiles = new Tile[map.getWidth() * map.getHeight()];
+
+        FileHandleResolver resolver = new Constants.ClasspathResolver();
+        TmxMapLoader loader = new TmxMapLoader(resolver);
+        TiledMap tm = loader.load("assets/tmx/" + tmxFile);
+
+        TiledMapTileLayer ml = (TiledMapTileLayer) tm.getLayers().get(map.getId() + "-map");
+        if (ml != null) {
+            FileHandle f = resolver.resolve("assets/graphics/latest-atlas.txt");
+            TextureAtlas.TextureAtlasData atlas = new TextureAtlas.TextureAtlasData(f, f.parent(), false);
+            int png_grid_width = 24;
+            Tile[] mapTileIds = new Tile[png_grid_width * Constants.tilePixelWidth + 1];
+            for (TextureAtlas.TextureAtlasData.Region r : atlas.getRegions()) {
+                int x = r.left / r.width;
+                int y = r.top / r.height;
+                int i = x + (y * png_grid_width) + 1;
+                mapTileIds[i] = ts.getTileByName(r.name);
+                if (mapTileIds[i] == null) {
+                    //System.out.printf("no tile found: %s %d\n",r.name,i);
+                }
+            }
+
+            for (int y = 0; y < map.getHeight(); y++) {
+                for (int x = 0; x < map.getWidth(); x++) {
+                    StaticTiledMapTile tr = (StaticTiledMapTile) ml.getCell(x, map.getWidth() - 1 - y).getTile();
+                    Tile tile = mapTileIds[tr.getId()];
+                    if (tile == null) {
+                        //System.out.printf("no tile found: %d  %d %d\n",x,y,tr.getId());
+                    }
+                    tiles[x + (y * map.getWidth())] = tile;
+                }
+            }
+        }
+        
+        map.setTiles(tiles);
+
+        
+        MapLayer objectsLayer = tm.getLayers().get("portals");
+        if (objectsLayer != null) {
+            Iterator<MapObject> iter = objectsLayer.getObjects().iterator();
+            while (iter.hasNext()) {
+                MapObject obj = iter.next();
+                Portal p = map.getPortal(Maps.valueOf(obj.getName()).getId());
+                Iterator<String> keys = obj.getProperties().getKeys();
+                while (keys.hasNext()) {
+                    String key = keys.next();
+                    String value = obj.getProperties().get(key).toString();
+                    if (key.equals("x")) {
+                        p.setX(new Integer(value));
+                    } else if (key.equals("y")) {
+                        p.setY(new Integer(value));
+                    }
+                }
+            }
+        }
+        
+        objectsLayer = tm.getLayers().get("moongates");
+        if (objectsLayer != null) {
+            Iterator<MapObject> iter = objectsLayer.getObjects().iterator();
+            while (iter.hasNext()) {
+                MapObject obj = iter.next();
+                Moongate m = map.getMoongate(obj.getName());
+                Iterator<String> keys = obj.getProperties().getKeys();
+                while (keys.hasNext()) {
+                    String key = keys.next();
+                    String value = obj.getProperties().get(key).toString();
+                    if (key.equals("x")) {
+                        m.setX(new Integer(value));
+                    } else if (key.equals("y")) {
+                        m.setY(new Integer(value));
+                    }
+                }
+            }
+        }
+
     }
 
     public static Direction getPath(MapBorderBehavior borderbehavior, int width, int height, int toX, int toY, int validMovesMask, boolean towards, int fromX, int fromY) {

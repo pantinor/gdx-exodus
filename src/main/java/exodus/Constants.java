@@ -1,5 +1,9 @@
 package exodus;
 
+import com.badlogic.gdx.Files;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.files.FileHandle;
 import objects.Armor;
 import objects.BaseMap;
 import objects.Creature;
@@ -8,8 +12,6 @@ import objects.Weapon;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -47,8 +49,30 @@ public interface Constants {
         FIRE(17, "Dungeon of Fire"),
         DOOM(18, "Dungeon of Doom"),
         SNAKE(19, "Dungeon of the Snake"),
-        TIME(20, "Dungeon of Time");
-        
+        TIME(20, "Dungeon of Time"),
+        BRICK_CON(33, ""),
+        BRIDGE_CON(34, ""),
+        BRUSH_CON(35, ""),
+        CAMP_CON(36, ""),
+        DNG0_CON(37, ""),
+        DNG1_CON(38, ""),
+        DNG2_CON(39, ""),
+        DNG3_CON(40, ""),
+        DNG4_CON(41, ""),
+        DNG5_CON(42, ""),
+        DNG6_CON(43, ""),
+        DUNGEON_CON(44, ""),
+        FOREST_CON(45, ""),
+        GRASS_CON(46, ""),
+        HILL_CON(47, ""),
+        INN_CON(48, ""),
+        MARSH_CON(49, ""),
+        SHIPSEA_CON(50, ""),
+        SHIPSHIP_CON(51, ""),
+        SHIPSHOR_CON(52, ""),
+        SHORE_CON(53, ""),
+        SHORSHIP_CON(54, "");
+
         private int id;
         private String label;
         private BaseMap baseMap;
@@ -463,70 +487,70 @@ public interface Constants {
 
     public enum DungeonTile {
 
-        NOTHING(0x00, "Nothing", "brick_floor", true),
-        FLOOR(0x00, "Floor", "brick_floor", true),
-        WATER(0x00, "Water", "water", true),
-        CEILING(0x00, "Ceiling", "none", false),
-        LADDER_UP(0x10, "Ladder Up", "up_ladder", true, null),
-        LADDER_DOWN(0x20, "Ladder Down", "down_ladder", true, null),
-        LADDER_UP_DOWN(0x30, "Ladder Up & Down", "down_ladder", true, null),
-        CEILING_HOLE(0x50, "Ceiling Hole", "solid", false),
-        FLOOR_HOLE(0x60, "Floor Hole", "solid", false),
-        ORB(0x70, "Magic Orb", "magic_flash", true),
-        LIGHT(0, "Light", "miss_flash", true),
-        MOONGATE(0, "Moongate", "moongate", true),
-        ALTAR(0, "Altar", "altar", true),
-        CHEST(0x40, "Treasure Chest", "chest", true),
-        FIRE(0x40, "Fireplace", "campfire", true),
-        WIND_TRAP(0x80, "Winds/Darknes Trap", "hit_flash", true),
-        ROCK_TRAP(0x81, "Falling Rock Trap", "hit_flash", true),
-        PIT_TRAP(0x8E, "Pit Trap", "hit_flash", true),
-        FOUNTAIN_PLAIN(0x90, "Plain Fountain", "Z", true),
-        FOUNTAIN_HEAL(0x91, "Healing Fountain", "H", true),
-        FOUNTAIN_ACID(0x92, "Acid Fountain", "A", true),
-        FOUNTAIN_CURE(0x93, "Cure Fountain", "C", true),
-        FOUNTAIN_POISON(0x94, "Poison Fountain", "P", true),
-        FIELD_POISON(0xA0, "Poison Field", "poison_field", false),
-        FIELD_ENERGY(0xA1, "Energy Field", "energy_field", false),
-        FIELD_FIRE(0xA2, "Fire Field", "fire_field", false),
-        FIELD_SLEEP(0xA3, "Sleep Field", "sleep_field", false),
-        DOOR(0xC0, "Door", "door", true, null),
-        LOCKED_DOOR(0, "Locked Door", "locked_door", false, null),
-        SECRET_DOOR(0xE0, "Secret Door", "secret_door", false, null),
-        ROOM_1(0xD0, "Dungeon Room 1", "spacer_square", true),
-        ROOM_2(0xD1, "Dungeon Room 2", "spacer_square", true),
-        ROOM_3(0xD2, "Dungeon Room 3", "spacer_square", true),
-        ROOM_4(0xD3, "Dungeon Room 4", "spacer_square", true),
-        ROOM_5(0xD4, "Dungeon Room 5", "spacer_square", true),
-        ROOM_6(0xD5, "Dungeon Room 6", "spacer_square", true),
-        ROOM_7(0xD6, "Dungeon Room 7", "spacer_square", true),
-        ROOM_8(0xD7, "Dungeon Room 8", "spacer_square", true),
-        ROOM_9(0xD8, "Dungeon Room 9", "spacer_square", true),
-        ROOM_10(0xD9, "Dungeon Room 10", "spacer_square", true),
-        ROOM_11(0xDA, "Dungeon Room 11", "spacer_square", true),
-        ROOM_12(0xDB, "Dungeon Room 12", "spacer_square", true),
-        ROOM_13(0xDC, "Dungeon Room 13", "spacer_square", true),
-        ROOM_14(0xDD, "Dungeon Room 14", "spacer_square", true),
-        ROOM_15(0xDE, "Dungeon Room 15", "spacer_square", true),
-        ROOM_16(0xDF, "Dungeon Room 16", "spacer_square", true),
-        COLUMN(0, "Column", "column", false),
-        ROCKS(0, "Rocks", "rocks", false),
-        WALL(0xF0, "Wall ", "brick_wall", false);
+        NOTHING((byte) 0x00, "Nothing", "brick_floor", true),
+        FLOOR((byte) 0x00, "Floor", "brick_floor", true),
+        WATER((byte) 0x00, "Water", "water", true),
+        CEILING((byte) 0x00, "Ceiling", "none", false),
+        LADDER_UP((byte) 0x10, "Ladder Up", "up_ladder", true, null),
+        LADDER_DOWN((byte) 0x20, "Ladder Down", "down_ladder", true, null),
+        LADDER_UP_DOWN((byte) 0x30, "Ladder Up & Down", "down_ladder", true, null),
+        CEILING_HOLE((byte) 0x00, "Ceiling Hole", "solid", false),
+        FLOOR_HOLE((byte) 0x00, "Floor Hole", "solid", false),
+        ORB((byte) 0x00, "Magic Orb", "magic_flash", true),
+        LIGHT((byte) 0, "Light", "miss_flash", true),
+        MOONGATE((byte) 0, "Moongate", "moongate", true),
+        ALTAR((byte) 0, "Altar", "altar", true),
+        CHEST((byte) 0x40, "Treasure Chest", "chest", true),
+        MARK((byte) 0x05, "Mark", "whirlpool", true),
+        WIND_TRAP((byte) 0x03, "Winds/Darknes Trap", "hit_flash", true),
+        GREMLINS((byte) 0x06, "Gremlins", "jester", true),
+        PIT_TRAP((byte) 0x04, "Pit Trap", "hit_flash", true),
+        FOUNTAIN_PLAIN((byte) 0x00, "Plain Fountain", "Z", true),
+        FOUNTAIN_HEAL((byte) 0x02, "Healing Fountain", "H", true),
+        FOUNTAIN_ACID((byte) 0x00, "Acid Fountain", "A", true),
+        FOUNTAIN_CURE((byte) 0x00, "Cure Fountain", "C", true),
+        FOUNTAIN_POISON((byte) 0x00, "Poison Fountain", "P", true),
+        FIELD_POISON((byte) 0x00, "Poison Field", "poison_field", false),
+        FIELD_ENERGY((byte) 0x00, "Energy Field", "energy_field", false),
+        FIELD_FIRE((byte) 0x00, "Fire Field", "fire_field", false),
+        FIELD_SLEEP((byte) 0x00, "Sleep Field", "sleep_field", false),
+        DOOR((byte) 0xC0, "Door", "door", true, null),
+        LOCKED_DOOR((byte) 0, "Locked Door", "locked_door", false, null),
+        SECRET_DOOR((byte) 0xA0, "Secret Door", "secret_door", false, null),
+        ROOM_1((byte) 0xD0, "Dungeon Room 1", "spacer_square", true),
+        ROOM_2((byte) 0xD1, "Dungeon Room 2", "spacer_square", true),
+        ROOM_3((byte) 0xD2, "Dungeon Room 3", "spacer_square", true),
+        ROOM_4((byte) 0xD3, "Dungeon Room 4", "spacer_square", true),
+        ROOM_5((byte) 0xD4, "Dungeon Room 5", "spacer_square", true),
+        ROOM_6((byte) 0xD5, "Dungeon Room 6", "spacer_square", true),
+        ROOM_7((byte) 0xD6, "Dungeon Room 7", "spacer_square", true),
+        ROOM_8((byte) 0xD7, "Dungeon Room 8", "spacer_square", true),
+        ROOM_9((byte) 0xD8, "Dungeon Room 9", "spacer_square", true),
+        ROOM_10((byte) 0xD9, "Dungeon Room 10", "spacer_square", true),
+        ROOM_11((byte) 0xDA, "Dungeon Room 11", "spacer_square", true),
+        ROOM_12((byte) 0xDB, "Dungeon Room 12", "spacer_square", true),
+        ROOM_13((byte) 0xDC, "Dungeon Room 13", "spacer_square", true),
+        ROOM_14((byte) 0xDD, "Dungeon Room 14", "spacer_square", true),
+        ROOM_15((byte) 0xDE, "Dungeon Room 15", "spacer_square", true),
+        ROOM_16((byte) 0xDF, "Dungeon Room 16", "spacer_square", true),
+        TIME_LORD((byte) 0x01, "Time Lord", "lord_british", false),
+        MISTY_WRITINGS((byte) 0x08, "Misty Writings", "shrine", false),
+        WALL((byte) 0x80, "Wall ", "brick_wall", false);
 
-        private int value;
+        private byte value;
         private String type;
         private String tileName;
         private Maps combatMap = null;
         private boolean creatureWalkable;
 
-        private DungeonTile(int value, String type, String tileName, boolean cw) {
+        private DungeonTile(byte value, String type, String tileName, boolean cw) {
             this.value = value;
             this.type = type;
             this.tileName = tileName;
             this.creatureWalkable = cw;
         }
 
-        private DungeonTile(int value, String type, String tileName, boolean cw, Maps combatMap) {
+        private DungeonTile(byte value, String type, String tileName, boolean cw, Maps combatMap) {
             this.value = value;
             this.type = type;
             this.tileName = tileName;
@@ -550,7 +574,7 @@ public interface Constants {
             return tileName;
         }
 
-        public static DungeonTile getTileByValue(int val) {
+        public static DungeonTile getTileByValue(byte val) {
             DungeonTile ret = DungeonTile.NOTHING;
             for (DungeonTile d : DungeonTile.values()) {
                 if (val == d.getValue()) {
@@ -663,9 +687,9 @@ public interface Constants {
             this.armor = armor;
         }
     }
-    
+
     public enum Profession {
-        
+
         BARBARIAN(SexType.MALE, "B"),
         DRUID(SexType.MALE, "D"),
         ALCHEMIST(SexType.MALE, "A"),
@@ -685,7 +709,7 @@ public interface Constants {
             this.sex = sex;
             this.id = id;
         }
-        
+
         public static Profession get(int v) {
             for (Profession x : values()) {
                 if (x.ordinal() == (v & 0xff)) {
@@ -702,21 +726,26 @@ public interface Constants {
         public String getId() {
             return id;
         }
-        
+
     }
 
     public enum ClassType {
 
-        HUMAN("H"),
-        ELF("E"),
-        DWARF("D"),
-        BOBIT("B"),
-        FUZZY("F");
+        HUMAN("H", 75, 75, 75, 75),
+        ELF("E", 75, 99, 75, 50),
+        DWARF("D", 99, 75, 50, 75),
+        BOBIT("B", 75, 50, 75, 99),
+        FUZZY("F", 25, 99, 99, 75);
 
         private final String id;
+        private final int maxStr, maxDex, maxInt, maxWis;
 
-        private ClassType(String id) {
+        private ClassType(String id, int mxSt, int mxDx, int mxIn, int mxWi) {
             this.id = id;
+            this.maxStr = mxSt;
+            this.maxDex = mxDx;
+            this.maxInt = mxIn;
+            this.maxWis = mxWi;
         }
 
         public static ClassType get(int v) {
@@ -730,6 +759,22 @@ public interface Constants {
 
         public String getId() {
             return id;
+        }
+
+        public int getMaxStr() {
+            return maxStr;
+        }
+
+        public int getMaxDex() {
+            return maxDex;
+        }
+
+        public int getMaxInt() {
+            return maxInt;
+        }
+
+        public int getMaxWis() {
+            return maxWis;
         }
 
     }
@@ -786,7 +831,7 @@ public interface Constants {
         COLD("C"),
         ASH("A"),
         DEAD("D");
-        
+
         private String id;
 
         private StatusType(String id) {
@@ -1271,7 +1316,9 @@ public interface Constants {
         hydra(50),
         dragon(51),
         balron(52),
-        fire_field(59);
+        grass(60),
+        floor(61),
+        chest(62);
 
         private int intValue;
         private int dungeonSpawnWeight;
@@ -1594,6 +1641,15 @@ public interface Constants {
         public void run() {
             Sounds.play(s);
         }
+    }
+
+    public class ClasspathResolver implements FileHandleResolver {
+
+        @Override
+        public FileHandle resolve(String fileName) {
+            return Gdx.files.classpath(fileName);
+        }
+
     }
 
 }

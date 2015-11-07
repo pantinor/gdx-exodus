@@ -97,7 +97,7 @@ public abstract class BaseScreen implements Screen, InputProcessor, Constants, O
         bookButt.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                //mainGame.setScreen(new BookScreen(mainGame, BaseScreen.this, Exodus.skin));
+                mainGame.setScreen(new BookScreen(mainGame, BaseScreen.this, Exodus.skin));
             }
         });
         bookButt.setX(625);

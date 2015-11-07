@@ -1,88 +1,97 @@
 <tileset>
-	<tile index="0" name="water" rule="water" />
-	<tile index="1" name="grass" rule="grass" />
-	<tile index="2" name="brush" rule="brush" />
-	<tile index="3" name="forest" rule="brush" />
-	<tile index="4" name="mountains" rule="mountains" />
-	<tile index="5" name="dungeon" rule="none" />
-	<tile index="6" name="town" rule="none" />
-	<tile index="7" name="castle" rule="none" />
-	<tile index="8" name="brick_floor" rule="floors"/>
-	<tile index="9" name="chest" rule="chest"/>
-	<tile index="10" name="horse" rule="horse"/>
-	<tile index="11" name="ship" rule="ship"/>
-	<tile index="12" name="whirlpool" rule="monster" />
-	<tile index="13" name="sea_serpent" rule="monster" />
-	<tile index="14" name="giant_squid" rule="monster" />
-	<tile index="15" name="pirate_ship" rule="monster" />
-	<tile index="16" name="merchant" rule="person" />
-	<tile index="17" name="jester" rule="person" />
-	<tile index="18" name="guard" rule="person" />
-	<tile index="19" name="lord_british" rule="person" />
-	<tile index="20" name="fighter" rule="person" />
-	<tile index="21" name="cleric" rule="person" />
-	<tile index="22" name="mage" rule="person" />
-	<tile index="23" name="rogue" rule="person" />
-	<tile index="24" name="orc" rule="monster" />
-	<tile index="25" name="skeleton" rule="monster" />
-	<tile index="26" name="cyclops" rule="monster" />
-	<tile index="27" name="daemon" rule="monster" />
-	<tile index="28" name="gazer" rule="monster" />
-	<tile index="29" name="dragon" rule="monster" />
-	<tile index="30" name="balron" rule="monster" />
-	<tile index="31" name="exodus" rule="solid" />
-	<tile index="32" name="energy_field" rule="energy_field"/>
-	<tile index="33" name="lava" rule="lava" />
-	<tile index="34" name="moongate" rule="solid" />
-	<tile index="35" name="brick_wall" rule="walls"/>
-	<tile index="36" name="blank" rule="signs" />
-	<tile index="37" name="spacer_square" rule="signs" />
-	<tile index="38" name="A" rule="signs" />
-	<tile index="39" name="B" rule="signs" />
-	<tile index="40" name="C" rule="signs" />
-	<tile index="41" name="D" rule="signs" />
-	<tile index="42" name="E" rule="signs" />
-	<tile index="43" name="F" rule="signs" />
-	<tile index="44" name="G" rule="signs" />
-	<tile index="45" name="H" rule="signs" />
-	<tile index="46" name="I" rule="signs" />
-	<tile index="47" name="V" rule="signs" />
-	<tile index="48" name="Y" rule="signs" />
-	<tile index="49" name="L" rule="signs" />
-	<tile index="50" name="M" rule="signs" />
-	<tile index="51" name="N" rule="signs" />
-	<tile index="52" name="O" rule="signs" />
-	<tile index="53" name="P" rule="signs" />
-	<tile index="54" name="W" rule="signs" />
-	<tile index="55" name="R" rule="signs" />
-	<tile index="56" name="S" rule="signs" />
-	<tile index="57" name="T" rule="signs" />
-	<tile index="58" name="GreatEarthSerpent1" rule="solid" />
-	<tile index="59" name="GreatEarthSerpent2" rule="solid" />
-	<tile index="60" name="magic_flash" rule="none" />
-	<tile index="61" name="hit_flash" rule="none" />
-	<tile index="62" name="shrine" rule="none" />
-	<tile index="63" name="avatar" rule="person" />
-	<tile index="64" name="merchant" rule="person" />
-	<tile index="65" name="jester" rule="person" />
-	<tile index="66" name="guard" rule="person" />
-	<tile index="67" name="lord_british" rule="person" />
-	<tile index="68" name="fighter" rule="person" />
-	<tile index="69" name="cleric" rule="person" />
-	<tile index="70" name="mage" rule="person" />
-	<tile index="71" name="rogue" rule="person" />
-	<tile index="72" name="orc" rule="monster" />
-	<tile index="73" name="skeleton" rule="monster" />
-	<tile index="74" name="cyclops" rule="monster" />
-	<tile index="75" name="daemon" rule="monster" />
-	<tile index="76" name="gazer" rule="monster" />
-	<tile index="77" name="dragon" rule="monster" />
-	<tile index="78" name="balron" rule="monster" />
-	<tile index="79" name="whirlpool" rule="monster" />"
+    <tile index="0" name="water" rule="water" />
+    <tile index="1" name="grass" rule="grass" />
+    <tile index="2" name="brush" rule="brush" />
+    <tile index="3" name="forest" opaque="true" rule="brush" />
+    <tile index="4" name="mountains" opaque="true" rule="mountains" />
+    <tile index="5" name="dungeon" rule="none" />
+    <tile index="6" name="town" rule="none" />
+    <tile index="7" name="castle" rule="none" />
+    <tile index="8" name="brick_floor" rule="floors"/>
+    <tile index="9" name="chest" rule="chest"/>
+    <tile index="10" name="horse" rule="horse"/>
+    <tile index="11" name="ship" rule="ship"/>
+    <tile index="12" name="whirlpool" rule="monster" />
+    <tile index="13" name="sea_serpent" rule="monster" />
+    <tile index="14" name="giant_squid" rule="monster" />
+    <tile index="15" name="pirate_ship" rule="monster" />
+    <tile index="16" name="merchant" rule="person" />
+    <tile index="17" name="jester" rule="person" />
+    <tile index="18" name="guard" rule="person" />
+    <tile index="19" name="lord_british" rule="person" />
+    <tile index="20" name="fighter" rule="person" />
+    <tile index="21" name="cleric" rule="person" />
+    <tile index="22" name="mage" rule="person" />
+    <tile index="23" name="rogue" rule="person" />
+    <tile index="24" name="orc" rule="monster" />
+    <tile index="25" name="skeleton" rule="monster" />
+    <tile index="26" name="cyclops" rule="monster" />
+    <tile index="27" name="daemon" rule="monster" />
+    <tile index="28" name="gazer" rule="monster" />
+    <tile index="29" name="dragon" rule="monster" />
+    <tile index="30" name="balron" rule="monster" />
+    <tile index="31" name="exodus" rule="solid" />
+    <tile index="32" name="energy_field" rule="energy_field"/>
+    <tile index="33" name="lava" rule="lava" />
+    <tile index="34" name="moongate" rule="solid" />
+    <tile index="35" name="brick_wall" opaque="true" rule="walls"/>
+    <tile index="36" name="blank" rule="signs" />
+    <tile index="37" name="spacer_square" rule="signs" />
+    <tile index="38" name="A" rule="signs" />
+    <tile index="39" name="B" rule="signs" />
+    <tile index="40" name="C" rule="signs" />
+    <tile index="41" name="D" rule="signs" />
+    <tile index="42" name="E" rule="signs" />
+    <tile index="43" name="F" rule="signs" />
+    <tile index="44" name="G" rule="signs" />
+    <tile index="45" name="H" rule="signs" />
+    <tile index="46" name="I" rule="signs" />
+    <tile index="47" name="V" rule="signs" />
+    <tile index="48" name="Y" rule="signs" />
+    <tile index="49" name="L" rule="signs" />
+    <tile index="50" name="M" rule="signs" />
+    <tile index="51" name="N" rule="signs" />
+    <tile index="52" name="O" rule="signs" />
+    <tile index="53" name="P" rule="signs" />
+    <tile index="54" name="W" rule="signs" />
+    <tile index="55" name="R" rule="signs" />
+    <tile index="56" name="S" rule="signs" />
+    <tile index="57" name="T" rule="signs" />
+    <tile index="58" name="GreatEarthSerpent1" rule="solid" />
+    <tile index="59" name="GreatEarthSerpent2" rule="solid" />
+    <tile index="60" name="magic_flash" rule="none" />
+    <tile index="61" name="hit_flash" rule="none" />
+    <tile index="62" name="shrine" rule="none" />
+    <tile index="63" name="avatar" rule="person" />
+    <tile index="64" name="merchant" rule="person" />
+    <tile index="65" name="jester" rule="person" />
+    <tile index="66" name="guard" rule="person" />
+    <tile index="67" name="lord_british" rule="person" />
+    <tile index="68" name="fighter" rule="person" />
+    <tile index="69" name="cleric" rule="person" />
+    <tile index="70" name="mage" rule="person" />
+    <tile index="71" name="rogue" rule="person" />
+    <tile index="72" name="orc" rule="monster" />
+    <tile index="73" name="skeleton" rule="monster" />
+    <tile index="74" name="cyclops" rule="monster" />
+    <tile index="75" name="daemon" rule="monster" />
+    <tile index="76" name="gazer" rule="monster" />
+    <tile index="77" name="dragon" rule="monster" />
+    <tile index="78" name="balron" rule="monster" />
+    <tile index="79" name="whirlpool" rule="monster" />"
         
-        <tile index="100" name="miss_flash" rule="none" />
-	<tile index ="101" name="door" rule="door" />
-	<tile index ="102" name="locked_door" rule="locked_door" />
+    <tile index ="100" name="miss_flash" rule="none" />
+    <tile index ="101" name="door" rule="door" />
+    <tile index ="102" name="locked_door" rule="locked_door" />
+    <tile index ="103" name="secret_door" opaque="true" rule="secret_door" />
+    <tile index ="104" name="down_ladder" rule="none" />
+    <tile index ="105" name="up_ladder" rule="none" />
+    <tile index ="106" name="shallows" rule="shallows" />
+    <tile index ="107" name="hills" rule="hills" />
+    <tile index ="108" name="swamp" rule="grass" />
+    <tile index ="109" name="sea" rule="water" />
+    <tile index ="109" name="bridge_piece1" rule="none" />
+    <tile index ="109" name="bridge_piece2" rule="none" />
 
 </tileset>
 

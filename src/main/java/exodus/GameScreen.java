@@ -44,6 +44,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import exodus.Party.PartyMember;
 import util.PartyDeathException;
 
 public class GameScreen extends BaseScreen {
@@ -82,13 +83,10 @@ public class GameScreen extends BaseScreen {
         initTransportAnimations();
         mainAvatar = avatarAnim;;
 
-        //textures for the moongates
         moongateTextures = Exodus.standardAtlas.findRegions("moongate");
-        //textures for the phases of  the moon
         moonAtlas = new TextureAtlas(Gdx.files.classpath("assets/graphics/moon-atlas.txt"));
 
         batch = new SpriteBatch();
-        //batch.enableBlending();
 
         stage = new Stage(viewport);
 
@@ -276,7 +274,7 @@ public class GameScreen extends BaseScreen {
 
             baseMap.initObjects(this, Exodus.standardAtlas, Exodus.standardAtlas);
 
-            //renderer.getFOV().calculateFOV(baseMap.getShadownMap(), x, y, 17f);
+            renderer.getFOV().calculateFOV(baseMap.getShadownMap(), x, y, 17f);
             newMapPixelCoords = getMapPixelCoords(x, y);
         }
 
@@ -290,81 +288,66 @@ public class GameScreen extends BaseScreen {
 
     }
 
-//    public void recalcFOV(BaseMap bm, int x, int y) {
-//        renderer.getFOV().calculateFOV(bm.getShadownMap(), x, y, 17f);
-//    }
+    public void recalcFOV(BaseMap bm, int x, int y) {
+        renderer.getFOV().calculateFOV(bm.getShadownMap(), x, y, 17f);
+    }
 
     public void attackAt(Maps combat, Creature cr) {
 
-//        Maps contextMap = Maps.get(context.getCurrentMap().getId());
-//        BaseMap combatMap = combat.getMap();
-//
-//        TiledMap tmap = new UltimaTiledMapLoader(combat, Exodus.standardAtlas, combat.getMap().getWidth(), combat.getMap().getHeight(), tilePixelWidth, tilePixelHeight).load();
-//
-//        CombatScreen sc = new CombatScreen(this, context, contextMap, combatMap, tmap, cr.getTile(), Exodus.creatures, Exodus.standardAtlas);
-//        mainGame.setScreen(sc);
-//
-//        currentEncounter = cr;
+        //Maps contextMap = Maps.get(context.getCurrentMap().getId());
+        //BaseMap combatMap = combat.getMap();
+
+        //TiledMap tmap = new UltimaTiledMapLoader(combat, Exodus.standardAtlas, combat.getMap().getWidth(), combat.getMap().getHeight(), tilePixelWidth, tilePixelHeight).load();
+
+        //CombatScreen sc = new CombatScreen(this, context, contextMap, combatMap, tmap, cr.getTile(), Exodus.creatures, Exodus.standardAtlas);
+        //mainGame.setScreen(sc);
+
+        //currentEncounter = cr;
     }
 
     @Override
     public void endCombat(boolean isWon, BaseMap combatMap, boolean wounded) {
 
-//        mainGame.setScreen(this);
-//
-//        if (currentEncounter != null) {
-//
-//            Tile tile = context.getCurrentMap().getTile(currentEncounter.currentX, currentEncounter.currentY);
-//
-//            if (isWon) {
-//
-//                log("Victory!");
-//
-//                if (!currentEncounter.getGood()) {
-//                    context.getParty().adjustKarma(KarmaAction.KILLED_EVIL);
-//                }
-//
-//                TileRule r = tile.getRule();
-//
-//                /* add a chest, if the creature leaves one */
-//                if (!currentEncounter.getNochest() && (r == null || !r.has(TileAttrib.unwalkable))) {
-//                    Tile ct = Exodus.baseTileSet.getTileByName("chest");
-//                    Drawable chest = new Drawable(context.getCurrentMap(), currentEncounter.currentX, currentEncounter.currentY, ct, Exodus.standardAtlas);
-//                    chest.setX(currentEncounter.currentPos.x);
-//                    chest.setY(currentEncounter.currentPos.y);
-//                    mapObjectsStage.addActor(chest);
-//                } /* add a ship if you just defeated a pirate ship */ else if (currentEncounter.getTile() == CreatureType.pirate_ship) {
-//                    Tile st = Exodus.baseTileSet.getTileByName("ship");
-//                    Drawable ship = new Drawable(context.getCurrentMap(), currentEncounter.currentX, currentEncounter.currentY, st, Exodus.standardAtlas);
-//                    ship.setX(currentEncounter.currentPos.x);
-//                    ship.setY(currentEncounter.currentPos.y);
-//                    mapObjectsStage.addActor(ship);
-//                }
-//            } else {
-//
-//                if (context.getParty().didAnyoneFlee()) {
-//                    log("Battle is lost!");
-//
-//                    /* minus points for fleeing from evil creatures */
-//                    if (!currentEncounter.getGood()) {
-//                        //lose karma points here
-//                        if (!wounded) {
-//                            context.getParty().adjustKarma(KarmaAction.HEALTHY_FLED_EVIL);
-//                        }
-//                    } else {
-//                        //get extra karma points
-//                        context.getParty().adjustKarma(KarmaAction.FLED_GOOD);
-//                    }
-//                } else if (!context.getParty().isAnyoneAlive()) {
-//                    partyDeath();
-//                }
-//            }
-//
-//            context.getCurrentMap().removeCreature(currentEncounter);
-//
-//            currentEncounter = null;
-//
-//        }
+        mainGame.setScreen(this);
+
+        if (currentEncounter != null) {
+
+            Tile tile = context.getCurrentMap().getTile(currentEncounter.currentX, currentEncounter.currentY);
+
+            if (isWon) {
+
+                log("Victory!");
+
+                TileRule r = tile.getRule();
+
+                /* add a chest, if the creature leaves one */
+                if (!currentEncounter.getNochest() && (r == null || !r.has(TileAttrib.unwalkable))) {
+                    Tile ct = Exodus.baseTileSet.getTileByName("chest");
+                    Drawable chest = new Drawable(context.getCurrentMap(), currentEncounter.currentX, currentEncounter.currentY, ct, Exodus.standardAtlas);
+                    chest.setX(currentEncounter.currentPos.x);
+                    chest.setY(currentEncounter.currentPos.y);
+                    mapObjectsStage.addActor(chest);
+                } /* add a ship if you just defeated a pirate ship */ else if (currentEncounter.getTile() == CreatureType.pirate_ship) {
+                    Tile st = Exodus.baseTileSet.getTileByName("ship");
+                    Drawable ship = new Drawable(context.getCurrentMap(), currentEncounter.currentX, currentEncounter.currentY, st, Exodus.standardAtlas);
+                    ship.setX(currentEncounter.currentPos.x);
+                    ship.setY(currentEncounter.currentPos.y);
+                    mapObjectsStage.addActor(ship);
+                }
+            } else {
+
+                if (context.getParty().didAnyoneFlee()) {
+                    log("Battle is lost!");
+                } else if (!context.getParty().isAnyoneAlive()) {
+                    partyDeath();
+                }
+            }
+
+            context.getCurrentMap().removeCreature(currentEncounter);
+
+            currentEncounter = null;
+
+        }
     }
 
     @Override
@@ -576,11 +559,6 @@ public class GameScreen extends BaseScreen {
 
         } else if (keycode == Keys.E) {
 
-            if (context.getTransportContext() == TransportContext.BALLOON) {
-                log("Only on foot!");
-                return false;
-            }
-
             Portal p = context.getCurrentMap().getPortal(v.x, v.y, 0);
             if (p != null) {
 
@@ -590,7 +568,7 @@ public class GameScreen extends BaseScreen {
                     loadNextMap(dest, p.getStartx(), p.getStarty());
                 } else {
                     newMapPixelCoords = getMapPixelCoords(p.getStartx(), p.getStarty());
-                    //recalcFOV(context.getCurrentMap(), p.getStartx(), p.getStarty());
+                    recalcFOV(context.getCurrentMap(), p.getStartx(), p.getStarty());
                 }
                 return false;
 
@@ -604,7 +582,7 @@ public class GameScreen extends BaseScreen {
         } else if (keycode == Keys.M) {
 
         } else if (keycode == Keys.P) {
-            peerGem();
+            //peerGem();
         } else if (keycode == Keys.U) {
 
             log("Use Item:");
@@ -704,13 +682,11 @@ public class GameScreen extends BaseScreen {
             }
 
             /* things that happen while not on board the balloon */
-            if (context.getTransportContext() != TransportContext.BALLOON) {
-                checkSpecialCreatures(dir, newx, newy);
-                checkBridgeTrolls(newx, newy);
-            }
+            checkSpecialCreatures(dir, newx, newy);
+            checkBridgeTrolls(newx, newy);
         }
 
-        //renderer.getFOV().calculateFOV(context.getCurrentMap().getShadownMap(), newx, newy, 17f);
+        renderer.getFOV().calculateFOV(context.getCurrentMap().getShadownMap(), newx, newy, 17f);
 
         log(dir.toString());
     }
@@ -719,44 +695,27 @@ public class GameScreen extends BaseScreen {
     public void finishTurn(int currentX, int currentY) {
 
         try {
-//
-//            checkHullIntegrity(context.getCurrentMap(), currentX, currentY);
-//
-//            boolean checkSleeping = false;
-//            if (context.getParty().getMember(0).getPlayer().status == StatusType.SLEEPING) {
-//                checkSleeping = true;
-//            }
-//
-//            context.getParty().endTurn(context.getCurrentMap().getType());
-//
-//            if (checkSleeping && context.getParty().getMember(0).getPlayer().status != StatusType.SLEEPING) {
-//                mainAvatar = avatarAnim;
-//            }
-//
-//            context.getAura().passTurn();
-//
-//            if (context.getTransportContext() != TransportContext.BALLOON) {
-//
-//                TileEffect effect = context.getCurrentMap().getTile(currentX, currentY).getRule().getEffect();
-//                context.getParty().applyEffect(effect);
-//                if (effect == TileEffect.FIRE || effect == TileEffect.LAVA) {
-//                    Sounds.play(Sound.FIREFIELD);
-//                } else if (effect == TileEffect.POISON || effect == TileEffect.POISONFIELD) {
-//                    Sounds.play(Sound.POISON_EFFECT);
-//                } else if (effect == TileEffect.SLEEP) {
-//                    Sounds.play(Sound.SLEEP);
-//                    if (context.getParty().getMember(0).getPlayer().status == StatusType.SLEEPING) {
-//                        mainAvatar = corpseAnim;
-//                    }
-//                }
-//
-//                if (checkRandomCreatures()) {
-//                    spawnCreature(null, currentX, currentY);
-//                }
-//
+
+            checkHullIntegrity(context.getCurrentMap(), currentX, currentY);
+
+            context.getParty().endTurn(context.getCurrentMap().getType());
+
+            context.getAura().passTurn();
+
+                TileEffect effect = context.getCurrentMap().getTile(currentX, currentY).getRule().getEffect();
+                context.getParty().applyEffect(effect);
+                if (effect == TileEffect.FIRE || effect == TileEffect.LAVA) {
+                    Sounds.play(Sound.FIREFIELD);
+                } else if (effect == TileEffect.POISON || effect == TileEffect.POISONFIELD) {
+                    Sounds.play(Sound.POISON_EFFECT);
+                }
+
+                if (checkRandomCreatures()) {
+                    spawnCreature(null, currentX, currentY);
+                }
+
                 context.getCurrentMap().moveObjects(this, currentX, currentY);
-//            }
-//
+
         } catch (PartyDeathException t) {
             partyDeath();
         }
@@ -877,13 +836,13 @@ public class GameScreen extends BaseScreen {
             return cr;
         }
 
-//        if (context.getParty().getSaveGame().moves > 30000) {
-//            era = 15;
-//        } else if (context.getParty().getSaveGame().moves > 20000) {
-//            era = 7;
-//        } else {
+        if (context.getParty().getSaveGame().moves > 30000) {
+            era = 15;
+        } else if (context.getParty().getSaveGame().moves > 20000) {
+            era = 7;
+        } else {
             era = 3;
-//        }
+        }
 
         randId = CreatureType.orc.getValue();
         randId += era & rand.nextInt(16) & rand.nextInt(16);
@@ -1145,62 +1104,59 @@ public class GameScreen extends BaseScreen {
 
     public void getChest(int index, int x, int y) {
 
-//        boolean found = false;
-//
-//        Drawable chest = null;
-//        Array<Actor> as = mapObjectsStage.getActors();
-//        for (Actor a : as) {
-//            if (a instanceof Drawable) {
-//                Drawable d = (Drawable) a;
-//                if (StringUtils.equals("chest", d.getTile().getName()) && d.getCx() == x && d.getCy() == y) {
-//                    chest = (Drawable) a;
-//                    found = true;
-//                    chest.remove();
-//                    break;
-//                }
-//            }
-//        }
-//
-//        if (chest == null) {
-//            //check tile too, ie in cities
-//            Tile tile = context.getCurrentMap().getTile(x, y);
-//            if (tile.getRule() == TileRule.chest) {
-//                replaceTile("brick_floor", x, y);
-//                found = true;
-//            }
-//        }
-//
-//        try {
-//            if (found) {
-//                PartyMember pm = context.getParty().getMember(index);
-//                if (pm == null) {
-//                    System.err.println("member is null " + index);
-//                }
-//                if (pm.getPlayer() == null) {
-//                    System.err.println("player is null " + index);
-//                }
-//                context.getChestTrapHandler(pm);
-//                log(String.format("The Chest Holds: %d Gold", context.getParty().getChestGold()));
-//                if (context.getCurrentMap().getType() == MapType.city) {
-//                    context.getParty().adjustKarma(KarmaAction.STOLE_CHEST);
-//                }
-//            } else {
-//                log("Not Here!");
-//            }
-//        } catch (PartyDeathException e) {
-//            partyDeath();
-//        }
+        boolean found = false;
+
+        Drawable chest = null;
+        Array<Actor> as = mapObjectsStage.getActors();
+        for (Actor a : as) {
+            if (a instanceof Drawable) {
+                Drawable d = (Drawable) a;
+                if ("chest".equals(d.getTile().getName()) && d.getCx() == x && d.getCy() == y) {
+                    chest = (Drawable) a;
+                    found = true;
+                    chest.remove();
+                    break;
+                }
+            }
+        }
+
+        if (chest == null) {
+            //check tile too, ie in cities
+            Tile tile = context.getCurrentMap().getTile(x, y);
+            if (tile.getRule() == TileRule.chest) {
+                replaceTile("brick_floor", x, y);
+                found = true;
+            }
+        }
+
+        try {
+            if (found) {
+                PartyMember pm = context.getParty().getMember(index);
+                if (pm == null) {
+                    System.err.println("member is null " + index);
+                }
+                if (pm.getPlayer() == null) {
+                    System.err.println("player is null " + index);
+                }
+                context.getChestTrapHandler(pm);
+                log(String.format("The Chest Holds: %d Gold", context.getParty().getChestGold(pm)));
+            } else {
+                log("Not Here!");
+            }
+        } catch (PartyDeathException e) {
+            partyDeath();
+        }
 
     }
 
-    public void peerGem() {
-//        if (context.getParty().getSaveGame().gems > 0) {
-//            context.getParty().getSaveGame().gems--;
-//            log("Peer at a Gem!");
-//            Gdx.input.setInputProcessor(new PeerGemInputAdapter());
-//        } else {
-//            log("Thou dost have no gems!");
-//        }
+    public void peerGem(PartyMember pm) {
+        if (pm.getPlayer().gems > 0) {
+            pm.getPlayer().gems--;
+            log("Peer at a Gem!");
+            Gdx.input.setInputProcessor(new PeerGemInputAdapter());
+        } else {
+            log("Thou dost have no gems!");
+        }
     }
 
     public void peerTelescope() {

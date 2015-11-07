@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.Array;
 import exodus.Context;
 import exodus.Exodus;
 import exodus.GameScreen;
+import exodus.Party.PartyMember;
 import java.util.Iterator;
 import javax.xml.bind.annotation.XmlTransient;
 import util.PartyDeathException;
@@ -43,7 +44,7 @@ public class BaseMap implements Constants {
     private Dungeon dungeon;
 
     private List<Creature> creatures = new ArrayList<>();
-    //private List<PartyMember> combatPlayers;
+    private List<PartyMember> combatPlayers;
     private Stage surfaceMapStage;
 
     private List<Moongate> moongates;
@@ -69,6 +70,18 @@ public class BaseMap implements Constants {
         }
         return null;
     }
+    
+    public Moongate getMoongate(String name) {
+        if (moongates == null) {
+            return null;
+        }
+        for (Moongate m : moongates) {
+            if (m.getName().equals(name)) {
+                return m;
+            }
+        }
+        return null;
+    }
 
     public Portal getPortal(int id) {
         if (portals == null) {
@@ -81,7 +94,7 @@ public class BaseMap implements Constants {
         }
         return null;
     }
-
+    
     public Portal getPortal(float x, float y, float z) {
         if (portals == null) {
             return null;
@@ -168,12 +181,12 @@ public class BaseMap implements Constants {
     public Dungeon getDungeon() {
         return dungeon;
     }
-    
+
     @XmlTransient
     public List<Person> getPeople() {
         return people;
     }
-    
+
     public void setPeople(List<Person> people) {
         this.people = people;
     }
@@ -314,7 +327,7 @@ public class BaseMap implements Constants {
     public void setShadownMap(float[][] shadownMap) {
         this.shadownMap = shadownMap;
     }
-    
+
     public Person getPersonAt(int x, int y) {
         for (Person p : people) {
             if (p == null) {
@@ -355,11 +368,11 @@ public class BaseMap implements Constants {
                 if (arr == null || arr.size == 0) {
                     arr = atlas2.findRegions(tname);
                 }
-                
+
                 if (arr.size == 0) {
-                    System.err.printf("%s - tname is empty %s",p, tname);
+                    System.err.printf("%s - tname is empty %s", p, tname);
                 }
-                
+
                 p.setTextureRegion(arr.first());
 
                 if (arr.size > 1) {
@@ -396,7 +409,7 @@ public class BaseMap implements Constants {
 
         initialized = true;
     }
-    
+
     public void moveObjects(GameScreen screen, int avatarX, int avatarY) throws PartyDeathException {
 
         if (people != null) {
@@ -526,8 +539,6 @@ public class BaseMap implements Constants {
                     } else if (cr.getTile() == CreatureType.twister) {
                         if (screen.context.getTransportContext() == TransportContext.SHIP) {
                             screen.context.damageShip(10, 30);
-                        } else if (screen.context.getTransportContext() != TransportContext.BALLOON) {
-                            //screen.context.getParty().damageParty(0, 75);
                         }
                         continue;
                     }
@@ -590,7 +601,7 @@ public class BaseMap implements Constants {
         }
 
     }
-    
+
     public boolean isTileBlockedForRangedAttack(int x, int y, boolean checkForCreatures) {
         Tile tile = getTile(x, y);
         TileRule rule = tile.getRule();
@@ -625,10 +636,10 @@ public class BaseMap implements Constants {
             Tile east = getTile(x + 1 >= width - 1 ? 0 : x + 1, y);
             Tile west = getTile(x - 1 < 0 ? width - 1 : x - 1, y);
 
-            mask = addToMask(context,Direction.NORTH, mask, north, x, y - 1 < 0 ? height - 1 : y - 1, cr, avatarX, avatarY);
-            mask = addToMask(context,Direction.SOUTH, mask, south, x, y + 1 >= height ? 0 : y + 1, cr, avatarX, avatarY);
-            mask = addToMask(context,Direction.EAST, mask, east, x + 1 >= width - 1 ? 0 : x + 1, y, cr, avatarX, avatarY);
-            mask = addToMask(context,Direction.WEST, mask, west, x - 1 < 0 ? width - 1 : x - 1, y, cr, avatarX, avatarY);
+            mask = addToMask(context, Direction.NORTH, mask, north, x, y - 1 < 0 ? height - 1 : y - 1, cr, avatarX, avatarY);
+            mask = addToMask(context, Direction.SOUTH, mask, south, x, y + 1 >= height ? 0 : y + 1, cr, avatarX, avatarY);
+            mask = addToMask(context, Direction.EAST, mask, east, x + 1 >= width - 1 ? 0 : x + 1, y, cr, avatarX, avatarY);
+            mask = addToMask(context, Direction.WEST, mask, west, x - 1 < 0 ? width - 1 : x - 1, y, cr, avatarX, avatarY);
 
         } else {
 
@@ -637,10 +648,10 @@ public class BaseMap implements Constants {
             Tile east = getTile(x + 1, y);
             Tile west = getTile(x - 1, y);
 
-            mask = addToMask(context,Direction.NORTH, mask, north, x, y - 1, cr, avatarX, avatarY);
-            mask = addToMask(context,Direction.SOUTH, mask, south, x, y + 1, cr, avatarX, avatarY);
-            mask = addToMask(context,Direction.EAST, mask, east, x + 1, y, cr, avatarX, avatarY);
-            mask = addToMask(context,Direction.WEST, mask, west, x - 1, y, cr, avatarX, avatarY);
+            mask = addToMask(context, Direction.NORTH, mask, north, x, y - 1, cr, avatarX, avatarY);
+            mask = addToMask(context, Direction.SOUTH, mask, south, x, y + 1, cr, avatarX, avatarY);
+            mask = addToMask(context, Direction.EAST, mask, east, x + 1, y, cr, avatarX, avatarY);
+            mask = addToMask(context, Direction.WEST, mask, west, x - 1, y, cr, avatarX, avatarY);
         }
 
         return mask;
@@ -687,12 +698,6 @@ public class BaseMap implements Constants {
                         } else {
                             canmove = false;
                         }
-                    } else if (tc == TransportContext.BALLOON) {
-                        if (!rule.has(TileAttrib.unflyable)) {
-                            canmove = true;
-                        } else {
-                            canmove = false;
-                        }
                     }
                 }
             } else {
@@ -701,8 +706,8 @@ public class BaseMap implements Constants {
 
             //NPCs cannot go thru the secret doors or walk where the avatar is
             if (cr != null) {
-                if ((tile.getIndex() == 73 && !cr.getIncorporeal()) || 
-                        (avatarX == x && avatarY == y && !cr.getCanMoveOntoAvatar())) {
+                if ((tile.getIndex() == 73 && !cr.getIncorporeal())
+                        || (avatarX == x && avatarY == y && !cr.getCanMoveOntoAvatar())) {
                     canmove = false;
                 }
             }
@@ -727,23 +732,23 @@ public class BaseMap implements Constants {
                 }
             }
 
-//            if (combatPlayers != null) {
-//                for (PartyMember p : combatPlayers) {
-//                    if (p.combatCr == null || p.fled) {
-//                        continue;
-//                    }
-//                    if (p.combatCr.currentX == x && p.combatCr.currentY == y) {
-//                        canmove = false;
-//                        break;
-//                    }
-//                }
-//            }
+            if (combatPlayers != null) {
+                for (PartyMember p : combatPlayers) {
+                    if (p.combatCr == null || p.fled) {
+                        continue;
+                    }
+                    if (p.combatCr.currentX == x && p.combatCr.currentY == y) {
+                        canmove = false;
+                        break;
+                    }
+                }
+            }
 
             if (rule == null || canmove || isDoorOpen(x, y)) {
                 mask = Direction.addToMask(dir, mask);
             }
         } else {
-			//if the tile is not on the map then it is OOB, 
+            //if the tile is not on the map then it is OOB, 
             //so add this direction anyway so that monster flee operations work.
             if (cr != null && cr.getDamageStatus() == CreatureStatus.FLEEING) {
                 mask = Direction.addToMask(dir, mask);
@@ -751,27 +756,7 @@ public class BaseMap implements Constants {
         }
         return mask;
     }
-//    public void removeJoinedPartyMemberFromPeopleList(Party party) {
-//        if (city == null) {
-//            return;
-//        }
-//        for (PartyMember pm : party.getMembers()) {
-//            String name = pm.getPlayer().name;
-//            Person joiner = null;
-//            for (Person p : city.getPeople()) {
-//                if (p != null
-//                        && p.getRole() != null
-//                        && p.getRole().getRole().equals("companion")
-//                        && p.getConversation() != null
-//                        && p.getConversation().getName().equals(name)) {
-//
-//                    joiner = p;
-//                    break;
-//                }
-//            }
-//            city.getPeople().remove(joiner);
-//        }
-//    }
+
     public DoorStatus getDoor(int x, int y) {
         for (DoorStatus ds : doors) {
             if (ds.x == x && ds.y == y) {
@@ -1217,14 +1202,15 @@ public class BaseMap implements Constants {
 //
 //        return null;
 //    }
-//    @XmlTransient
-//    public List<PartyMember> getCombatPlayers() {
-//        return combatPlayers;
-//    }
-//
-//    public void setCombatPlayers(List<PartyMember> combatPlayers) {
-//        this.combatPlayers = combatPlayers;
-//    }
+    @XmlTransient
+    public List<PartyMember> getCombatPlayers() {
+        return combatPlayers;
+    }
+
+    public void setCombatPlayers(List<PartyMember> combatPlayers) {
+        this.combatPlayers = combatPlayers;
+    }
+
     public Stage getSurfaceMapStage() {
         return surfaceMapStage;
     }

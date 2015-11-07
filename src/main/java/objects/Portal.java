@@ -139,7 +139,7 @@ public class Portal implements Constants {
                 + "</properties>\n"
                 + "</object>\n";
 
-        return String.format(template, name, x * 32, y * 32, condition == null ? "" : condition, x, y, destmapid, message == null ? "" : message);
+        return String.format(template, name, x * 32*4, y * 32*4, condition == null ? "" : condition, x, y, destmapid, message == null ? "" : message);
     }
 
     public int getMapTileId() {

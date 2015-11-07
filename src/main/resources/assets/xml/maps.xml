@@ -1,7 +1,6 @@
 <maps>
-    <!-- world map -->
-    <map id="0" type="world" fname="sosaria.ult" width="64" height="64" levels="1" borderbehavior="wrap" music="OUTSIDE">
-	
+    
+    <map id="0" type="world" fname="map_0_sosaria_large.tmx" width="256" height="256" levels="1" borderbehavior="wrap" music="OUTSIDE">
         <portal x="45" y="18" destmapid="1" startx="32" starty="61" />
         <portal x="10" y="53" destmapid="2" startx="32" starty="62" />
         <portal x="46" y="19" destmapid="3" startx="2" starty="32" />
@@ -32,49 +31,73 @@
         <moongate name="lastquarter" phase="6" x="31" y="31" d1="2" d2="3" d3="4" />
         <moongate name="crescentwan" phase="7" x="58" y="31" d1="5" d2="6" d3="7" />
 	
-        <label name="balloon" x="64" y="64" />
+        <label name="mysticarmour" x="79" y="176" />
+        <label name="mysticweapon" x="134" y="14" />
 
     </map>
-	
     <map id="1" type="city" fname="british.ult" width="64" height="64" levels="1" borderbehavior="exit" music="FANFARE">
     </map>
-	
     <map id="2" type="city" fname="exodus.ult" width="64" height="64" levels="1" borderbehavior="exit" music="EXODUS">
     </map>
-	
     <map id="3" type="city" fname="lcb.ult" width="64" height="64" levels="1" borderbehavior="exit" music="TOWNS">
     </map>
-	
     <map id="4" type="city" fname="yew.ult" width="64" height="64" levels="1" borderbehavior="exit" music="TOWNS">
     </map>
-	
     <map id="5" type="city" fname="moon.ult" width="64" height="64" levels="1" borderbehavior="exit" music="TOWNS">
     </map>
-	
     <map id="6" type="city" fname="grey.ult" width="64" height="64" levels="1" borderbehavior="exit" music="TOWNS">
     </map>
-	
     <map id="7" type="city" fname="devil.ult" width="64" height="64" levels="1" borderbehavior="exit" music="EXODUS">
     </map>
-	
     <map id="8" type="city" fname="montor_e.ult" width="64" height="64" levels="1" borderbehavior="exit" music="TOWNS">
     </map>
-	
     <map id="9" type="city" fname="montor_w.ult" width="64" height="64" levels="1" borderbehavior="exit" music="TOWNS">
     </map>
-	
     <map id="10" type="city" fname="death.ult" width="64" height="64" levels="1" borderbehavior="exit" music="EXODUS">
     </map>
-	
     <map id="11" type="city" fname="dawn.ult" width="64" height="64" levels="1" borderbehavior="exit" music="TOWNS">
     </map>
-	
     <map id="12" type="city" fname="fawn.ult" width="64" height="64" levels="1" borderbehavior="exit" music="TOWNS">
     </map>
-	
     <map id="13" type="city" fname="ambrosia.ult" width="64" height="64" levels="1" borderbehavior="exit" music="CASTLES">
     </map>
-
-
-	
+    
+    <map id="14" type="dungeon" fname="perinian.ult" width="16" height="16" levels="8" borderbehavior="exit" music="DUNGEON">
+    </map>
+    <map id="15" type="dungeon" fname="dardin.ult" width="16" height="16" levels="8" borderbehavior="exit" music="DUNGEON">
+    </map>
+    <map id="16" type="dungeon" fname="mine.ult" width="16" height="16" levels="8" borderbehavior="exit" music="DUNGEON">
+    </map>
+    <map id="17" type="dungeon" fname="fire.ult" width="16" height="16" levels="8" borderbehavior="exit" music="DUNGEON">
+    </map>
+    <map id="18" type="dungeon" fname="m.ult" width="16" height="16" levels="8" borderbehavior="exit" music="DUNGEON">
+    </map>
+    <map id="19" type="dungeon" fname="p.ult" width="16" height="16" levels="8" borderbehavior="exit" music="DUNGEON">
+    </map>
+    <map id="20" type="dungeon" fname="time.ult" width="16" height="16" levels="8" borderbehavior="exit" music="DUNGEON">
+    </map>
+    
+    <map id="33" type="combat" fname="brick.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
+    <map id="34" type="combat" fname="bridge.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
+    <map id="35" type="combat" fname="brush.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
+    <map id="36" type="combat" fname="camp.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
+    <map id="37" type="combat" fname="dng0.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   <!-- Walls -->
+    <map id="38" type="combat" fname="dng1.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   <!-- Up ladder -->
+    <map id="39" type="combat" fname="dng2.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   <!-- Down ladder -->
+    <map id="40" type="combat" fname="dng3.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   <!-- Up-down ladder -->
+    <map id="41" type="combat" fname="dng4.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   <!-- Chest -->
+    <map id="42" type="combat" fname="dng5.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   <!-- Doorway -->
+    <map id="43" type="combat" fname="dng6.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   <!-- Secret Door -->
+    <map id="44" type="combat" fname="dungeon.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   <!-- Dungeon -->
+    <map id="45" type="combat" fname="forest.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
+    <map id="46" type="combat" fname="grass.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
+    <map id="47" type="combat" fname="hill.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
+    <map id="48" type="combat" fname="inn.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
+    <map id="49" type="combat" fname="marsh.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
+    <map id="50" type="combat" fname="shipsea.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
+    <map id="51" type="combat" fname="shipship.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
+    <map id="52" type="combat" fname="shipshor.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
+    <map id="53" type="combat" fname="shore.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
+    <map id="54" type="combat" fname="shorship.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
+    
 </maps>

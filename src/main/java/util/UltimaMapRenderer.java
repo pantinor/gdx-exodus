@@ -44,9 +44,9 @@ import exodus.Context;
 
 public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constants {
 
-    private BaseMap bm;
-    private Context context;
-    //private SpreadFOV fov;
+    private final BaseMap bm;
+    private final Context context;
+    private final SpreadFOV fov;
     float stateTime = 0;
 
     TextureRegion door;
@@ -57,7 +57,7 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
         super(map, unitScale);
         this.bm = bm;
         this.context = context;
-        //this.fov = new SpreadFOV(bm.getWidth(), bm.getHeight(), bm.getBorderbehavior() == MapBorderBehavior.wrap);
+        this.fov = new SpreadFOV(bm.getWidth(), bm.getHeight(), bm.getBorderbehavior() == MapBorderBehavior.wrap);
 
         if (atlas != null) {
 
@@ -72,9 +72,9 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
 
     }
 
-//    public SpreadFOV getFOV() {
-//        return this.fov;
-//    }
+    public SpreadFOV getFOV() {
+        return this.fov;
+    }
 
     @Override
     public void render() {
@@ -93,15 +93,13 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
         stateTime += Gdx.graphics.getDeltaTime();
 
         Color batchColor = batch.getColor();
-        float color = 0;//Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, batchColor.a * layer.getOpacity());
+        float color = 0;
 
         int layerWidth = layer.getWidth();
         int layerHeight = layer.getHeight();
 
         int layerTileWidth = (int) (layer.getTileWidth() * unitScale);
         int layerTileHeight = (int) (layer.getTileHeight() * unitScale);
-
-        float[] vertices = this.vertices;
 
         int col1 = Math.max(0, (int) (viewBounds.x / layerTileWidth));
         int col2 = Math.min(layerWidth, (int) ((viewBounds.x + viewBounds.width + layerTileWidth) / layerTileWidth));
@@ -247,28 +245,22 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
 
     private float getColor(Color batchColor, int x, int y) {
 
-//        if (context != null && context.getTransportContext() == TransportContext.BALLOON) {
-//            return Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, 1f);
-//        }
-//
-//        float[][] lightMap = fov.getLightMap();
-//
-//        if (!(x >= 0 && x < lightMap.length && y >= 0 && y < lightMap[0].length)) {
-//            return Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, 1f);
-//        }
-//
-//        float val = lightMap[x][y];
-//
-//        if (val <= 0) {
-//            return Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, .2f);
-//        } else {
-//            val = val < .2f ? .2f : val;
-//            val = val > .85f ? 1f : val;
-//            return Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, val);
-//        }
-        
-        return Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, 1f);
+        float[][] lightMap = fov.getLightMap();
 
+        if (!(x >= 0 && x < lightMap.length && y >= 0 && y < lightMap[0].length)) {
+            return Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, 1f);
+        }
+
+        float val = lightMap[x][y];
+
+        if (val <= 0) {
+            return Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, .0f); //make it all black
+        } else {
+            val = val < .2f ? .2f : val;
+            val = val > .85f ? 1f : val;
+            return Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, val);
+        }
+        
     }
 
     private void draw(TextureRegion region, float x, float y, int locX, int locY) {

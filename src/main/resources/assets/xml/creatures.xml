@@ -1,22 +1,22 @@
 <creatures>
-	<creature id="0" name="Horse" tile="horse" basehp="255" exp="10" good="true" wontattack="true" />
-	<creature id="1" name="Horse" tile="horse" basehp="255" exp="10" good="true" wontattack="true" />
+	<creature id="0" name="Horse" tile="horse" basehp="255" exp="6" good="true" wontattack="true" />
+	<creature id="1" name="Horse" tile="horse" basehp="255" exp="6" good="true" wontattack="true" />
 
 	<!-- Classes -->
-	<creature id="2" name="Mage" tile="mage" basehp="112" exp="8" ranged="true" rangedhittile="magic_flash" rangedmisstile="magic_flash" good="true" wontattack="true" />
+	<creature id="2" name="Mage" tile="mage" basehp="112" exp="10" ranged="true" rangedhittile="magic_flash" rangedmisstile="magic_flash" good="true" wontattack="true" />
 	<creature id="3" name="Bard" tile="bard" basehp="48" exp="7" good="true" wontattack="true" />
-	<creature id="4" name="Fighter" tile="fighter" basehp="96" exp="7" good="true" wontattack="true" />
+	<creature id="4" name="Fighter" tile="fighter" basehp="96" exp="8" good="true" wontattack="true" />
 	<creature id="5" name="Druid" tile="druid" basehp="64" exp="10" good="true" wontattack="true" />
-	<creature id="6" name="Tinker" tile="tinker" basehp="96" exp="9" good="true" wontattack="true" />
+	<creature id="6" name="Tinker" tile="tinker" basehp="96" exp="5" good="true" wontattack="true" />
 	<creature id="7" name="Paladin" tile="paladin" basehp="128" exp="4" good="true" wontattack="true" />
 	<creature id="8" name="Ranger" tile="ranger" basehp="144" exp="3" good="true" wontattack="true" />
 	<creature id="9" name="Shepherd" tile="shepherd" basehp="48" exp="9" good="true" wontattack="true" />
 
 	<!-- Misc town creatures -->
-	<creature id="10" name="Guard" tile="guard" basehp="128" exp="13" good="true" wontattack="true" />
-	<creature id="11" name="Merchant" tile="villager" basehp="48" exp="9" good="true" wontattack="true" />
+	<creature id="10" name="Guard" tile="guard" basehp="128" exp="15" good="true" wontattack="true" />
+	<creature id="11" name="Merchant" tile="villager" basehp="48" exp="1" good="true" wontattack="true" />
 	<creature id="12" name="Bard" tile="bard_singing" basehp="48" exp="9" good="true" wontattack="true" />
-	<creature id="13" name="Jester" tile="jester" basehp="48" exp="9" good="true" wontattack="true" />
+	<creature id="13" name="Jester" tile="jester" basehp="48" exp="2" good="true" wontattack="true" />
 	<creature id="14" name="Beggar" tile="beggar" basehp="32" exp="13" good="true" wontattack="true" />
 	<creature id="15" name="Child" tile="child" basehp="32" exp="10" good="true" wontattack="true" />
 	<creature id="16" name="Bull" tile="bull" basehp="128" exp="11" good="true" />
@@ -63,7 +63,8 @@
 	<creature id="51" encounterSize="4" name="Dragon" tile="dragon" basehp="224" exp="15" ranged="true" worldrangedtile="hit_flash" rangedhittile="hit_flash" rangedmisstile="hit_flash" flies="true" resists="fire" leader="52" />
 	<creature id="52" encounterSize="1" name="Balron" tile="balron" basehp="255" exp="16" ranged="true" rangedhittile="random" rangedmisstile="random" flies="true" casts="sleep" resists="fire" />
         
-        <!-- Peculiar Fire field phantoms found in Destard LV4 -->
-        <creature id="59" name="Living Lava" tile="fire_field" basehp="48" exp="14" canMoveOntoCreatures="true" resists="fire" canMoveOntoAvatar="true" rangedhittile="random" rangedmisstile="fire_field" leader="45" divides="true"/> 
-
+        <creature id="60" encounterSize="15" name="Grass" tile="grass" basehp="48" exp="4" />
+        <creature id="61" encounterSize="15" name="Chest" tile="chest" basehp="48" exp="4" />
+        <creature id="62" encounterSize="15" name="Floor" tile="brick_floor" basehp="48" exp="4" />
+        
 </creatures>

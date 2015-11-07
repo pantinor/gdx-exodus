@@ -59,7 +59,7 @@ public class Moongate {
                 + "</properties>\n"
                 + "</object>\n";
 
-        return String.format(template, name, x * 32, y * 32, x, y, phase);
+        return String.format(template, name, x * 32*4, y * 32*4, x, y, phase);
     }
 
     public AtlasRegion getCurrentTexture() {

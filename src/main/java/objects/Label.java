@@ -57,7 +57,7 @@ public class Label {
                 + "</properties>\n"
                 + "</object>\n";
 
-        return String.format(template, name, x * 32, y * 32, x, y);
+        return String.format(template, name, x * 32*4, y * 32*4, x, y);
     }
 
 }

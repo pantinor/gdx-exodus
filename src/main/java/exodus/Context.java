@@ -13,6 +13,7 @@ import objects.Tile;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import exodus.Party.PartyMember;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -264,38 +265,38 @@ public class Context implements Constants {
 
     public Maps getCombatMapForTile(Tile combatantTile, TransportContext transport, int x, int y) {
 
-//        boolean fromShip = false;
-//        boolean toShip = false;
-//
-//        Tile tileUnderneathAvatar = currentMap.getTile(x, y);
-//
-//        if (transport == TransportContext.SHIP) {
-//            fromShip = true;
-//        }
-//
-//        if (combatantTile.getRule() == TileRule.ship) {
-//            toShip = true;
-//        }
-//
-//        if (fromShip && toShip) {
-//            return Maps.SHIPSHIP_CON;
-//        }
-//
-//        if (toShip) {
-//            return Maps.SHORSHIP_CON;
-//        } else if (fromShip && tileUnderneathAvatar.getRule() == TileRule.water) {
-//            return Maps.SHIPSEA_CON;
-//        } else if (tileUnderneathAvatar.getRule() == TileRule.water) {
-//            return Maps.SHORE_CON;
-//        } else if (fromShip && tileUnderneathAvatar.getRule() != TileRule.water) {
-//            return Maps.SHIPSHOR_CON;
-//        }
-//
-//        if (tileUnderneathAvatar.getCombatMap() != null) {
-//            return tileUnderneathAvatar.getCombatMap();
-//        }
-//
-//        return Maps.BRICK_CON;
+        boolean fromShip = false;
+        boolean toShip = false;
+
+        Tile tileUnderneathAvatar = currentMap.getTile(x, y);
+
+        if (transport == TransportContext.SHIP) {
+            fromShip = true;
+        }
+
+        if (combatantTile.getRule() == TileRule.ship) {
+            toShip = true;
+        }
+
+        if (fromShip && toShip) {
+            //return Maps.SHIPSHIP_CON;
+        }
+
+        if (toShip) {
+            //return Maps.SHORSHIP_CON;
+        } else if (fromShip && tileUnderneathAvatar.getRule() == TileRule.water) {
+            //return Maps.SHIPSEA_CON;
+        } else if (tileUnderneathAvatar.getRule() == TileRule.water) {
+            //return Maps.SHORE_CON;
+        } else if (fromShip && tileUnderneathAvatar.getRule() != TileRule.water) {
+            //return Maps.SHIPSHOR_CON;
+        }
+
+        if (tileUnderneathAvatar.getCombatMap() != null) {
+            return tileUnderneathAvatar.getCombatMap();
+        }
+
+        //return Maps.BRICK_CON;
         
         return null;
     }
@@ -343,71 +344,71 @@ public class Context implements Constants {
     public void damageShip(int minDamage, int maxDamage) {
         if (transportContext == TransportContext.SHIP) {
             int damage = minDamage >= 0 && minDamage < maxDamage ? rand.nextInt(maxDamage + 1 - minDamage) + minDamage : maxDamage;
-            //party.adjustShipHull(-damage);
+            party.adjustShipHull(-damage);
         }
     }
 
-//    public boolean getChestTrapHandler(PartyMember pm) throws PartyDeathException {
-//
-//        TileEffect trapType;
-//        int randNum = rand.nextInt(4);
-//        boolean passTest = (rand.nextInt(2) == 0);
-//
-//        /* Chest is trapped! 50/50 chance */
-//        if (passTest) {
-//            /* Figure out which trap the chest has */
-//            switch (randNum) {
-//                case 0:
-//                    trapType = TileEffect.FIRE;
-//                    break; /* acid trap (56% chance - 9/16) */
-//
-//                case 1:
-//                    trapType = TileEffect.SLEEP;
-//                    break; /* sleep trap (19% chance - 3/16) */
-//
-//                case 2:
-//                    trapType = TileEffect.POISON;
-//                    break; /* poison trap (19% chance - 3/16) */
-//
-//                case 3:
-//                    trapType = TileEffect.LAVA;
-//                    break; /* bomb trap (6% chance - 1/16) */
-//
-//                default:
-//                    trapType = TileEffect.FIRE;
-//                    break;
-//            }
-//
-//            if (trapType == TileEffect.FIRE) {
-//                Exodus.hud.add("Acid Trap!");
-//                Sounds.play(Sound.ACID);
-//            } else if (trapType == TileEffect.POISON) {
-//                Exodus.hud.add("Poison Trap!");
-//                Sounds.play(Sound.POISON_EFFECT);
-//            } else if (trapType == TileEffect.SLEEP) {
-//                Exodus.hud.add("Sleep Trap!");
-//                Sounds.play(Sound.SLEEP);
-//            } else if (trapType == TileEffect.LAVA) {
-//                Exodus.hud.add("Bomb Trap!");
-//                Sounds.play(Sound.BOOM);
-//            }
-//
-//            if (pm.getPlayer().dex + 25 < rand.nextInt(100)) {
-//                if (trapType == TileEffect.LAVA) {/* bomb trap */
-//
-//                    party.applyEffect(trapType);
-//                } else {
-//                    pm.applyEffect(trapType);
-//                }
-//            } else {
-//                Exodus.hud.add("Evaded!");
-//            }
-//
-//            return true;
-//        }
-//
-//        return false;
-//    }
+    public boolean getChestTrapHandler(PartyMember pm) throws PartyDeathException {
+
+        TileEffect trapType;
+        int randNum = rand.nextInt(4);
+        boolean passTest = (rand.nextInt(2) == 0);
+
+        /* Chest is trapped! 50/50 chance */
+        if (passTest) {
+            /* Figure out which trap the chest has */
+            switch (randNum) {
+                case 0:
+                    trapType = TileEffect.FIRE;
+                    break; /* acid trap (56% chance - 9/16) */
+
+                case 1:
+                    trapType = TileEffect.SLEEP;
+                    break; /* sleep trap (19% chance - 3/16) */
+
+                case 2:
+                    trapType = TileEffect.POISON;
+                    break; /* poison trap (19% chance - 3/16) */
+
+                case 3:
+                    trapType = TileEffect.LAVA;
+                    break; /* bomb trap (6% chance - 1/16) */
+
+                default:
+                    trapType = TileEffect.FIRE;
+                    break;
+            }
+
+            if (trapType == TileEffect.FIRE) {
+                Exodus.hud.add("Acid Trap!");
+                Sounds.play(Sound.ACID);
+            } else if (trapType == TileEffect.POISON) {
+                Exodus.hud.add("Poison Trap!");
+                Sounds.play(Sound.POISON_EFFECT);
+            } else if (trapType == TileEffect.SLEEP) {
+                Exodus.hud.add("Sleep Trap!");
+                Sounds.play(Sound.SLEEP);
+            } else if (trapType == TileEffect.LAVA) {
+                Exodus.hud.add("Bomb Trap!");
+                Sounds.play(Sound.BOOM);
+            }
+
+            if (pm.getPlayer().dex + 25 < rand.nextInt(100)) {
+                if (trapType == TileEffect.LAVA) {/* bomb trap */
+
+                    party.applyEffect(trapType);
+                } else {
+                    pm.applyEffect(trapType);
+                }
+            } else {
+                Exodus.hud.add("Evaded!");
+            }
+
+            return true;
+        }
+
+        return false;
+    }
 
     public Drawable getCurrentShip() {
         return currentShip;
@@ -426,29 +427,29 @@ public class Context implements Constants {
     }
 
     public Maps getCombatMap(Creature c, BaseMap bm, int creatureX, int creatureY, int avatarX, int avatarY) {
-//        Tile ct = bm.getTile(creatureX, creatureY);
-//        Maps cm = ct.getCombatMap();
-//
-//        TileRule ptr = bm.getTile(avatarX, avatarY).getRule();
-//        if (c.getSwims() && !ptr.has(TileAttrib.unwalkable)) {
-//            cm = Maps.SHORE_CON;
-//        } else if (c.getSails() && !ptr.has(TileAttrib.unwalkable)) {
-//            cm = Maps.SHORSHIP_CON;
-//        }
-//
-//        if (transportContext == TransportContext.SHIP) {
-//            if (c.getSwims()) {
-//                cm = Maps.SHIPSEA_CON;
-//            } else if (c.getSails()) {
-//                cm = Maps.SHIPSHIP_CON;
-//            } else {
-//                cm = Maps.SHIPSHOR_CON;
-//            }
-//        }
-//
-//        return cm;
+        Tile ct = bm.getTile(creatureX, creatureY);
+        Maps cm = ct.getCombatMap();
+
+        TileRule ptr = bm.getTile(avatarX, avatarY).getRule();
+        if (c.getSwims() && !ptr.has(TileAttrib.unwalkable)) {
+            //cm = Maps.SHORE_CON;
+        } else if (c.getSails() && !ptr.has(TileAttrib.unwalkable)) {
+            //cm = Maps.SHORSHIP_CON;
+        }
+
+        if (transportContext == TransportContext.SHIP) {
+            if (c.getSwims()) {
+                //cm = Maps.SHIPSEA_CON;
+            } else if (c.getSails()) {
+                //cm = Maps.SHIPSHIP_CON;
+            } else {
+                //cm = Maps.SHIPSHOR_CON;
+            }
+        }
+
+        return cm;
         
-        return null;
+        //return null;
     }
 
     public long getLastCommandTime() {

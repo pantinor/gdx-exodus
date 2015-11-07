@@ -1,5 +1,15 @@
 package exodus;
 
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import static exodus.Constants.STATS_ARMOR;
+import static exodus.Constants.STATS_ITEMS;
+import static exodus.Constants.STATS_PLAYER1;
+import static exodus.Constants.STATS_PLAYER4;
+import static exodus.Constants.STATS_SPELLS;
+import static exodus.Constants.STATS_WEAPONS;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -86,8 +96,6 @@ public class Party extends Observable implements Constants {
             context.setTransportContext(TransportContext.HORSE);
         } else if (transport.getRule().has(TileAttrib.ship)) {
             context.setTransportContext(TransportContext.SHIP);
-        } else if (transport.getRule().has(TileAttrib.balloon)) {
-            context.setTransportContext(TransportContext.BALLOON);
         } else {
             context.setTransportContext(TransportContext.FOOT);
         }
@@ -271,8 +279,13 @@ public class Party extends Observable implements Constants {
         this.torchduration = torchduration;
     }
 
-    public void adjustFood(PartyMember member, int v) {
-        member.player.food = Utils.adjustValue(member.player.food, v, 999900, 0);
+    public void adjustFoodHealth(PartyMember member) {
+        member.player.submorsels -= 10;
+        if (member.player.submorsels < 0) {
+            member.player.submorsels = 100;
+            member.player.food = Utils.adjustValue(member.player.food, -1, 999900, 0);
+            member.player.health = Utils.adjustValue(member.player.health, 1, member.player.maxHealth, 0);
+        }
     }
 
     public void adjustGold(PartyMember member, int v) {
@@ -636,7 +649,7 @@ public class Party extends Observable implements Constants {
             if (mapType != MapType.combat) {
 
                 if (member.player.status != StatusType.DEAD) {
-                    adjustFood(member, -1);
+                    adjustFoodHealth(member);
                 }
 
                 if (member.player.status == StatusType.POISONED) {
@@ -658,7 +671,7 @@ public class Party extends Observable implements Constants {
             }
         }
 
-//        if (context.getCurrentMap().getId() == Maps.WORLD.getId() && saveGame.shiphull < 50 && rand.nextInt(4) == 0) {
+//        if (context.getCurrentMap().getId() == Maps.SOSARIA.getId() && saveGame.shiphull < 50 && rand.nextInt(4) == 0) {
 //            saveGame.shiphull++;
 //            if (saveGame.shiphull > 50) {
 //                saveGame.shiphull = 50;
@@ -672,6 +685,149 @@ public class Party extends Observable implements Constants {
 
     public void setContext(Context context) {
         this.context = context;
+    }
+
+    //to proper case
+    public static String pc(String s) {
+        return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
+    }
+
+    public String[] getZstats() {
+
+        StringBuilder sb1 = new StringBuilder();
+        for (PartyMember pm : members) {
+            CharacterRecord p = pm.getPlayer();
+            sb1.append(pc(p.name)).append("  ").append(pc(p.race.toString())).
+                    append("|").append(pc(p.profession.toString())).
+                    append("|").append(pc(p.sex.getDesc())).append("  ").append(p.status.getId()).
+                    append("|").append("MANA: ").append(p.mana).append("  LV: ").append(p.getLevel()).
+                    append("|" + "STR: ").append(p.str).append("  HEALTH: ").append(p.health).
+                    append("|" + "DEX: ").append(p.dex).append("  MAXHEALTH: ").append(p.maxHealth).
+                    append("|" + "INT: ").append(p.intell).append("  EXP: ").append(p.exp).
+                    append("|" + "WIS: ").append(p.wis).
+                    append("|" + "READIED: ").append(pc(p.weapon.toString())).
+                    append("|" + "WORN: ").append(pc(p.armor.toString())).
+                    append("|" + "TORCHES: ").append(p.torches).
+                    append("|" + "GEMS: ").append(p.gems).
+                    append("|" + "KEYS: ").append(p.keys).
+                    append("|" + "GOLD: ").append(p.gold).
+                    append("|" + "FOOD: ").append(p.food);
+
+            for (ArmorType t : ArmorType.values()) {
+                if (t == ArmorType.NONE) {
+                    continue;
+                }
+                sb1.append("|" + t + ": ").append(p.qtyArmors[t.ordinal()]);
+            }
+
+            for (WeaponType t : WeaponType.values()) {
+                if (t == WeaponType.NONE) {
+                    continue;
+                }
+                sb1.append("|" + t + ": ").append(p.qtyWeapons[t.ordinal()]);
+            }
+
+            sb1.append("~");
+        }
+
+//
+//        for (Item item : Constants.Item.values()) {
+//            if (!item.isVisible()) {
+//                continue;
+//            }
+//            sb4.append((this.items & (1 << item.ordinal())) > 0 ? item.getDesc() + "|" : "");
+//        }
+//
+        String[] ret = new String[1];
+        ret[0] = sb1.toString();
+
+        return ret;
+    }
+    
+    public Texture zstatsBox;
+
+    public void renderZstats(int showZstats, BitmapFont font, Batch batch, int SCREEN_HEIGHT) {
+
+        if (zstatsBox == null) {
+            Pixmap pixmap = new Pixmap(175, 490, Pixmap.Format.RGBA8888);
+            pixmap.setColor(0f, 0f, 0f, 0.65f);
+            pixmap.fillRectangle(0, 0, 175, 490);
+            zstatsBox = new Texture(pixmap);
+            pixmap.dispose();
+        }
+
+        batch.draw(zstatsBox, 5, SCREEN_HEIGHT - 5 - 490);
+
+        int rx = 10;
+        int ry = SCREEN_HEIGHT - 10;
+
+        String[] pages = getZstats();
+        if (showZstats >= STATS_PLAYER1 && showZstats <= STATS_PLAYER4) {
+            // players
+            String[] players = pages[0].split("\\~");
+            for (int i = 0; i < players.length; i++) {
+                String[] lines = players[i].split("\\|");
+                if (i != showZstats - 1) {
+                    continue;
+                }
+                rx = 10;
+                ry = SCREEN_HEIGHT - 10;
+                font.draw(batch, "Player " + (i + 1), rx, ry);
+                ry = ry - 18;
+                for (int j = 0; j < lines.length; j++) {
+                    if (lines[j] == null || lines[j].length() < 1) {
+                        continue;
+                    }
+                    font.draw(batch, lines[j], rx, ry);
+                    ry = ry - 18;
+                }
+            }
+        } else if (showZstats == STATS_WEAPONS) {
+            String[] lines = pages[1].split("\\|");
+            font.draw(batch, "Weapons", rx, ry);
+            ry = ry - 18;
+            for (int j = 0; j < lines.length; j++) {
+                if (lines[j] == null || lines[j].length() < 1) {
+                    continue;
+                }
+                font.draw(batch, lines[j], rx, ry);
+                ry = ry - 18;
+            }
+        } else if (showZstats == STATS_ARMOR) {
+            String[] lines = pages[2].split("\\|");
+            font.draw(batch, "Armor", rx, ry);
+            ry = ry - 18;
+            for (int j = 0; j < lines.length; j++) {
+                if (lines[j] == null || lines[j].length() < 1) {
+                    continue;
+                }
+                font.draw(batch, lines[j], rx, ry);
+                ry = ry - 18;
+            }
+        } else if (showZstats == STATS_ITEMS) {
+            String[] lines = pages[3].split("\\|");
+            font.draw(batch, "Items", rx, ry);
+            ry = ry - 18;
+            for (int j = 0; j < lines.length; j++) {
+                if (lines[j] == null || lines[j].length() < 1) {
+                    continue;
+                }
+                font.draw(batch, lines[j], rx, ry);
+                ry = ry - 18;
+            }
+        } else if (showZstats == STATS_SPELLS) {
+            String[] lines = pages[5].split("\\|");
+            font.draw(batch, "Spell Mixtures", rx, ry);
+            ry = ry - 18;
+            for (int j = 0; j < lines.length; j++) {
+                if (lines[j] == null || lines[j].length() < 1) {
+                    continue;
+                }
+                font.draw(batch, lines[j], rx, ry);
+                ry = ry - 18;
+            }
+        }
+
     }
 
 }
