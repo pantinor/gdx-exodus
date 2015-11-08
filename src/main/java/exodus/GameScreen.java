@@ -46,6 +46,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import exodus.Party.PartyMember;
 import util.PartyDeathException;
+import util.Utils;
 
 public class GameScreen extends BaseScreen {
 
@@ -103,6 +104,17 @@ public class GameScreen extends BaseScreen {
         seq1.addAction(Actions.delay(.25f));
         seq1.addAction(Actions.run(gameTimer));
         stage.addAction(Actions.forever(seq1));
+        
+        //add 2 whirlpools
+        Creature wp = Exodus.creatures.getInstance(CreatureType.whirlpool, Exodus.standardAtlas);
+        wp.currentX = 200;
+        wp.currentY = 53;
+        Maps.SOSARIA.getMap().addCreature(wp);
+        
+        wp = Exodus.creatures.getInstance(CreatureType.whirlpool, Exodus.standardAtlas);
+        wp.currentX = 69;
+        wp.currentY = 194;
+        Maps.SOSARIA.getMap().addCreature(wp);
 
         addButtons();
 
@@ -178,8 +190,8 @@ public class GameScreen extends BaseScreen {
             //context.loadJournalEntries();
 
             //load the surface world first
-            loadNextMap(Maps.SOSARIA, sg.partyX, sg.partyY);
-            //loadNextMap(Maps.WORLD, 141, 90);
+            //loadNextMap(Maps.SOSARIA, sg.partyX, sg.partyY);
+            loadNextMap(Maps.SOSARIA, 148, 211);
 
             //load the dungeon if save game starts in dungeon
             if (Maps.get(sg.location) != Maps.SOSARIA) {
@@ -430,10 +442,10 @@ public class GameScreen extends BaseScreen {
             batch.draw(moonAtlas.findRegion("phase_" + feluccaphase), 380, Exodus.SCREEN_HEIGHT - 25, 25, 25);
             Exodus.font.draw(batch, "Wind " + context.getWindDirection().toString(), 415, Exodus.SCREEN_HEIGHT - 7);
         }
-//
-//        if (context.getAura().getType() != AuraType.NONE) {
-//            Exodus.font.draw(batch, context.getAura().getType().toString(), 200, Exodus.SCREEN_HEIGHT - 32);
-//        }
+
+        if (context.getAura().getType() != AuraType.NONE) {
+            Exodus.font.draw(batch, context.getAura().getType().toString(), 200, Exodus.SCREEN_HEIGHT - 32);
+        }
         batch.end();
 
         projectilesStage.act();
@@ -563,8 +575,11 @@ public class GameScreen extends BaseScreen {
             if (p != null) {
 
                 Maps dest = Maps.get(p.getDestmapid());
-
-                if (p.getDestmapid() != context.getCurrentMap().getId()) {
+                if (p.getDestmapid() == Maps.DAWN.getId()) {
+                    if (trammelphase == 0 && feluccaphase == 0) {
+                        loadNextMap(dest, p.getStartx(), p.getStarty());
+                    }
+                } else if (p.getDestmapid() != context.getCurrentMap().getId()) {
                     loadNextMap(dest, p.getStartx(), p.getStarty());
                 } else {
                     newMapPixelCoords = getMapPixelCoords(p.getStartx(), p.getStarty());
@@ -681,9 +696,8 @@ public class GameScreen extends BaseScreen {
                 }
             }
 
-            /* things that happen while not on board the balloon */
-            checkSpecialCreatures(dir, newx, newy);
-            checkBridgeTrolls(newx, newy);
+            //checkSpecialCreatures(dir, newx, newy);
+            //checkBridgeTrolls(newx, newy);
         }
 
         renderer.getFOV().calculateFOV(context.getCurrentMap().getShadownMap(), newx, newy, 17f);
@@ -826,7 +840,7 @@ public class GameScreen extends BaseScreen {
 
         if (tile.getRule().has(TileAttrib.sailable)) {
             randId = CreatureType.pirate_ship.getValue();
-            randId += rand.nextInt(7);
+            randId += rand.nextInt(6);
             Creature cr = Exodus.creatures.getInstance(CreatureType.get(randId), Exodus.standardAtlas);
             return cr;
         } else if (tile.getRule().has(TileAttrib.swimmable)) {
@@ -879,6 +893,13 @@ public class GameScreen extends BaseScreen {
             for (Moongate g : context.getCurrentMap().getMoongates()) {
                 g.setCurrentTexture(null);
             }
+            
+            //for the town of dawn to only show at new moons
+            if (trammelphase == 0 && feluccaphase == 0 && trammelSubphase == 1) {
+                replaceTile("town",148,212);
+            } else if (trammelphase == 0 && feluccaphase == 1 && trammelSubphase == 16) {
+                replaceTile("grass",148,212);
+            }
 
             if (showmoongates) {
                 Moongate gate = context.getCurrentMap().getMoongate(trammelphase);
@@ -929,57 +950,6 @@ public class GameScreen extends BaseScreen {
         return dest;
     }
 
-    private void checkSpecialCreatures(Direction dir, int x, int y) {
-
-//        /*
-//         * if heading east into pirates cove (O'A" N'N"), generate pirate ships
-//         */
-//        if (dir == Direction.EAST && x == 0xdd && y == 0xe0) {
-//            for (PirateCoveInfo pci : PirateCoveInfo.values()) {
-//                Creature pirate = Exodus.creatures.getInstance(CreatureType.pirate_ship, Exodus.standardAtlas);
-//                pirate.currentX = pci.getX();
-//                pirate.currentY = pci.getY();
-//                pirate.currentPos = getMapPixelCoords(pci.getX(), pci.getY());
-//                pirate.sailDir = pci.getFacing();
-//                context.getCurrentMap().addCreature(pirate);
-//            }
-//        }
-//
-//        /*
-//         * if heading south towards the shrine of humility, generate
-//         * daemons unless horn has been blown
-//         */
-//        if (dir == Direction.SOUTH && x >= 229 && x < 234 && y >= 212 && y < 217 && context.getAura().getType() != AuraType.HORN) {
-//            for (int i = 0; i < 8; i++) {
-//                Creature daemon = Exodus.creatures.getInstance(CreatureType.daemon, Exodus.standardAtlas);
-//                daemon.currentX = 231;
-//                daemon.currentY = y + 1;
-//                daemon.currentPos = getMapPixelCoords(231, y + 1);
-//                context.getCurrentMap().addCreature(daemon);
-//            }
-//        }
-    }
-
-    private void checkBridgeTrolls(int x, int y) {
-        Tile bridge = context.getCurrentMap().getTile(x, y);
-
-        if (bridge == null || !bridge.getName().equals("bridge")) {
-            return;
-        }
-
-        if (rand.nextInt(8) != 0) {
-            return;
-        }
-
-        log("Bridge Trolls!");
-
-        Creature troll = Exodus.creatures.getInstance(CreatureType.troll, Exodus.standardAtlas);
-        troll.currentX = x;
-        troll.currentY = y;
-        troll.currentPos = getMapPixelCoords(x, y);
-        attackAt(bridge.getCombatMap(), troll);
-    }
-
     public void board(int x, int y) {
 
         if (context.getTransportContext() != TransportContext.FOOT) {
@@ -1007,18 +977,6 @@ public class GameScreen extends BaseScreen {
             tile = Exodus.baseTileSet.getTileByName("horse");
         }
 
-        //check for balloon
-        Drawable balloon = null;
-        for (Actor a : mapObjectsStage.getActors()) {
-            if (a instanceof Drawable) {
-                Drawable d = (Drawable) a;
-                if (d.getTile().getName().equals("balloon") && d.getCx() == x && d.getCy() == y) {
-                    balloon = d;
-                    tile = d.getTile();
-                }
-            }
-        }
-
         if (tile == null) {
             log("Board What?");
             return;
@@ -1027,7 +985,7 @@ public class GameScreen extends BaseScreen {
         if (tile.getRule().has(TileAttrib.ship)) {
             log("Board Frigate!");
             if (context.getLastShip() != ship) {
-                //context.getParty().adjustShipHull(50);
+                context.getParty().adjustShipHull(50);
             }
             context.setCurrentShip(ship);
             ship.remove();
@@ -1043,7 +1001,7 @@ public class GameScreen extends BaseScreen {
             return;
         }
 
-        //context.getParty().setTransport(tile);
+        context.getParty().setTransport(tile);
 
     }
 

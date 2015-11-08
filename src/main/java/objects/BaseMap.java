@@ -43,7 +43,7 @@ public class BaseMap implements Constants {
     private List<Label> labels;
     private Dungeon dungeon;
 
-    private List<Creature> creatures = new ArrayList<>();
+    private final List<Creature> creatures = new ArrayList<>();
     private List<PartyMember> combatPlayers;
     private Stage surfaceMapStage;
 
@@ -57,7 +57,7 @@ public class BaseMap implements Constants {
     //otherwise cannot catch up and talk to the character
     private long wanderFlag = 0;
 
-    private List<DoorStatus> doors = new ArrayList<>();
+    private final List<DoorStatus> doors = new ArrayList<>();
 
     public Moongate getMoongate(int phase) {
         if (moongates == null) {
@@ -494,7 +494,7 @@ public class BaseMap implements Constants {
             Creature cr = i.next();
 
             int dist = Utils.movementDistance(borderbehavior, width, height, cr.currentX, cr.currentY, avatarX, avatarY);
-            if (dist > MAX_CREATURE_DISTANCE) {
+            if (dist > MAX_CREATURE_DISTANCE && cr.getTile() != CreatureType.whirlpool) {
                 i.remove();
                 continue;
             }
@@ -532,10 +532,8 @@ public class BaseMap implements Constants {
                 if (cr.getWontattack()) {
                     if (cr.getTile() == CreatureType.whirlpool) {
                         screen.context.damageShip(-1, 10);
-                        //teleport to lock lake
-                        screen.newMapPixelCoords = screen.getMapPixelCoords(127, 78);
-                        i.remove();
-                        continue;
+                        screen.loadNextMap(Maps.AMBROSIA, 32, 58);
+                        break;
                     } else if (cr.getTile() == CreatureType.twister) {
                         if (screen.context.getTransportContext() == TransportContext.SHIP) {
                             screen.context.damageShip(10, 30);
