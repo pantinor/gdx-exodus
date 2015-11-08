@@ -46,7 +46,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import exodus.Party.PartyMember;
 import util.PartyDeathException;
-import util.Utils;
 
 public class GameScreen extends BaseScreen {
 
@@ -191,7 +190,7 @@ public class GameScreen extends BaseScreen {
 
             //load the surface world first
             //loadNextMap(Maps.SOSARIA, sg.partyX, sg.partyY);
-            loadNextMap(Maps.SOSARIA, 148, 211);
+            loadNextMap(Maps.SOSARIA, 224, 26);
 
             //load the dungeon if save game starts in dungeon
             if (Maps.get(sg.location) != Maps.SOSARIA) {
@@ -266,6 +265,12 @@ public class GameScreen extends BaseScreen {
         BaseMap baseMap = m.getMap();
 
         if (baseMap.getType() == MapType.dungeon) {
+            
+                DungeonScreen sc = new DungeonScreen(this, context, m);
+                if (restoreSG) {
+                    sc.restoreSaveGameLocation(dngx, dngy, dngLevel, orientation);
+                }
+                mainGame.setScreen(sc);
 
         } else {
 

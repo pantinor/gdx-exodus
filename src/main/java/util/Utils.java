@@ -347,7 +347,7 @@ public class Utils implements Constants {
                     StaticTiledMapTile tr = (StaticTiledMapTile) ml.getCell(x, map.getWidth() - 1 - y).getTile();
                     Tile tile = mapTileIds[tr.getId()];
                     if (tile == null) {
-                        //System.out.printf("no tile found: %d  %d %d\n",x,y,tr.getId());
+                        System.out.printf("no tile found: %d %d %d\n",x,y,tr.getId());
                     }
                     tiles[x + (y * map.getWidth())] = tile;
                 }

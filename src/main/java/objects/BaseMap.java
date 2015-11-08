@@ -16,9 +16,11 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
+import exodus.BaseScreen;
 import exodus.Context;
 import exodus.Exodus;
 import exodus.GameScreen;
+import exodus.Party;
 import exodus.Party.PartyMember;
 import java.util.Iterator;
 import javax.xml.bind.annotation.XmlTransient;
@@ -815,28 +817,28 @@ public class BaseMap implements Constants {
         }
     }
 
-//    public ItemMapLabels searchLocation(BaseScreen screen, Party p, int x, int y, int z) {
-//        SaveGame sg = p.getSaveGame();
-//
-//        if (labels == null) {
-//            return null;
-//        }
-//
-//        Label tmp = null;
-//        for (Label l : labels) {
-//            if (l.getX() == x && l.getY() == y && l.getZ() == z) {
-//                tmp = l;
-//            }
-//        }
-//        if (tmp == null) {
-//            return null;
-//        }
-//
-//        int expPoints = 0;
-//        ItemMapLabels label = ItemMapLabels.valueOf(ItemMapLabels.class, tmp.getName());
-//        boolean added = false;
-//
-//        int conditions = label.getConditions();
+    public ItemMapLabels searchLocation(BaseScreen screen, Party p, int x, int y, int z) {
+        SaveGame sg = p.getSaveGame();
+
+        if (labels == null) {
+            return null;
+        }
+
+        Label tmp = null;
+        for (Label l : labels) {
+            if (l.getX() == x && l.getY() == y && l.getZ() == z) {
+                tmp = l;
+            }
+        }
+        if (tmp == null) {
+            return null;
+        }
+
+        int expPoints = 0;
+        ItemMapLabels label = ItemMapLabels.valueOf(ItemMapLabels.class, tmp.getName());
+        boolean added = false;
+
+        int conditions = label.getConditions();
 //
 //        if ((conditions & SC_NEWMOONS) > 0 && !(GameScreen.trammelphase == 0 && GameScreen.feluccaphase == 0)) {
 //            return null;
@@ -1190,16 +1192,18 @@ public class BaseMap implements Constants {
 //
 //        }
 //
-//        if (expPoints > 0) {
-//            p.getMember(0).awardXP(expPoints);
-//        }
-//
-//        if (added) {
-//            return label;
-//        }
-//
-//        return null;
-//    }
+        if (expPoints > 0) {
+            p.getMember(0).awardXP(expPoints);
+        }
+
+        if (added) {
+            return label;
+        }
+
+        return null;
+    }
+    
+    
     @XmlTransient
     public List<PartyMember> getCombatPlayers() {
         return combatPlayers;

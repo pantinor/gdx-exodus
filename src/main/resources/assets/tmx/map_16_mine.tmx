@@ -109,7 +109,7 @@
 </data>
 </layer>
 <layer name="Dungeon Level 6" width="16" height="16">
-<properties><property name="writings" value="G, T, & G!"/></properties>
+<properties><property name="writings" value="G, T, and G!"/></properties>
 <data encoding="csv">
 126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,
 126,29,126,61,61,442,442,442,442,63,63,63,63,63,63,63,

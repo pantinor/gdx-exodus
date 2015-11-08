@@ -90,8 +90,12 @@
     <tile index ="107" name="hills" rule="hills" />
     <tile index ="108" name="swamp" rule="grass" />
     <tile index ="109" name="sea" rule="water" />
-    <tile index ="109" name="bridge_piece1" rule="none" />
-    <tile index ="109" name="bridge_piece2" rule="none" />
+    <tile index ="110" name="bridge_piece1" rule="none" />
+    <tile index ="111" name="bridge_piece2" rule="none" />
+    <tile index ="112" name="ruins" rule="none" />
+    <tile index ="113" name="rocks" rule="solid" />
+    <tile index ="114" name="stone_wall" rule="walls" />
+    <tile index ="115" name="city" rule="none" />
 
 </tileset>
 

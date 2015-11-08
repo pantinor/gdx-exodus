@@ -46,7 +46,7 @@
 </data>
 </layer>
 <layer name="Dungeon Level 3" width="16" height="16">
-<properties><property name="writings" value="Traps & Treasure"/></properties>
+<properties><property name="writings" value="Traps and Treasure"/></properties>
 <data encoding="csv">
 126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,126,
 126,126,63,63,74,63,63,63,61,61,63,63,74,63,63,126,
