@@ -52,6 +52,7 @@ public class Exodus extends Game {
     public static BitmapFont font;
     public static BitmapFont smallFont;
     public static BitmapFont largeFont;
+    public static BitmapFont ultimaFont;
     
     public static StartScreen startScreen;
     public static Skin skin;
@@ -106,12 +107,22 @@ public class Exodus extends Game {
         largeFont = generator.generateFont(parameter);
 
         generator.dispose();
+        
+        generator = new FreeTypeFontGenerator(Gdx.files.classpath("assets/fonts/ultima.ttf"));
+        parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+
+        parameter.size = 96;
+        ultimaFont = generator.generateFont(parameter);
+        
+        generator.dispose();
+
 
         skin = new Skin(Gdx.files.classpath("assets/skin/uiskin.json"));
         skin.remove("default-font", BitmapFont.class);
         skin.add("default-font", font, BitmapFont.class);
         skin.add("journal", font, BitmapFont.class);
         skin.add("death-screen", largeFont, BitmapFont.class);
+        skin.add("ultima", ultimaFont, BitmapFont.class);
 
         Label.LabelStyle ls = skin.get("default", Label.LabelStyle.class);
         ls.font = font;

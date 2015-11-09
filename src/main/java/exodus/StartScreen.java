@@ -6,10 +6,7 @@
 package exodus;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,7 +14,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -62,19 +58,12 @@ public class StartScreen implements Screen, Constants {
     TextButton manage;
     TextButton journey;
 
-    BitmapFont ultimaFont;
     BitmapFont exodusFont;
 
     public StartScreen(Exodus main) {
         this.mainGame = main;
 
         title = new Texture(Gdx.files.classpath("assets/graphics/splash.png"));
-
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.classpath("assets/fonts/ultima.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-
-        parameter.size = 96;
-        ultimaFont = generator.generateFont(parameter);
 
         exodusFont = new BitmapFont(Gdx.files.classpath("assets/fonts/exodus.fnt"));
 
@@ -187,7 +176,7 @@ public class StartScreen implements Screen, Constants {
         batch.begin();
         batch.draw(title, 0, 0);
         exodusFont.draw(batch, "EXODUS", 320, Exodus.SCREEN_HEIGHT - 140);
-        ultimaFont.draw(batch, "Ultima III", 315, Exodus.SCREEN_HEIGHT - 240);
+        Exodus.ultimaFont.draw(batch, "Ultima III", 315, Exodus.SCREEN_HEIGHT - 240);
         Exodus.largeFont.draw(batch, "From the depths of hell...he comes for VENGEANCE!", 300, Exodus.SCREEN_HEIGHT - 342);
         Exodus.largeFont.draw(batch, "LIBGDX Conversion by Paul Antinori", 350, 84);
         Exodus.largeFont.draw(batch, "Copyright 1983 Lord British", 375, 48);

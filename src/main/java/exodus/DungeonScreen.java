@@ -1,6 +1,5 @@
 package exodus;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -49,6 +48,9 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.UBJsonReader;
 import util.PartyDeathException;
 
@@ -183,9 +185,6 @@ public class DungeonScreen extends BaseScreen {
 
         decalBatch = new DecalBatch(new CameraGroupStrategy(camera));
 
-//        inputController = new CameraInputController(camera);
-//        inputController.rotateLeftKey = inputController.rotateRightKey = inputController.forwardKey = inputController.backwardKey = 0;
-//        inputController.translateUnits = 30f;
         ModelBuilder builder = new ModelBuilder();
         lightModel = builder.createSphere(.1f, .1f, .1f, 10, 10, new Material(ColorAttribute.createDiffuse(1, 1, 1, 1)), Usage.Position);
         lightModel.nodes.get(0).parts.get(0).setRenderable(pLight = new Renderable());
@@ -214,6 +213,14 @@ public class DungeonScreen extends BaseScreen {
                         byte index = bytes[pos];
                         pos++;
                         DungeonTile tile = DungeonTile.getTileByValue(index);
+                        
+                        for (objects.Label l : this.dngMap.getMap().getLabels()) {
+                            if (l.getX() == x && l.getY() == y && l.getZ() == i) {
+                                tile = DungeonTile.valueOf(l.getName());
+                                break;
+                            }
+                        }
+                        
                         dungeonTiles[i][x][y] = tile;
                         addBlock(i, tile, x + .5f, .5f, y + .5f);
                     }
@@ -221,13 +228,13 @@ public class DungeonScreen extends BaseScreen {
             }
 
             pos = 0x800;
-            int[] textOffsets = new int[8];
-            for (int x = 0; x < 8; x++) {
+            int[] textOffsets = new int[DUNGEON_LVLS];
+            for (int x = 0; x < DUNGEON_LVLS; x++) {
                 textOffsets[x] = (bytes[pos] & 0xff) + 0x800;
                 pos += 2;
             }
 
-            for (int x = 0; x < 8; x++) {
+            for (int x = 0; x < DUNGEON_LVLS; x++) {
                 int os = textOffsets[x];
                 byte[] b = new byte[64];
                 int c = 0;
@@ -242,7 +249,6 @@ public class DungeonScreen extends BaseScreen {
                 texts[x] = new String(b, "UTF-8").trim();
                 texts[x] = texts[x].replaceAll("[<>]", "");
                 texts[x] = texts[x].replaceAll("[\n\r]", " ");
-
             }
 
             miniMapIcon = new MiniMapIcon();
@@ -525,7 +531,7 @@ public class DungeonScreen extends BaseScreen {
             modelInstances.add(in);
             in.x = (int) tx;
             in.y = (int) tz;
-        } else if (tile == DungeonTile.MARK) {
+        } else if (tile.toString().startsWith("MARK")) {
             ModelInstance instance = new ModelInstance(orbModel, tx, .5f, tz);
             instance.nodes.get(0).scale.set(.0025f, .0025f, .0025f);
             instance.calculateTransforms();
@@ -601,10 +607,7 @@ public class DungeonScreen extends BaseScreen {
                 } else if (tile == DungeonTile.DOOR) {
                     pixmap.setColor(0.6f, 0.6f, 0.6f, 0.7f);
                     pixmap.fillRectangle(OFST + (x * DIM), OFST + (y * DIM), DIM, DIM);
-                } else if (tile.getValue() >= 208 && tile.getValue() <= 223) { //room indicator
-                    pixmap.setColor(0.36f, 0.04f, 0.04f, 0.7f);
-                    pixmap.fillRectangle(OFST + (x * DIM), OFST + (y * DIM), DIM, DIM);
-                } else if (tile.getValue() >= 160 && tile.getValue() <= 163) { //fields
+                } else if (tile.toString().startsWith("FIELD")) {
                     Color c = Color.GREEN;
                     if (tile == DungeonTile.FIELD_ENERGY) {
                         c = Color.BLUE;
@@ -617,8 +620,8 @@ public class DungeonScreen extends BaseScreen {
                     }
                     pixmap.setColor(c);
                     pixmap.fillRectangle(OFST + (x * DIM), OFST + (y * DIM), DIM, DIM);
-                } else if (tile.getValue() >= 10 && tile.getValue() <= 48) {
-                    drawLadderTriangle(tile, pixmap, x, y); //ladders
+                } else if (tile.toString().startsWith("LADDER")) {
+                    drawLadderTriangle(tile, pixmap, x, y);
                 }
             }
         }
@@ -1106,6 +1109,12 @@ public class DungeonScreen extends BaseScreen {
                 context.getParty().applyEffect(TileEffect.LAVA);
                 Sounds.play(Sound.FIREFIELD);
                 break;
+            case MISTY_WRITINGS:
+                Label label = new Label(texts[currentLevel], Exodus.skin, "ultima", Color.WHITE);
+                label.setPosition(32*6, 32*12);
+                stage.addActor(label);
+                label.addAction(sequence(Actions.moveTo(32*6, 32*8, 2f), Actions.fadeOut(2f), Actions.removeActor(label)));
+                break;
         }
     }
 
@@ -1122,82 +1131,52 @@ public class DungeonScreen extends BaseScreen {
         moveDungeonCreatures(this, currentX, currentY);
     }
 
-    public void getMark(int index) {
+    public void getMark(DungeonTile type, int index) {
         if (index >= context.getParty().getMembers().size()) {
             return;
         }
         Party.PartyMember pm = context.getParty().getMember(index);
         int x = (Math.round(currentPos.x) - 1);
         int y = (Math.round(currentPos.z) - 1);
-
-        int stats = 0;
-        int damage = 0;
-
-//        switch (dngMap) {
-//            case DECEIT:
-//                stats = STATSBONUS_INT;
-//                break;
-//            case DESPISE:
-//                stats = STATSBONUS_DEX;
-//                break;
-//            case DESTARD:
-//                stats = STATSBONUS_STR;
-//                break;
-//            case WRONG:
-//                stats = STATSBONUS_INT | STATSBONUS_DEX;
-//                break;
-//            case COVETOUS:
-//                stats = STATSBONUS_DEX | STATSBONUS_STR;
-//                break;
-//            case SHAME:
-//                stats = STATSBONUS_INT | STATSBONUS_STR;
-//                break;
-//            case HYTHLOTH:
-//                stats = STATSBONUS_INT | STATSBONUS_DEX | STATSBONUS_STR;
-//                break;
-//            default:
-//                break;
-//        }
-        if ((stats & STATSBONUS_STR) > 0) {
-            log("Strength + 5");
-            int n = Utils.adjustValueMax(pm.getPlayer().str, 5, 50);
-            pm.getPlayer().str = n;
-            damage += 200;
-        }
-        if ((stats & STATSBONUS_DEX) > 0) {
-            log("Dexterity + 5");
-            int n = Utils.adjustValueMax(pm.getPlayer().dex, 5, 50);
-            pm.getPlayer().dex = n;
-            damage += 200;
-        }
-        if ((stats & STATSBONUS_INT) > 0) {
-            log("Intelligence + 5");
-            int n = Utils.adjustValueMax(pm.getPlayer().intell, 5, 50);
-            pm.getPlayer().intell = n;
-            damage += 200;
+        
+        log("You touch the " + type.getType() + "!");
+        
+        switch(type) {
+            case MARK_KINGS:
+                pm.getPlayer().markKings = 1;
+                break;
+            case MARK_FIRE:
+                pm.getPlayer().markFire = 1;
+                break;
+            case MARK_SNAKE:
+                pm.getPlayer().markSnake = 1;
+                break;
+            case MARK_FORCE:
+                pm.getPlayer().markForce = 1;
+                break;
         }
 
         Sounds.play(Sound.LIGHTNING);
 
         try {
-            pm.applyDamage(damage, false);
+            pm.applyDamage(50, false);
         } catch (PartyDeathException pde) {
             partyDeath();
             return;
         }
 
-        //remove orb model instance
-        DungeonTileModelInstance orb = null;
-        for (DungeonTileModelInstance dmi : modelInstances) {
-            if (dmi.getTile() == DungeonTile.ORB) {
-                if (dmi.x == x && dmi.y == y && dmi.getLevel() == currentLevel) {
-                    orb = dmi;
-                    break;
-                }
-            }
-        }
-        modelInstances.remove(orb);
-        dungeonTiles[currentLevel][x][y] = DungeonTile.NOTHING;
+//        //remove model instance
+//        DungeonTileModelInstance mark = null;
+//        for (DungeonTileModelInstance dmi : modelInstances) {
+//            if (dmi.getTile() == DungeonTile.MARK) {
+//                if (dmi.x == x && dmi.y == y && dmi.getLevel() == currentLevel) {
+//                    mark = dmi;
+//                    break;
+//                }
+//            }
+//        }
+//        modelInstances.remove(mark);
+//        dungeonTiles[currentLevel][x][y] = DungeonTile.NOTHING;
 
     }
 
@@ -1220,7 +1199,7 @@ public class DungeonScreen extends BaseScreen {
                     }
                     break;
                 case FOUNTAIN_ACID:
-                    pm.applyDamage(100, false);
+                    pm.applyDamage(25, false);
                     Sounds.play(Sound.DAMAGE_EFFECT);
                     log("Bleck--Nasty!");
                     break;
@@ -1236,7 +1215,7 @@ public class DungeonScreen extends BaseScreen {
                     if (pm.getPlayer().status != StatusType.POISONED) {
                         Sounds.play(Sound.DAMAGE_EFFECT);
                         pm.applyEffect(TileEffect.POISON);
-                        pm.applyDamage(100, false);
+                        pm.applyDamage(25, false);
                         log("Argh-Choke-Gasp!");
                     } else {
                         log("Hmm--No Effect!");

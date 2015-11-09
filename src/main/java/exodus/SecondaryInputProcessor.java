@@ -283,7 +283,7 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
 
         } else if (screen.scType == ScreenType.DUNGEON) {
 
-            //DungeonScreen dngScreen = (DungeonScreen) screen;
+            DungeonScreen dngScreen = (DungeonScreen) screen;
 
             if (initialKeyCode == Keys.S) {
 
@@ -294,12 +294,15 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                     case FOUNTAIN_CURE:
                     case FOUNTAIN_POISON:
                         if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_8) {
-                            //dngScreen.dungeonDrinkFountain(dngTile, keycode - 7 - 1);
+                            dngScreen.dungeonDrinkFountain(dngTile, keycode - 7 - 1);
                         }
                         break;
-                    case ORB:
+                    case MARK_KINGS:
+                    case MARK_SNAKE:
+                    case MARK_FIRE:
+                    case MARK_FORCE:
                         if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_8) {
-                            //dngScreen.dungeonTouchOrb(keycode - 7 - 1);
+                            dngScreen.getMark(dngTile, keycode - 7 - 1);
                         }
                         break;
                     default:
@@ -309,7 +312,7 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
             } else if (initialKeyCode == Keys.G) {
 
                 if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_8) {
-                    //dngScreen.getChest(keycode - 7 - 1, currentX, currentY);
+                    dngScreen.getChest(keycode - 7 - 1, currentX, currentY);
                 }
 
             } else if (initialKeyCode == Keys.R) {
