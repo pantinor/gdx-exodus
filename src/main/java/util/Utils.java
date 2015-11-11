@@ -10,6 +10,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -17,16 +18,20 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.removeActor;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 import exodus.BaseScreen;
+import exodus.CombatScreen;
 import exodus.Constants;
 import exodus.Context;
 import exodus.Exodus;
+import exodus.Party.PartyMember;
 import exodus.Sound;
 import exodus.Sounds;
 import java.awt.image.BufferedImage;
@@ -193,15 +198,15 @@ public class Utils implements Constants {
 
             } else if (map.getType() == MapType.combat) {
 
-                int pos = 0;
+                int pos = 0x40;
                 for (int y = 0; y < map.getHeight(); y++) {
                     for (int x = 0; x < map.getWidth(); x++) {
-                        int index = (bytes[pos] & 0xff) / 4;
+                        int index = bytes[pos] & 0xff;
                         pos++;
                         Tile tile = ts.getTileByIndex(index);
                         if (tile == null) {
-                            System.out.println("Tile index cannot be found: " + index + " using index 37 for black space.");
-                            tile = ts.getTileByIndex(37);
+                            //System.err.printf("%S Combat Tile index cannot be found: %d using index 127 for black space (%d, %d)\n", map, index, x, y);
+                            tile = ts.getTileByIndex(127);
                         }
                         tiles[x + y * map.getWidth()] = tile;
                     }
@@ -319,7 +324,7 @@ public class Utils implements Constants {
     }
 
     public static void setTilesFromTMX(BaseMap map, Maps id, String tmxFile, TileSet ts) {
-        
+
         Tile[] tiles = new Tile[map.getWidth() * map.getHeight()];
 
         FileHandleResolver resolver = new Constants.ClasspathResolver();
@@ -347,16 +352,15 @@ public class Utils implements Constants {
                     StaticTiledMapTile tr = (StaticTiledMapTile) ml.getCell(x, map.getWidth() - 1 - y).getTile();
                     Tile tile = mapTileIds[tr.getId()];
                     if (tile == null) {
-                        System.out.printf("no tile found: %d %d %d\n",x,y,tr.getId());
+                        System.out.printf("no tile found: %d %d %d\n", x, y, tr.getId());
                     }
                     tiles[x + (y * map.getWidth())] = tile;
                 }
             }
         }
-        
+
         map.setTiles(tiles);
 
-        
         MapLayer objectsLayer = tm.getLayers().get("portals");
         if (objectsLayer != null) {
             Iterator<MapObject> iter = objectsLayer.getObjects().iterator();
@@ -375,7 +379,7 @@ public class Utils implements Constants {
                 }
             }
         }
-        
+
         objectsLayer = tm.getLayers().get("moongates");
         if (objectsLayer != null) {
             Iterator<MapObject> iter = objectsLayer.getObjects().iterator();
@@ -669,6 +673,260 @@ public class Utils implements Constants {
 
             res = AttackResult.HIT;
         }
+
+        return res;
+    }
+
+    public static AttackResult attackHit(Creature attacker, PartyMember defender) {
+        int attackValue = rand.nextInt(0x100) + attacker.getAttackBonus();
+        int defenseValue = defender.getDefense();
+        return attackValue > defenseValue ? AttackResult.HIT : AttackResult.MISS;
+    }
+
+    private static boolean attackHit(PartyMember attacker, Creature defender) {
+        int attackValue = rand.nextInt(0x100) + attacker.getAttackBonus();
+        int defenseValue = defender.getDefense();
+        return attackValue > defenseValue;
+    }
+
+    public static boolean dealDamage(PartyMember attacker, Creature defender, int damage) {
+        int xp = defender.getExp();
+        if (!damageCreature(defender, damage, true)) {
+            attacker.awardXP(xp);
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean dealDamage(Creature attacker, PartyMember defender) throws PartyDeathException {
+        int damage = attacker.getDamage();
+        return defender.applyDamage(damage, true);
+    }
+
+    public static boolean damageCreature(Creature cr, int damage, boolean byplayer) {
+
+        if (cr.getTile() != CreatureType.lord_british) {
+            cr.setHP(Utils.adjustValueMin(cr.getHP(), -damage, 0));
+        }
+
+        switch (cr.getDamageStatus()) {
+
+            case DEAD:
+                if (byplayer) {
+                    Exodus.hud.add(String.format("%s Killed! Exp. %d", cr.getName(), cr.getExp()));
+                } else {
+                    Exodus.hud.add(String.format("%s Killed!", cr.getName()));
+                }
+                return false;
+            case FLEEING:
+                Exodus.hud.add(String.format("%s Fleeing!", cr.getName()));
+                break;
+
+            case CRITICAL:
+                Exodus.hud.add(String.format("%s Critical!", cr.getName()));
+                break;
+
+            case HEAVILYWOUNDED:
+                Exodus.hud.add(String.format("%s Heavily Wounded!", cr.getName()));
+                break;
+
+            case LIGHTLYWOUNDED:
+                Exodus.hud.add(String.format("%s Lightly Wounded!", cr.getName()));
+                break;
+
+            case BARELYWOUNDED:
+                Exodus.hud.add(String.format("%s Barely Wounded!", cr.getName()));
+                break;
+            case FINE:
+                break;
+            default:
+                break;
+        }
+
+        return true;
+    }
+
+    /**
+     * using diagonals computes distance, used with finding nearest party member
+     */
+    public static int distance(MapBorderBehavior borderbehavior, int width, int height, int fromX, int fromY, int toX, int toY) {
+        int dist = movementDistance(borderbehavior, width, height, fromX, fromY, toX, toY);
+
+        if (dist <= 0) {
+            return dist;
+        }
+
+        /* calculate how many fewer movements there would have been */
+        dist -= Math.abs(fromX - toX) < Math.abs(fromY - toY) ? Math.abs(fromX - toX) : Math.abs(fromY - toY);
+
+        return dist;
+    }
+
+    public static void animateAttack(Stage stage, final CombatScreen scr, PartyMember attacker, Direction dir, int x, int y, int range) {
+
+        final AttackVector av = Utils.attack(scr.combatMap, attacker, dir, x, y, range);
+
+        boolean magicHit = attacker.getPlayer().weapon.getWeapon().getHittile().equals("magic_flash");
+
+        final ProjectileActor p = new ProjectileActor(scr, magicHit ? Color.CYAN : Color.RED, x, y, av.result);
+
+        Vector3 v = scr.getMapPixelCoords(av.x, av.y);
+
+        final TextureRegion hitTile = (magicHit ? Exodus.magicHitTile : Exodus.hitTile);
+
+        p.addAction(sequence(moveTo(v.x, v.y, av.distance * .1f), new Action() {
+            @Override
+            public boolean act(float delta) {
+                switch (p.res) {
+                    case HIT:
+                        p.resultTexture = hitTile;
+                        break;
+                    case MISS:
+                        p.resultTexture = Exodus.missTile;
+                        break;
+                }
+
+                scr.replaceTile(av.leaveTileName, av.x, av.y);
+
+                scr.finishPlayerTurn();
+
+                return true;
+            }
+        }, fadeOut(.2f), removeActor(p)));
+
+        stage.addActor(p);
+    }
+
+    private static AttackVector attack(BaseMap combatMap, PartyMember attacker, Direction dir, int x, int y, int range) {
+
+        WeaponType wt = attacker.getPlayer().weapon;
+        boolean weaponCanAttackThroughObjects = wt.getWeapon().getAttackthroughobjects();
+
+        List<AttackVector> path = Utils.getDirectionalActionPath(combatMap, dir.getMask(), x, y, 1, range, weaponCanAttackThroughObjects, true, false);
+
+        AttackVector target = null;
+        boolean foundTarget = false;
+        int distance = 1;
+        for (AttackVector v : path) {
+            AttackResult res = attackAt(combatMap, v, attacker, dir, range, distance);
+            target = v;
+            target.result = res;
+            target.distance = distance;
+            if (res != AttackResult.NONE) {
+                foundTarget = true;
+                break;
+            }
+            distance++;
+        }
+
+        if (wt.getWeapon().getLose() || (wt.getWeapon().getLosewhenranged() && (!foundTarget || distance > 1))) {
+            if (attacker.loseWeapon() == WeaponType.NONE) {
+                Exodus.hud.add("Last One!");
+            }
+        }
+
+        if (wt.getWeapon().getLeavetile() != null && combatMap.getTile(target.x, target.y).walkable()) {
+            target.leaveTileName = wt.getWeapon().getLeavetile();
+        }
+
+        return target;
+    }
+
+//    public static void animateMagicAttack(Stage stage, final CombatScreen scr, PartyMember attacker, Direction dir, int x, int y, Spell spell, int minDamage, int maxDamage) {
+//
+//        final AttackVector av = Utils.castSpellAttack(scr.combatMap, attacker, dir, x, y, minDamage, maxDamage, spell);
+//
+//        Color color = Color.WHITE;
+//        switch (spell) {
+//            case FIREBALL:
+//                color = Color.RED;
+//                break;
+//            case ICEBALL:
+//                color = Color.CYAN;
+//                break;
+//            case KILL:
+//                color = Color.VIOLET;
+//                break;
+//            case MAGICMISSILE:
+//                color = Color.BLUE;
+//                break;
+//            case SLEEP:
+//                color = Color.PURPLE;
+//                break;
+//        }
+//
+//        final ProjectileActor p = new ProjectileActor(scr, color, x, y, av.result);
+//
+//        Vector3 v = scr.getMapPixelCoords(av.x, av.y);
+//
+//        p.addAction(sequence(moveTo(v.x, v.y, av.distance * .1f), new Action() {
+//            public boolean act(float delta) {
+//
+//                switch (p.res) {
+//                    case HIT:
+//                        p.resultTexture = Exodus.magicHitTile;
+//                        break;
+//                    case MISS:
+//                        p.resultTexture = Exodus.missTile;
+//                        break;
+//                }
+//
+//                scr.replaceTile(av.leaveTileName, av.x, av.y);
+//
+//                scr.finishPlayerTurn();
+//
+//                return true;
+//            }
+//        }, fadeOut(.2f), removeActor(p)));
+//
+//        stage.addActor(p);
+//    }
+//    private static AttackVector castSpellAttack(BaseMap combatMap, PartyMember attacker, Direction dir, int x, int y, int minDamage, int maxDamage, Spell spell) {
+//
+//        List<AttackVector> path = Utils.getDirectionalActionPath(combatMap, dir.getMask(), x, y, 1, 11, true, true, false);
+//
+//        AttackVector target = null;
+//        int distance = 1;
+//        for (AttackVector v : path) {
+//            AttackResult res = castAt(combatMap, v, attacker, minDamage, maxDamage, spell);
+//            target = v;
+//            target.result = res;
+//            target.distance = distance;
+//            if (res != AttackResult.NONE) {
+//                break;
+//            }
+//            distance++;
+//        }
+//
+//        return target;
+//    }
+    private static AttackResult attackAt(BaseMap combatMap, AttackVector target, PartyMember attacker, Direction dir, int range, int distance) {
+        AttackResult res = AttackResult.NONE;
+        Creature creature = null;
+        for (Creature c : combatMap.getCreatures()) {
+            if (c.currentX == target.x && c.currentY == target.y) {
+                creature = c;
+                break;
+            }
+        }
+
+        WeaponType wt = attacker.getPlayer().weapon;
+        boolean wrongRange = (wt.getWeapon().getAbsolute_range() > 0 && (distance != range));
+
+        if (creature == null || wrongRange) {
+            if (!wt.getWeapon().getDontshowtravel()) {
+            }
+            return res;
+        }
+
+        //if ((combatMap.getId() == Maps.ABYSS.getId() && !wt.getWeapon().getMagic()) || !attackHit(attacker, creature)) {
+        //    Ultima4.hud.add("Missed!\n");
+        //    res = AttackResult.MISS;
+        //} else {
+        Sounds.play(Sound.NPC_STRUCK);
+        dealDamage(attacker, creature, attacker.getDamage());
+        res = AttackResult.HIT;
+        //}
 
         return res;
     }

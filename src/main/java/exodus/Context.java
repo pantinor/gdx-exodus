@@ -432,24 +432,23 @@ public class Context implements Constants {
 
         TileRule ptr = bm.getTile(avatarX, avatarY).getRule();
         if (c.getSwims() && !ptr.has(TileAttrib.unwalkable)) {
-            //cm = Maps.SHORE_CON;
+            cm = Maps.SHORE_CON;
         } else if (c.getSails() && !ptr.has(TileAttrib.unwalkable)) {
-            //cm = Maps.SHORSHIP_CON;
+            cm = Maps.SHORSHIP_CON;
         }
 
         if (transportContext == TransportContext.SHIP) {
             if (c.getSwims()) {
-                //cm = Maps.SHIPSEA_CON;
+                cm = Maps.SHIPSEA_CON;
             } else if (c.getSails()) {
-                //cm = Maps.SHIPSHIP_CON;
+                cm = Maps.SHIPSHIP_CON;
             } else {
-                //cm = Maps.SHIPSHOR_CON;
+                cm = Maps.SHIPSHOR_CON;
             }
         }
 
         return cm;
         
-        //return null;
     }
 
     public long getLastCommandTime() {

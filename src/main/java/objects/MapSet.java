@@ -49,5 +49,20 @@ public class MapSet {
 
         }
     }
+    
+    public void init(MapType mt, TileSet ts) {
+        for (BaseMap m : maps) {
+            if (m.getType() != mt) {
+                continue;
+            }
+            Maps map = Maps.get(m.getId());
+            map.setMap(m);
+            try {
+                Utils.setMapTiles(m, ts);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 }

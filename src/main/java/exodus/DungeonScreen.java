@@ -44,6 +44,7 @@ import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -53,6 +54,7 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.UBJsonReader;
 import util.PartyDeathException;
+import util.UltimaTiledMapLoader;
 
 public class DungeonScreen extends BaseScreen {
 
@@ -716,22 +718,21 @@ public class DungeonScreen extends BaseScreen {
     }
 
     public void battleWandering(Creature cr, int x, int y) {
-//        if (cr == null) {
-//            return;
-//        }
-//        Maps contextMap = Maps.get(dngMap.getId());
-//        DungeonTile tile = dungeonTiles[currentLevel][x][y];
-//        TiledMap tmap = new UltimaTiledMapLoader(tile.getCombatMap(), Ultima4.standardAtlas, 11, 11, tilePixelWidth, tilePixelHeight).load();
-//        context.setCurrentTiledMap(tmap);
-//        CombatScreen sc = new CombatScreen(this, context, contextMap, tile.getCombatMap().getMap(), tmap, cr.getTile(), Ultima4.creatures, Ultima4.standardAtlas);
-//        mainGame.setScreen(sc);
-//        currentEncounter = cr;
+        if (cr == null) {
+            return;
+        }
+        Maps contextMap = Maps.get(dngMap.getId());
+        DungeonTile tile = dungeonTiles[currentLevel][x][y];
+        TiledMap tmap = new UltimaTiledMapLoader(tile.getCombatMap(), Exodus.standardAtlas, 11, 11, tilePixelWidth, tilePixelHeight).load();
+        context.setCurrentTiledMap(tmap);
+        CombatScreen sc = new CombatScreen(this, context, contextMap, tile.getCombatMap().getMap(), tmap, cr.getTile(), Exodus.creatures, Exodus.standardAtlas);
+        mainGame.setScreen(sc);
+        currentEncounter = cr;
     }
 
     @Override
     public void partyDeath() {
-        //mainGame.setScreen(new DeathScreen(gameScreen, context.getParty()));
-        //gameScreen.loadNextMap(Maps.CASTLE_OF_LORD_BRITISH_2, REVIVE_CASTLE_X, REVIVE_CASTLE_Y);
+        mainGame.setScreen(new StartScreen(mainGame));
     }
 
     @Override
@@ -1162,7 +1163,6 @@ public class DungeonScreen extends BaseScreen {
             pm.applyDamage(50, false);
         } catch (PartyDeathException pde) {
             partyDeath();
-            return;
         }
 
 //        //remove model instance

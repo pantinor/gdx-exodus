@@ -491,9 +491,9 @@ public interface Constants {
         FLOOR((byte) 0x00, "Floor", "brick_floor", true),
         WATER((byte) 0x00, "Water", "water", true),
         CEILING((byte) 0x00, "Ceiling", "none", false),
-        LADDER_UP((byte) 0x10, "Ladder Up", "up_ladder", true, null),
-        LADDER_DOWN((byte) 0x20, "Ladder Down", "down_ladder", true, null),
-        LADDER_UP_DOWN((byte) 0x30, "Ladder Up & Down", "down_ladder", true, null),
+        LADDER_UP((byte) 0x10, "Ladder Up", "up_ladder", true, Maps.DNG1_CON),
+        LADDER_DOWN((byte) 0x20, "Ladder Down", "down_ladder", true, Maps.DNG2_CON),
+        LADDER_UP_DOWN((byte) 0x30, "Ladder Up & Down", "down_ladder", true, Maps.DNG3_CON),
         CEILING_HOLE((byte) 0x00, "Ceiling Hole", "solid", false),
         FLOOR_HOLE((byte) 0x00, "Floor Hole", "solid", false),
         ORB((byte) 0x00, "Magic Orb", "magic_flash", true),
@@ -518,17 +518,17 @@ public interface Constants {
         FIELD_ENERGY((byte) 0x00, "Energy Field", "energy_field", false),
         FIELD_FIRE((byte) 0x00, "Fire Field", "fire_field", false),
         FIELD_SLEEP((byte) 0x00, "Sleep Field", "sleep_field", false),
-        DOOR((byte) 0xC0, "Door", "door", true, null),
-        LOCKED_DOOR((byte) 0, "Locked Door", "locked_door", false, null),
-        SECRET_DOOR((byte) 0xA0, "Secret Door", "secret_door", false, null),
+        DOOR((byte) 0xC0, "Door", "door", true, Maps.DNG5_CON),
+        LOCKED_DOOR((byte) 0, "Locked Door", "locked_door", false, Maps.DNG5_CON),
+        SECRET_DOOR((byte) 0xA0, "Secret Door", "secret_door", false, Maps.DNG6_CON),
         TIME_LORD((byte) 0x01, "Time Lord", "lord_british", false),
-        MISTY_WRITINGS((byte) 0x08, "Misty Writings", "shrine", false),
+        MISTY_WRITINGS((byte) 0x08, "Misty Writings", "shrine", true),
         WALL((byte) 0x80, "Wall ", "brick_wall", false);
 
         private byte value;
         private String type;
         private String tileName;
-        private Maps combatMap = null;
+        private Maps combatMap = Maps.DNG0_CON;
         private boolean creatureWalkable;
 
         private DungeonTile(byte value, String type, String tileName, boolean cw) {
@@ -678,24 +678,26 @@ public interface Constants {
 
     public enum Profession {
 
-        BARBARIAN(SexType.MALE, "B"),
-        DRUID(SexType.MALE, "D"),
-        ALCHEMIST(SexType.MALE, "A"),
-        RANGER(SexType.MALE, "R"),
-        FIGHTER(SexType.MALE, "F"),
-        WIZARD(SexType.MALE, "W"),
-        THIEF(SexType.MALE, "T"),
-        LARK(SexType.FEMALE, "T"),
-        ILLUSIONIST(SexType.FEMALE, "T"),
-        CLERIC(SexType.FEMALE, "T"),
-        PALADIN(SexType.FEMALE, "T");
+        BARBARIAN(SexType.MALE, "B","fighter"),
+        DRUID(SexType.MALE, "D","shepherd"),
+        ALCHEMIST(SexType.MALE, "A","tinker"),
+        RANGER(SexType.MALE, "R","ranger"),
+        FIGHTER(SexType.MALE, "F","fighter"),
+        WIZARD(SexType.MALE, "W","mage"),
+        THIEF(SexType.MALE, "T","rogue"),
+        LARK(SexType.FEMALE, "L","tinker"),
+        ILLUSIONIST(SexType.FEMALE, "I","mage"),
+        CLERIC(SexType.FEMALE, "C","cleric"),
+        PALADIN(SexType.FEMALE, "P","paladin");
 
         private final SexType sex;
         private final String id;
+        private final String tile;
 
-        private Profession(SexType sex, String id) {
+        private Profession(SexType sex, String id, String tile) {
             this.sex = sex;
             this.id = id;
+            this.tile = tile;
         }
 
         public static Profession get(int v) {
@@ -713,6 +715,10 @@ public interface Constants {
 
         public String getId() {
             return id;
+        }
+
+        public String getTile() {
+            return tile;
         }
 
     }

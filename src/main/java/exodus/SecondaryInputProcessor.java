@@ -13,6 +13,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import exodus.Party.PartyMember;
 //import vendor.TinkerDialog;
 
 public class SecondaryInputProcessor extends InputAdapter implements Constants {
@@ -154,12 +155,15 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
 
             } else if (initialKeyCode == Keys.R) {
 
-
+                if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_8) {
+                    Gdx.input.setInputProcessor(new ReadyWearInputAdapter(screen.context.getParty().getMember(keycode - 7 - 1), true));
+                    return false;
+                }
 
             } else if (initialKeyCode == Keys.W) {
 
                 if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_8) {
-                    //Gdx.input.setInputProcessor(new ReadyWearInputAdapter(screen.context.getParty().getMember(keycode - 7 - 1), false));
+                    Gdx.input.setInputProcessor(new ReadyWearInputAdapter(screen.context.getParty().getMember(keycode - 7 - 1), false));
                     return false;
                 }
 
@@ -198,14 +202,14 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
 
         } else if (screen.scType == ScreenType.COMBAT) {
 
-            //CombatScreen combatScreen = (CombatScreen) screen;
+            CombatScreen combatScreen = (CombatScreen) screen;
 
             if (initialKeyCode == Keys.A) {
 
                 screen.log("Attack > " + dir.toString());
 
-                //PartyMember attacker = combatScreen.party.getActivePartyMember();
-                //WeaponType wt = attacker.getPlayer().weapon;
+                PartyMember attacker = combatScreen.party.getActivePartyMember();
+                WeaponType wt = attacker.getPlayer().weapon;
 
                 if (rangeInputModeDirection != null) {
                     switch (rangeInputModeDirection) {
@@ -224,7 +228,7 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                     }
                     if (keycode >= Keys.NUM_0 && keycode <= Keys.NUM_9) {
                         Sounds.play(Sound.PC_ATTACK);
-                        //Utils.animateAttack(stage, combatScreen, attacker, rangeInputModeDirection, x, y, keycode - 7);
+                        Utils.animateAttack(stage, combatScreen, attacker, rangeInputModeDirection, x, y, keycode - 7);
 
                     } else {
                         screen.log("Invalid range!");
@@ -233,15 +237,9 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
 
                 } else {
 
-                    //if (wt.getWeapon().getChoosedistance()) {
-                    //    rangeInputModeDirection = dir;
-                    //    screen.log("Throw Range:");
-                    //    return false;
-                    //}
-
                     Sounds.play(Sound.PC_ATTACK);
-                    //int range = wt.getWeapon().getRange();
-                    //Utils.animateAttack(stage, combatScreen, attacker, dir, x, y, range);
+                    int range = wt.getWeapon().getRange();
+                    Utils.animateAttack(stage, combatScreen, attacker, dir, x, y, range);
                 }
 
                 Gdx.input.setInputProcessor(new InputMultiplexer(screen, stage));
@@ -318,14 +316,14 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
             } else if (initialKeyCode == Keys.R) {
 
                 if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_8) {
-                    //Gdx.input.setInputProcessor(new ReadyWearInputAdapter(screen.context.getParty().getMember(keycode - 7 - 1), true));
+                    Gdx.input.setInputProcessor(new ReadyWearInputAdapter(screen.context.getParty().getMember(keycode - 7 - 1), true));
                     return false;
                 }
 
             } else if (initialKeyCode == Keys.W) {
 
                 if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_8) {
-                    //Gdx.input.setInputProcessor(new ReadyWearInputAdapter(screen.context.getParty().getMember(keycode - 7 - 1), false));
+                    Gdx.input.setInputProcessor(new ReadyWearInputAdapter(screen.context.getParty().getMember(keycode - 7 - 1), false));
                     return false;
                 }
             }
@@ -411,63 +409,63 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
 //        }
 //    }
 
-//    public class ReadyWearInputAdapter extends InputAdapter {
-//
-//        boolean ready;
-//        PartyMember pm;
-//
-//        public ReadyWearInputAdapter(PartyMember pm, boolean ready) {
-//            this.ready = ready;
-//            this.pm = pm;
-//
-//            if (ready) {
-//                for (WeaponType wt : WeaponType.values()) {
-//                    char ch = (char) ('a' + wt.ordinal());
-//                    if (wt == WeaponType.HANDS) {
-//                        screen.log(Character.toUpperCase(ch) + " - " + WeaponType.get(ch - 'a'));
-//                        continue;
-//                    }
-//                    if (pm.getParty().getSaveGame().weapons[wt.ordinal()] > 0) {
-//                        screen.log(Character.toUpperCase(ch) + " - " + WeaponType.get(ch - 'a'));
-//                    } else if (pm.getPlayer().weapon == wt) {
-//                        screen.log(Character.toUpperCase(ch) + " - " + WeaponType.get(ch - 'a'));
-//                    }
-//                }
-//            } else {
-//                for (ArmorType at : ArmorType.values()) {
-//                    char ch = (char) ('a' + at.ordinal());
-//                    if (at == ArmorType.NONE) {
-//                        screen.log(Character.toUpperCase(ch) + " - " + ArmorType.get(ch - 'a'));
-//                        continue;
-//                    }
-//                    if (pm.getParty().getSaveGame().armor[at.ordinal()] > 0) {
-//                        screen.log(Character.toUpperCase(ch) + " - " + ArmorType.get(ch - 'a'));
-//                    } else if (pm.getPlayer().armor == at) {
-//                        screen.log(Character.toUpperCase(ch) + " - " + ArmorType.get(ch - 'a'));
-//                    }
-//                }
-//            }
-//        }
-//
-//        @Override
-//        public boolean keyUp(int keycode) {
-//            if (keycode >= Keys.A && keycode <= Keys.P) {
-//                boolean ret = false;
-//                if (ready) {
-//                    ret = pm.readyWeapon(keycode - 29);
-//                } else {
-//                    ret = pm.wearArmor(keycode - 29);
-//                }
-//                if (!ret) {
-//                    screen.log("Failed!");
-//                } else {
-//                    screen.log("Success!");
-//                }
-//            }
-//            Gdx.input.setInputProcessor(new InputMultiplexer(screen, stage));
-//            screen.finishTurn(currentX, currentY);
-//            return false;
-//        }
-//    }
+    public class ReadyWearInputAdapter extends InputAdapter {
+
+        boolean ready;
+        PartyMember pm;
+
+        public ReadyWearInputAdapter(PartyMember pm, boolean ready) {
+            this.ready = ready;
+            this.pm = pm;
+
+            if (ready) {
+                for (WeaponType wt : WeaponType.values()) {
+                    char ch = (char) ('a' + wt.ordinal());
+                    if (wt == WeaponType.NONE) {
+                        screen.log(Character.toUpperCase(ch) + " - " + WeaponType.get(ch - 'a'));
+                        continue;
+                    }
+                    if (pm.getPlayer().qtyWeapons[wt.ordinal()] > 0) {
+                        screen.log(Character.toUpperCase(ch) + " - " + WeaponType.get(ch - 'a'));
+                    } else if (pm.getPlayer().weapon == wt) {
+                        screen.log(Character.toUpperCase(ch) + " - " + WeaponType.get(ch - 'a'));
+                    }
+                }
+            } else {
+                for (ArmorType at : ArmorType.values()) {
+                    char ch = (char) ('a' + at.ordinal());
+                    if (at == ArmorType.NONE) {
+                        screen.log(Character.toUpperCase(ch) + " - " + ArmorType.get(ch - 'a'));
+                        continue;
+                    }
+                    if (pm.getPlayer().qtyArmors[at.ordinal()] > 0) {
+                        screen.log(Character.toUpperCase(ch) + " - " + ArmorType.get(ch - 'a'));
+                    } else if (pm.getPlayer().armor == at) {
+                        screen.log(Character.toUpperCase(ch) + " - " + ArmorType.get(ch - 'a'));
+                    }
+                }
+            }
+        }
+
+        @Override
+        public boolean keyUp(int keycode) {
+            if (keycode >= Keys.A && keycode <= Keys.P) {
+                boolean ret = false;
+                if (ready) {
+                    ret = pm.readyWeapon(keycode - 29);
+                } else {
+                    ret = pm.wearArmor(keycode - 29);
+                }
+                if (!ret) {
+                    screen.log("Failed!");
+                } else {
+                    screen.log("Success!");
+                }
+            }
+            Gdx.input.setInputProcessor(new InputMultiplexer(screen, stage));
+            screen.finishTurn(currentX, currentY);
+            return false;
+        }
+    }
 
 }

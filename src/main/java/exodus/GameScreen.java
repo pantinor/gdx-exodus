@@ -311,15 +311,15 @@ public class GameScreen extends BaseScreen {
 
     public void attackAt(Maps combat, Creature cr) {
 
-        //Maps contextMap = Maps.get(context.getCurrentMap().getId());
-        //BaseMap combatMap = combat.getMap();
+        Maps contextMap = Maps.get(context.getCurrentMap().getId());
+        BaseMap combatMap = combat.getMap();
 
-        //TiledMap tmap = new UltimaTiledMapLoader(combat, Exodus.standardAtlas, combat.getMap().getWidth(), combat.getMap().getHeight(), tilePixelWidth, tilePixelHeight).load();
+        TiledMap tmap = new UltimaTiledMapLoader(combat, Exodus.standardAtlas, combat.getMap().getWidth(), combat.getMap().getHeight(), tilePixelWidth, tilePixelHeight).load();
 
-        //CombatScreen sc = new CombatScreen(this, context, contextMap, combatMap, tmap, cr.getTile(), Exodus.creatures, Exodus.standardAtlas);
-        //mainGame.setScreen(sc);
+        CombatScreen sc = new CombatScreen(this, context, contextMap, combatMap, tmap, cr.getTile(), Exodus.creatures, Exodus.standardAtlas);
+        mainGame.setScreen(sc);
 
-        //currentEncounter = cr;
+        currentEncounter = cr;
     }
 
     @Override
@@ -369,8 +369,7 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public void partyDeath() {
-        //mainGame.setScreen(new DeathScreen(this, context.getParty()));
-        //loadNextMap(Maps.CASTLE_OF_LORD_BRITISH_2, REVIVE_CASTLE_X, REVIVE_CASTLE_Y);
+        mainGame.setScreen(new StartScreen(mainGame));
     }
 
     @Override
