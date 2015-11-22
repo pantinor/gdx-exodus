@@ -1144,16 +1144,16 @@ public class DungeonScreen extends BaseScreen {
         
         switch(type) {
             case MARK_KINGS:
-                pm.getPlayer().markKings = 1;
+                pm.getPlayer().marks[0] = 1;
                 break;
             case MARK_FIRE:
-                pm.getPlayer().markFire = 1;
+                pm.getPlayer().marks[1] = 1;
                 break;
             case MARK_SNAKE:
-                pm.getPlayer().markSnake = 1;
+                pm.getPlayer().marks[2] = 1;
                 break;
             case MARK_FORCE:
-                pm.getPlayer().markForce = 1;
+                pm.getPlayer().marks[3] = 1;
                 break;
         }
 

@@ -173,14 +173,8 @@ public class SaveGame implements Constants {
 
         public String name = null;
         public int portaitIndex = 11 + 2 * 16;
-        public int markKings;
-        public int markSnake;
-        public int markFire;
-        public int markForce;
-        public int cardDeath;
-        public int cardSol;
-        public int cardLove;
-        public int cardMoons;
+        public int[] marks = new int[4];
+        public int[] cards = new int[4];
         public int torches;
         public int inParty;
         public StatusType status = StatusType.GOOD;
@@ -193,7 +187,6 @@ public class SaveGame implements Constants {
         public SexType sex = SexType.MALE;
         public int mana;
         public int health;
-        public int maxHealth;
         public int exp;
         public int food;
         public int submorsels = 100;
@@ -223,14 +216,14 @@ public class SaveGame implements Constants {
                 }
             }
 
-            dos.writeByte(markKings);
-            dos.writeByte(markSnake);
-            dos.writeByte(markFire);
-            dos.writeByte(markForce);
-            dos.writeByte(cardDeath);
-            dos.writeByte(cardSol);
-            dos.writeByte(cardLove);
-            dos.writeByte(cardMoons);
+            dos.writeByte(marks[0]);
+            dos.writeByte(marks[1]);
+            dos.writeByte(marks[2]);
+            dos.writeByte(marks[3]);
+            dos.writeByte(cards[0]);
+            dos.writeByte(cards[1]);
+            dos.writeByte(cards[2]);
+            dos.writeByte(cards[3]);
             dos.writeByte(torches);
             dos.writeByte(inParty);
             dos.writeByte(status.ordinal());
@@ -243,7 +236,6 @@ public class SaveGame implements Constants {
             dos.writeByte(sex.ordinal());
             dos.writeShort(mana);
             dos.writeShort(health);
-            dos.writeShort(maxHealth);
             dos.writeShort(exp);
             dos.writeShort(food);
             dos.writeShort(gold);
@@ -268,7 +260,11 @@ public class SaveGame implements Constants {
             }
 
             dos.writeShort(portaitIndex);
+            
             dos.writeByte(0);
+            dos.writeByte(0);
+            dos.writeByte(0);
+
             dos.writeInt(0);
 
             return 1;
@@ -289,14 +285,14 @@ public class SaveGame implements Constants {
             }
             name = new String(nameArray).trim();
 
-            markKings = dis.readByte();
-            markSnake = dis.readByte();
-            markFire = dis.readByte();
-            markForce = dis.readByte();
-            cardDeath = dis.readByte();
-            cardSol = dis.readByte();
-            cardLove = dis.readByte();
-            cardMoons = dis.readByte();
+            marks[0] = dis.readByte();
+            marks[0]  = dis.readByte();
+            marks[0]  = dis.readByte();
+            marks[0]  = dis.readByte();
+            cards[0]  = dis.readByte();
+            cards[0]  = dis.readByte();
+            cards[0]  = dis.readByte();
+            cards[0]  = dis.readByte();
             torches = dis.readByte();
             inParty = dis.readByte();
             status = StatusType.get(dis.readByte());
@@ -309,7 +305,6 @@ public class SaveGame implements Constants {
             sex = SexType.get(dis.readByte());
             mana = dis.readShort();
             health = dis.readShort();
-            maxHealth = dis.readShort();
             exp = dis.readShort();
             food = dis.readShort();
             gold = dis.readShort();
@@ -334,6 +329,9 @@ public class SaveGame implements Constants {
             }
 
             portaitIndex = dis.readShort();
+            
+            dis.readByte();
+            dis.readByte();
             dis.readByte();
             dis.readInt();
 
@@ -378,19 +376,11 @@ public class SaveGame implements Constants {
         }
 
         public int getLevel() {
-            return exp / 100;
+            return exp / 100 + 1;
         }
-
-        public int getMaxLevel() {
-            int level = 1;
-            int next = 100;
-
-            while (exp >= next && level < 25) {
-                level++;
-                next <<= 1;
-            }
-
-            return level;
+        
+        public int getMaxHealth() {
+            return getLevel() * 100 + 50;
         }
 
         public void adjustMp(int pts) {
@@ -402,13 +392,13 @@ public class SaveGame implements Constants {
         }
 
         public boolean advanceLevel() {
-            if (getLevel() == getMaxLevel()) {
+            if (getLevel() >= 25) {
                 return false;
             }
 
             status = StatusType.GOOD;
-            maxHealth = getMaxLevel() * 100;
-            health = maxHealth;
+            
+            health = getMaxHealth();
 
             /* improve stats by 1-8 each */
             str += rand.nextInt(8) + 1;

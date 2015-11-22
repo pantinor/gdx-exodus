@@ -115,15 +115,5 @@ public class Vendor {
         return null;
     }
 
-    public Item getTavernInfo(int tip) {
-        for (Item i : inventoryItems) {
-            if (i.getType() == InventoryType.TAVERNINFO) {
-                if (tip / 10 == i.getPrice() / 10) {
-                    return i;
-                }
-            }
-        }
-        return null;
-    }
 
 }

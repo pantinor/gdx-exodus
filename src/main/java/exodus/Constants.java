@@ -1,6 +1,5 @@
 package exodus;
 
-import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
@@ -598,29 +597,24 @@ public interface Constants {
 
     public enum WeaponType {
 
-        NONE("A"),
-        DAGGER("B"),
-        MACE("C"),
-        SLING("D"),
-        AXE("E"),
-        BOW("F"),
-        SWORD("G"),
-        SWORD_2H("H"),
-        AXE_P2("I"),
-        BOW_P2("J"),
-        SWORD_P2("K"),
-        GLOVES("L"),
-        AXE_P4("M"),
-        BOW_P4("N"),
-        SWORD_P4("O"),
-        EXOTIC("P");
+        NONE,
+        DAGGER,
+        MACE,
+        SLING,
+        AXE,
+        BOW,
+        SWORD,
+        SWORD_2H,
+        AXE_P2,
+        BOW_P2,
+        SWORD_P2,
+        GLOVES,
+        AXE_P4,
+        BOW_P4,
+        SWORD_P4,
+        EXOTIC;
 
         private Weapon weapon;
-        private final String letter;
-
-        private WeaponType(String letter) {
-            this.letter = letter;
-        }
 
         public static WeaponType get(int v) {
             for (WeaponType x : values()) {
@@ -637,10 +631,6 @@ public interface Constants {
 
         public void setWeapon(Weapon weapon) {
             this.weapon = weapon;
-        }
-
-        public String getLetter() {
-            return letter;
         }
 
     }
@@ -675,28 +665,32 @@ public interface Constants {
             this.armor = armor;
         }
     }
+    
+    public enum Mark {
+        KINGS, SNAKE, FIRE, FORCE;
+    }
+    
+    public enum Card {
+        DEATH, SOL, LOVE, MOONS;
+    }
 
     public enum Profession {
 
-        BARBARIAN(SexType.MALE, "B","fighter"),
-        DRUID(SexType.MALE, "D","shepherd"),
-        ALCHEMIST(SexType.MALE, "A","tinker"),
-        RANGER(SexType.MALE, "R","ranger"),
-        FIGHTER(SexType.MALE, "F","fighter"),
-        WIZARD(SexType.MALE, "W","mage"),
-        THIEF(SexType.MALE, "T","rogue"),
-        LARK(SexType.FEMALE, "L","tinker"),
-        ILLUSIONIST(SexType.FEMALE, "I","mage"),
-        CLERIC(SexType.FEMALE, "C","cleric"),
-        PALADIN(SexType.FEMALE, "P","paladin");
+        BARBARIAN("fighter"),
+        DRUID("shepherd"),
+        ALCHEMIST("tinker"),
+        RANGER("ranger"),
+        FIGHTER("fighter"),
+        WIZARD("mage"),
+        THIEF("rogue"),
+        LARK("jester"),
+        ILLUSIONIST("mage"),
+        CLERIC("cleric"),
+        PALADIN("paladin");
 
-        private final SexType sex;
-        private final String id;
         private final String tile;
 
-        private Profession(SexType sex, String id, String tile) {
-            this.sex = sex;
-            this.id = id;
+        private Profession(String tile) {
             this.tile = tile;
         }
 
@@ -707,14 +701,6 @@ public interface Constants {
                 }
             }
             return null;
-        }
-
-        public SexType getSex() {
-            return sex;
-        }
-
-        public String getId() {
-            return id;
         }
 
         public String getTile() {
@@ -778,10 +764,7 @@ public interface Constants {
     public static final int STATS_PLAYER2 = 2;
     public static final int STATS_PLAYER3 = 3;
     public static final int STATS_PLAYER4 = 4;
-    public static final int STATS_WEAPONS = 5;
-    public static final int STATS_ARMOR = 6;
-    public static final int STATS_ITEMS = 7;
-    public static final int STATS_SPELLS = 9;
+    public static final int STATS_SPELLS = 5;
 
     //for touching orbs
     public static final int STATSBONUS_INT = 0x1;
@@ -845,71 +828,18 @@ public interface Constants {
         }
     }
 
-    public enum Reagent {
+    public enum Spell {
 
-        ASH("Sulfurous Ash", 1 << 0),
-        GINSENG("Ginseng", 1 << 1),
-        GARLIC("Garlic", 1 << 2),
-        SILK("Spider Silk", 1 << 3),
-        MOSS("Blood Moss", 1 << 4),
-        PEARL("Black Pearl", 1 << 5),
-        NIGHTSHADE("Nightshade", 1 << 6),
-        MANDRAKE("Mandrake Root", 1 << 7);
+        AWAKEN("Awaken", 0, 5, Sound.HEALING);
 
-        String desc;
-        int mask;
-
-        private Reagent(String desc, int mask) {
-            this.mask = mask;
-            this.desc = desc;
-        }
-
-        public static Reagent get(int v) {
-            for (Reagent x : values()) {
-                if (x.ordinal() == (v & 0xff)) {
+        public static Spell get(int i) {
+            for (Spell x : values()) {
+                if (x.ordinal() == i) {
                     return x;
                 }
             }
             return null;
         }
-
-        public int getMask() {
-            return this.mask;
-        }
-
-        public String getDesc() {
-            return this.desc;
-        }
-    }
-
-    public enum Spell {
-
-        AWAKEN("Awaken", Reagent.GINSENG.getMask() | Reagent.GARLIC.getMask(), 5, Sound.HEALING),
-        BLINK("Blink", Reagent.SILK.getMask() | Reagent.MOSS.getMask(), 15),
-        CURE("Cure", Reagent.GINSENG.getMask() | Reagent.GARLIC.getMask(), 5, Sound.HEALING),
-        DISPEL("Dispell", Reagent.ASH.getMask() | Reagent.GARLIC.getMask() | Reagent.PEARL.getMask(), 20),
-        ENERGY("Energy Field", Reagent.ASH.getMask() | Reagent.SILK.getMask() | Reagent.PEARL.getMask(), 10),
-        FIREBALL("Fireball", Reagent.ASH.getMask() | Reagent.PEARL.getMask(), 15, Sound.FIREBALL),
-        GATE("Gate", Reagent.ASH.getMask() | Reagent.PEARL.getMask() | Reagent.MANDRAKE.getMask(), 40),
-        HEAL("Heal", Reagent.GINSENG.getMask() | Reagent.SILK.getMask(), 10, Sound.HEALING),
-        ICEBALL("Iceball", Reagent.PEARL.getMask() | Reagent.MANDRAKE.getMask(), 20, Sound.FIREBALL),
-        JINX("Jinx", Reagent.PEARL.getMask() | Reagent.NIGHTSHADE.getMask() | Reagent.MANDRAKE.getMask(), 30),
-        KILL("Kill", Reagent.PEARL.getMask() | Reagent.NIGHTSHADE.getMask(), 25, Sound.FIREBALL),
-        LIGHT("Light", Reagent.ASH.getMask(), 5),
-        MAGICMISSILE("Magic missile", Reagent.ASH.getMask() | Reagent.PEARL.getMask(), 5, Sound.FIREBALL),
-        NEGATE("Negate", Reagent.ASH.getMask() | Reagent.GARLIC.getMask() | Reagent.MANDRAKE.getMask(), 20),
-        OPEN("Open", Reagent.ASH.getMask() | Reagent.MOSS.getMask(), 5),
-        PROTECTION("Protection", Reagent.ASH.getMask() | Reagent.GINSENG.getMask() | Reagent.GARLIC.getMask(), 15),
-        QUICKNESS("Quickness", Reagent.ASH.getMask() | Reagent.GINSENG.getMask() | Reagent.MOSS.getMask(), 20),
-        RESURRECT("Resurrect", Reagent.ASH.getMask() | Reagent.GINSENG.getMask() | Reagent.GARLIC.getMask() | Reagent.SILK.getMask() | Reagent.MOSS.getMask() | Reagent.MANDRAKE.getMask(), 45),
-        SLEEP("Sleep", Reagent.SILK.getMask() | Reagent.GINSENG.getMask(), 15, Sound.SLEEP),
-        TREMOR("Tremor", Reagent.ASH.getMask() | Reagent.MOSS.getMask() | Reagent.MANDRAKE.getMask(), 30, Sound.TREMOR),
-        UNDEAD("Undead", Reagent.ASH.getMask() | Reagent.GARLIC.getMask(), 15, Sound.STEAL_ESSENCE),
-        VIEW("View", Reagent.NIGHTSHADE.getMask() | Reagent.MANDRAKE.getMask(), 15),
-        WINDS("Winds", Reagent.ASH.getMask() | Reagent.MOSS.getMask(), 10, Sound.ROCKS),
-        XIT("X-it", Reagent.ASH.getMask() | Reagent.SILK.getMask() | Reagent.MOSS.getMask(), 15),
-        YUP("Y-up", Reagent.SILK.getMask() | Reagent.MOSS.getMask(), 10),
-        ZDOWN("Z-down", Reagent.SILK.getMask() | Reagent.MOSS.getMask(), 5);
 
         String desc;
         int mask;
@@ -927,15 +857,6 @@ public interface Constants {
             this.mask = mask;
             this.mp = mp;
             this.sound = snd;
-        }
-
-        public static Spell get(int i) {
-            for (Spell x : values()) {
-                if (x.ordinal() == i) {
-                    return x;
-                }
-            }
-            return null;
         }
 
         public String getDesc() {
@@ -959,33 +880,6 @@ public interface Constants {
             return this.desc;
         }
 
-    }
-
-    public enum BaseVirtue {
-
-        NONE(0x00),
-        TRUTH(0x01),
-        LOVE(0x02),
-        COURAGE(0x04);
-
-        private int intValue;
-
-        private BaseVirtue(int value) {
-            intValue = value;
-        }
-
-        public int getValue() {
-            return intValue;
-        }
-
-        public static BaseVirtue get(int v) {
-            for (BaseVirtue x : values()) {
-                if (x.getValue() == (v & 0xff)) {
-                    return x;
-                }
-            }
-            return null;
-        }
 
     }
 
@@ -1055,7 +949,6 @@ public interface Constants {
 
         balloon("the Ballon", 0),
         lockelake("Locke Lake", 0),
-        telescope("a telescope", 0),
         mandrake1("Mandrake Root", SC_NEWMOONS | SC_REAGENTDELAY),
         mandrake2("Mandrake Root", SC_NEWMOONS | SC_REAGENTDELAY),
         nightshade1("Nightshade", SC_NEWMOONS | SC_REAGENTDELAY),
@@ -1065,32 +958,9 @@ public interface Constants {
         wheel("the Wheel from the H.M.S. Cape", 0),
         skull("the Skull of Modain the Wizard", SC_NEWMOONS),
         candle("the Candle of Love", 0),
-        book("the Book of Truth", 0),
         mysticarmor("Mystic Robes", SC_FULLAVATAR),
         mysticswords("Mystic Swords", SC_FULLAVATAR),
-        honestyrune("the Rune of Honesty", 0),
-        compassionrune("the Rune of Compassion", 0),
-        valorrune("the Rune of Valor", 0),
-        justicerune("the Rune of Justice", 0),
-        sacrificerune("the Rune of Sacrifice", 0),
-        honorrune("the Rune of Honor", 0),
-        humilityrune("the Rune of Humility", 0),
-        spiritualityrune("the Rune of Spirituality", 0),
         blackstone("the Black Stone", SC_NEWMOONS),
-        whitestone("the White Stone", 0),
-        bluestone("the Blue Stone", 0),
-        yellowstone("the Yellow Stone", 0),
-        redstone("the Red Stone", 0),
-        greenstone("the Green Stone", 0),
-        orangestone("the Orange Stone", 0),
-        purplestone("the Purple Stone", 0),
-        //extras
-        ironrunemold("Iron Rune Mold", 0),
-        blackironore("Black Iron Ore", 0),
-        magicparchment("Magic Parchment", 0),
-        greedrune("the Rune of Greed", 0),
-        songhumility("the Song of Humility", 0),
-        maskofminax("the Mask of Minax", 0),
         rageofgod("the Rage of God", 0);
 
         private String desc;
@@ -1148,32 +1018,6 @@ public interface Constants {
         }
     }
 
-    public static final int SPELL_MAX = 26;
-
-    public enum KarmaAction {
-
-        FOUND_ITEM,
-        STOLE_CHEST,
-        GAVE_TO_BEGGAR,
-        GAVE_ALL_TO_BEGGAR,
-        BRAGGED,
-        HUMBLE,
-        HAWKWIND,
-        MEDITATION,
-        BAD_MANTRA,
-        ATTACKED_GOOD,
-        FLED_GOOD,
-        HEALTHY_FLED_EVIL,
-        KILLED_EVIL,
-        SPARED_GOOD,
-        DONATED_BLOOD,
-        DIDNT_DONATE_BLOOD,
-        CHEAT_REAGENTS,
-        DIDNT_CHEAT_REAGENTS,
-        USED_SKULL,
-        DESTROYED_SKULL;
-    }
-
     public enum HealType {
 
         NONE,
@@ -1189,22 +1033,11 @@ public interface Constants {
         WEAPON,
         ARMOR,
         FOOD,
-        REAGENT,
-        GUILDITEM,
-        INN,
-        TAVERN,
         HEALER,
+        GUILDITEM,
         TAVERNINFO,
         ORACLEINFO,
-        TINKER,
         HORSE;
-    }
-
-    public enum CannotJoinError {
-
-        JOIN_SUCCEEDED,
-        JOIN_NOT_EXPERIENCED,
-        JOIN_NOT_VIRTUOUS;
     }
 
     public enum CombatAction {
@@ -1219,16 +1052,12 @@ public interface Constants {
 
     public enum PartyEvent {
 
-        POSITIVE_KARMA,
-        NEGATIVE_KARMA,
-        LOST_EIGHTH,
         ADVANCED_LEVEL,
         STARVING,
         POISON_DAMAGE,
         TRANSPORT_CHANGED,
         PARTY_DEATH,
         ACTIVE_PLAYER_CHANGED,
-        MEMBER_JOINED,
         PARTY_REVIVED,
         INVENTORY_ADDED,
     };
@@ -1313,8 +1142,8 @@ public interface Constants {
         floor(61),
         chest(62);
 
-        private int intValue;
-        private int dungeonSpawnWeight;
+        private final int intValue;
+        private final int dungeonSpawnWeight;
         private int dungeonSpawnLevel;
         private Creature creature;
 

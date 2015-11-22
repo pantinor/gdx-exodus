@@ -43,6 +43,9 @@ public class VendorClassSet {
             for (Vendor v : vc.getVendors()) {
                 v.setVendorClass(vc);
                 Maps map = v.getMapId();
+                if (map.getMap() == null) {
+                    continue;
+                }
                 for (Person p : map.getMap().getPeople()) {
                     if (p.getStart_x() == v.getStartX() && p.getStart_y() == v.getStartY()) {
                         p.setVendor(v);
@@ -73,7 +76,6 @@ public class VendorClassSet {
                 v = new HorseService(getVendor(type, map), context, member);
                 break;
             case TAVERNINFO:
-            case TAVERN:
                 v = new TavernService(getVendor(type, map), context, member);
                 break;
             case WEAPON:

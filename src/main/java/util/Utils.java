@@ -651,13 +651,13 @@ public class Utils implements Constants {
     }
 
     public static AttackResult attackHit(Creature attacker, PartyMember defender) {
-        int attackValue = rand.nextInt(0x100) + attacker.getAttackBonus();
+        int attackValue = rand.nextInt(256) + attacker.getAttackBonus();
         int defenseValue = defender.getDefense();
         return attackValue > defenseValue ? AttackResult.HIT : AttackResult.MISS;
     }
 
     private static boolean attackHit(PartyMember attacker, Creature defender) {
-        int attackValue = rand.nextInt(0x100) + attacker.getAttackBonus();
+        int attackValue = rand.nextInt(256) + attacker.getAttackBonus();
         int defenseValue = defender.getDefense();
         return attackValue > defenseValue;
     }

@@ -50,8 +50,8 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
             case Keys.O:
                 screen.log("OPEN> ");
                 break;
-            case Keys.U:
-                screen.log("UNLOCK> Which party member?");
+            case Keys.J:
+                screen.log("JIMMY> Which party member?");
                 break;
             case Keys.L:
                 screen.log("LOOK> ");
@@ -168,11 +168,21 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
 
             } else if (initialKeyCode == Keys.J) {
 
-                screen.logAppend(dir.toString());
-                if (bm.unlockDoor(x, y)) {
-                    screen.log("Unlocked!");
+                if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
+                    member = gameScreen.context.getParty().getMember(keycode - 7 - 1);
+                    screen.log("Direction? ");
+                    return false;
+                }
+
+                if (this.member != null) {
+                    if (member.getPlayer().keys > 0 && bm.unlockDoor(x, y)) {
+                        screen.log("Unlocked!");
+                        member.getPlayer().keys--;
+                    } else {
+                        screen.log("Can't!");
+                    }
                 } else {
-                    screen.log("Can't!");
+                    screen.log("Nobody selected!");
                 }
 
             } else if (initialKeyCode == Keys.R) {

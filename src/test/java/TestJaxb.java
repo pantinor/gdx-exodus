@@ -1,15 +1,13 @@
 
-import exodus.Constants;
+import exodus.Constants.InventoryType;
+import exodus.Constants.Maps;
 import static exodus.Constants.PARTY_SAV_BASE_FILENAME;
-import exodus.Constants.WeaponType;
-import exodus.Exodus;
-import exodus.StartScreen;
-import static exodus.StartScreen.movesCommands;
-import static exodus.StartScreen.movesData;
+import exodus.Context;
+import exodus.Party;
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
-import java.util.Collection;
+import java.io.InputStreamReader;
+import javax.swing.JOptionPane;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import objects.BaseMap;
@@ -18,11 +16,9 @@ import objects.SaveGame;
 import objects.SaveGame.CharacterRecord;
 import objects.Tile;
 import objects.TileSet;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.testng.annotations.Test;
-import util.Utils;
+import vendor.OracleService;
+import vendor.VendorClassSet;
 
 public class TestJaxb {
 
@@ -48,7 +44,7 @@ public class TestJaxb {
         }
     }
 
-    @Test
+    //@Test
     public void testReadSaveGame() throws Exception {
 
         SaveGame sg = new SaveGame();
@@ -78,6 +74,52 @@ public class TestJaxb {
 
         //sg.write(Constants.PARTY_SAV_BASE_FILENAME);
         //sg.write("test.sav");
+    }
+    
+    //@Test
+    public void testFoodVendor() throws Exception {
+
+        File file = new File("target/classes/assets/xml/vendor.xml");
+        JAXBContext jaxbContext = JAXBContext.newInstance(VendorClassSet.class);
+        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+        VendorClassSet vcs = (VendorClassSet) jaxbUnmarshaller.unmarshal(file);
+        vcs.init();
+
+
+        CharacterRecord rec = new CharacterRecord();
+        rec.name = "avatar";
+        rec.health = 200;
+        
+        SaveGame sg = new SaveGame();
+        sg.players[0] = rec;
+        
+        Party party = new Party(sg);
+        Context context = new Context();
+        context.setParty(party);
+        party.addMember(rec);
+
+        rec.gold = 2000;
+
+        OracleService v = new OracleService(vcs.getVendor(InventoryType.ORACLEINFO, Maps.DAWN), context, party.getMember(0));
+
+        while (true) {
+            
+            if (!v.nextDialog()) {
+                break;
+            }
+
+            String answer = JOptionPane.showInputDialog(null, "");
+
+            if (answer != null && answer.equals("bye")) {
+                break;
+            }
+
+            v.setResponse(answer);
+
+        }
+
+        System.err.println("sg gold = " + rec.gold);
+
     }
 
 }

@@ -182,8 +182,8 @@
         </vendor>
     </vendorClass>
 
-    <vendorClass type="TAVERN" music="SHOPPING">
-        <vendor id="FAWN" name="Sam's Canteen" owner="Sam" genericField1="Lamb Chops" type="TAVERN" startX="43" startY="26">
+    <vendorClass type="TAVERNINFO" music="SHOPPING">
+        <vendor id="FAWN" name="Sam's Canteen" owner="Sam" genericField1="Lamb Chops" type="TAVERNINFO" startX="43" startY="26">
             <item type="FOOD" name="Lamb Chops" price="1" />
             <item type="FOOD" name="ale" price="2" />
             <item type="TAVERNINFO" price="10" description="%s says: Have you ever heard of Ambrosia?" />
@@ -194,7 +194,7 @@
             <item type="TAVERNINFO" price="60" description="%s says: Shrines of knowledge, shrines of strength, are all but lost into the brink." />
             <item type="TAVERNINFO" price="70" description="%s says: Seek ye out the Lord of Time and the one way is a sure find!" />
         </vendor>
-        <vendor id="DAWN" name="Ballyhoo" owner="Brida" genericField1="Walnut Bread" type="TAVERN" startX="43" startY="50">
+        <vendor id="DAWN" name="Ballyhoo" owner="Brida" genericField1="Walnut Bread" type="TAVERNINFO" startX="43" startY="50">
             <item type="FOOD" name="Walnut Bread" price="1" />
             <item type="FOOD" name="ale" price="2" />
             <item type="TAVERNINFO" price="10" description="%s says: Have you ever heard of Ambrosia?" />
@@ -205,7 +205,7 @@
             <item type="TAVERNINFO" price="60" description="%s says: Shrines of knowledge, shrines of strength, are all but lost into the brink." />
             <item type="TAVERNINFO" price="70" description="%s says: Seek ye out the Lord of Time and the one way is a sure find!" />
         </vendor>
-        <vendor id="DEATH" name="the Draught" owner="Sorry" genericField1="Black Pudding" type="TAVERN" startX="52" startY="30">
+        <vendor id="DEATH" name="the Draught" owner="Sorry" genericField1="Black Pudding" type="TAVERNINFO" startX="52" startY="30">
             <item type="FOOD" name="Black Pudding" price="1" />
             <item type="FOOD" name="ale" price="2" />
             <item type="TAVERNINFO" price="10" description="%s says: Have you ever heard of Ambrosia?" />
@@ -217,7 +217,7 @@
             <item type="TAVERNINFO" price="70" description="%s says: Seek ye out the Lord of Time and the one way is a sure find!" />
         </vendor>
         
-        <vendor id="MONTOR_W" name="the Bar" owner="Dujek" genericField1="Pork Grizzle" type="TAVERN" startX="25" startY="50">
+        <vendor id="MONTOR_W" name="the Bar" owner="Dujek" genericField1="Pork Grizzle" type="TAVERNINFO" startX="25" startY="50">
             <item type="FOOD" name="Pork Grizzle" price="1" />
             <item type="FOOD" name="ale" price="2" />
             <item type="TAVERNINFO" price="10" description="%s says: Have you ever heard of Ambrosia?" />
@@ -229,7 +229,7 @@
             <item type="TAVERNINFO" price="70" description="%s says: Seek ye out the Lord of Time and the one way is a sure find!" />
         </vendor>
         
-        <vendor id="MONTOR_W" name="the Bar" owner="Whiskeyjack" genericField1="Spiced Ham" type="TAVERN" startX="39" startY="50">
+        <vendor id="MONTOR_W" name="the Bar" owner="Whiskeyjack" genericField1="Spiced Ham" type="TAVERNINFO" startX="39" startY="50">
             <item type="FOOD" name="Spiced Ham" price="1" />
             <item type="FOOD" name="ale" price="2" />
             <item type="TAVERNINFO" price="10" description="%s says: Have you ever heard of Ambrosia?" />
@@ -241,7 +241,7 @@
             <item type="TAVERNINFO" price="70" description="%s says: Seek ye out the Lord of Time and the one way is a sure find!" />
         </vendor>
         
-        <vendor id="MONTOR_E" name="the Brown Orc" owner="Gothrug" genericField1="Spiced Ham" type="TAVERN" startX="32" startY="50">
+        <vendor id="MONTOR_E" name="the Brown Orc" owner="Gothrug" genericField1="Spiced Ham" type="TAVERNINFO" startX="32" startY="50">
             <item type="FOOD" name="Spiced Ham" price="1" />
             <item type="FOOD" name="ale" price="2" />
             <item type="TAVERNINFO" price="10" description="%s says: Have you ever heard of Ambrosia?" />
@@ -253,7 +253,7 @@
             <item type="TAVERNINFO" price="70" description="%s says: Seek ye out the Lord of Time and the one way is a sure find!" />
         </vendor>
         
-        <vendor id="DEVIL" name="Le Grog Shop" owner="Spindle" genericField1="Gruel" type="TAVERN" startX="49" startY="14">
+        <vendor id="DEVIL" name="Le Grog Shop" owner="Spindle" genericField1="Gruel" type="TAVERNINFO" startX="49" startY="14">
             <item type="FOOD" name="Gruel" price="1" />
             <item type="FOOD" name="ale" price="2" />
             <item type="TAVERNINFO" price="10" description="%s says: Have you ever heard of Ambrosia?" />
@@ -265,7 +265,7 @@
             <item type="TAVERNINFO" price="70" description="%s says: Seek ye out the Lord of Time and the one way is a sure find!" />
         </vendor>
         
-        <vendor id="GREY" name="the Tap House" owner="Spindle" genericField1="Barbacoa" type="TAVERN" startX="39" startY="22">
+        <vendor id="GREY" name="the Tap House" owner="Spindle" genericField1="Barbacoa" type="TAVERNINFO" startX="39" startY="22">
             <item type="FOOD" name="Barbacoa" price="1" />
             <item type="FOOD" name="ale" price="2" />
             <item type="TAVERNINFO" price="10" description="%s says: Have you ever heard of Ambrosia?" />
@@ -277,7 +277,7 @@
             <item type="TAVERNINFO" price="70" description="%s says: Seek ye out the Lord of Time and the one way is a sure find!" />
         </vendor>
         
-        <vendor id="MOON" name="the Blue Boar" owner="Thyra" genericField1="Pork Chops" type="TAVERN" startX="45" startY="14">
+        <vendor id="MOON" name="the Blue Boar" owner="Thyra" genericField1="Pork Chops" type="TAVERNINFO" startX="45" startY="14">
             <item type="FOOD" name="Pork Chops" price="1" />
             <item type="FOOD" name="ale" price="2" />
             <item type="TAVERNINFO" price="10" description="%s says: Have you ever heard of Ambrosia?" />
@@ -289,7 +289,7 @@
             <item type="TAVERNINFO" price="70" description="%s says: Seek ye out the Lord of Time and the one way is a sure find!" />
         </vendor>
         
-        <vendor id="LCB" name="the Pub" owner="Alfred" genericField1="Pork Chops" type="TAVERN" startX="17" startY="12">
+        <vendor id="LCB" name="the Pub" owner="Alfred" genericField1="Pork Chops" type="TAVERNINFO" startX="17" startY="12">
             <item type="FOOD" name="Pork Chops" price="1" />
             <item type="FOOD" name="ale" price="2" />
             <item type="TAVERNINFO" price="10" description="%s says: Have you ever heard of Ambrosia?" />
@@ -301,7 +301,7 @@
             <item type="TAVERNINFO" price="70" description="%s says: Seek ye out the Lord of Time and the one way is a sure find!" />
         </vendor>
         
-        <vendor id="LCB" name="the Pub" owner="Ethelred" genericField1="Pork Chops" type="TAVERN" startX="17" startY="14">
+        <vendor id="LCB" name="the Pub" owner="Ethelred" genericField1="Pork Chops" type="TAVERNINFO" startX="17" startY="14">
             <item type="FOOD" name="Pork Chops" price="1" />
             <item type="FOOD" name="ale" price="2" />
             <item type="TAVERNINFO" price="10" description="%s says: Have you ever heard of Ambrosia?" />
@@ -367,31 +367,31 @@
     </vendorClass>
 
     <vendorClass type="GUILDITEM" music="SHOPPING">
-        <vendor id="FAWN" name="Tools of Trade" owner="Long John Leary" startX="32" startY="11">
+        <vendor id="FAWN" type="GUILDITEM" name="Tools of Trade" owner="Long John Leary" startX="32" startY="11">
             <item type="GUILDITEM" choice="a" name="Torches" price="30" quant="5" guildItemType="torch" description="I can give ya 5 long lasting Torches for a mere 30gp." />
             <item type="GUILDITEM" choice="b" name="Magic Gems" price="75" quant="1" guildItemType="gem" description="I've got magical mapping Gems, for only 75gp." />
             <item type="GUILDITEM" choice="c" name="Magic Keys" price="50" quant="1" guildItemType="key" description="Magical Keys, 1 use each, a fair price at 50gp." />
             <item type="GUILDITEM" choice="d" name="Powder" price="90" quant="1" guildItemType="powder" description="Negate time for opponents using a powder, for 90gp each." />
         </vendor>
-        <vendor id="DAWN" name="The Guild" owner="Freddy" startX="34" startY="19">
+        <vendor id="DAWN" type="GUILDITEM" name="The Guild" owner="Freddy" startX="34" startY="19">
             <item type="GUILDITEM" choice="a" name="Torches" price="30" quant="5" guildItemType="torch" description="I can give ya 5 long lasting Torches for a mere 30gp." />
             <item type="GUILDITEM" choice="b" name="Magic Gems" price="75" quant="1" guildItemType="gem" description="I've got magical mapping Gems, for only 75gp." />
             <item type="GUILDITEM" choice="c" name="Magic Keys" price="50" quant="1" guildItemType="key" description="Magical Keys, 1 use each, a fair price at 50gp." />
             <item type="GUILDITEM" choice="d" name="Powder" price="90" quant="1" guildItemType="powder" description="Negate time for opponents using a powder, for 90gp each." />
         </vendor>
-        <vendor id="DEVIL" name="The Thieves Guild" owner="Crocus" startX="48" startY="51">
+        <vendor id="DEVIL" type="GUILDITEM" name="The Thieves Guild" owner="Crocus" startX="48" startY="51">
             <item type="GUILDITEM" choice="a" name="Torches" price="30" quant="5" guildItemType="torch" description="I can give ya 5 long lasting Torches for a mere 30gp." />
             <item type="GUILDITEM" choice="b" name="Magic Gems" price="75" quant="1" guildItemType="gem" description="I've got magical mapping Gems, for only 75gp." />
             <item type="GUILDITEM" choice="c" name="Magic Keys" price="50" quant="1" guildItemType="key" description="Magical Keys, 1 use each, a fair price at 50gp." />
             <item type="GUILDITEM" choice="d" name="Powder" price="90" quant="1" guildItemType="powder" description="Negate time for opponents using a powder, for 90gp each." />
         </vendor>
-        <vendor id="DEVIL" name="The Thieves Guild" owner="Fiddler" startX="48" startY="55">
+        <vendor id="DEVIL" type="GUILDITEM" name="The Thieves Guild" owner="Fiddler" startX="48" startY="55">
             <item type="GUILDITEM" choice="a" name="Torches" price="30" quant="5" guildItemType="torch" description="I can give ya 5 long lasting Torches for a mere 30gp." />
             <item type="GUILDITEM" choice="b" name="Magic Gems" price="75" quant="1" guildItemType="gem" description="I've got magical mapping Gems, for only 75gp." />
             <item type="GUILDITEM" choice="c" name="Magic Keys" price="50" quant="1" guildItemType="key" description="Magical Keys, 1 use each, a fair price at 50gp." />
             <item type="GUILDITEM" choice="d" name="Powder" price="90" quant="1" guildItemType="powder" description="Negate time for opponents using a powder, for 90gp each." />
         </vendor>
-        <vendor id="GREY" name="The Guild" owner="Fiddler" startX="33" startY="19">
+        <vendor id="GREY" type="GUILDITEM" name="The Guild" owner="Fiddler" startX="33" startY="19">
             <item type="GUILDITEM" choice="a" name="Torches" price="30" quant="5" guildItemType="torch" description="I can give ya 5 long lasting Torches for a mere 30gp." />
             <item type="GUILDITEM" choice="b" name="Magic Gems" price="75" quant="1" guildItemType="gem" description="I've got magical mapping Gems, for only 75gp." />
             <item type="GUILDITEM" choice="c" name="Magic Keys" price="50" quant="1" guildItemType="key" description="Magical Keys, 1 use each, a fair price at 50gp." />
@@ -399,8 +399,8 @@
         </vendor>
     </vendorClass>
     
-    <vendorClass type="ORACLE" music="SHOPPING">
-        <vendor id="BRITISH" type="ORACLEINFO" owner="The Oracle" startX="20" startY="44">
+    <vendorClass type="ORACLEINFO" music="SHOPPING">
+        <vendor id="BRITISH" type="ORACLEINFO" owner="Radrion" startX="20" startY="44">
             <item type="ORACLEINFO" price="100" description="%s says: You'll learn of marks and playing cards and hidden holy shrines." />
             <item type="ORACLEINFO" price="200" description="%s says: Of marks there are but four - Fire, Force, Snake, King." />
             <item type="ORACLEINFO" price="300" description="%s says: Learn their use in Devil Guard or death you'll surely bring." />
@@ -425,10 +425,13 @@
     </vendorClass>
 
     <vendorClass type="HORSE" music="SHOPPING">
-        <vendor id="DAWN" type="HORSE" owner="Burrich" startX="36" startY="48">
+        <vendor id="DAWN" name="the Equine Emporium" type="HORSE" owner="Burrich" startX="40" startY="21">
             <item type="HORSE" name="horse" choice="y" price="100" />
         </vendor>
-        <vendor id="GREY" type="HORSE" owner="Fitz" startX="11" startY="13">
+        <vendor id="DAWN" name="the Equine Emporium" type="HORSE" owner="Brawn" startX="42" startY="21">
+            <item type="HORSE" name="horse" choice="y" price="100" />
+        </vendor>
+        <vendor id="GREY" name="the Stables" type="HORSE" owner="Fitz" startX="11" startY="13">
             <item type="HORSE" name="horse" choice="y" price="100" />
         </vendor>
     </vendorClass>

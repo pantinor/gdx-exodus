@@ -4,12 +4,9 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import static exodus.Constants.STATS_ARMOR;
-import static exodus.Constants.STATS_ITEMS;
 import static exodus.Constants.STATS_PLAYER1;
 import static exodus.Constants.STATS_PLAYER4;
 import static exodus.Constants.STATS_SPELLS;
-import static exodus.Constants.STATS_WEAPONS;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -38,7 +35,7 @@ public class Party extends Observable implements Constants {
         this.saveGame = sg;
 
         for (CharacterRecord r : saveGame.players) {
-            if (r.name == null || r.name.length() < 1) {
+            if (r == null || r.name == null || r.name.length() < 1) {
                 //none
             } else {
                 members.add(new PartyMember(this, r));
@@ -254,7 +251,7 @@ public class Party extends Observable implements Constants {
         for (PartyMember pm : members) {
             pm.fled = false;
             pm.getPlayer().status = StatusType.GOOD;
-            pm.getPlayer().health = pm.getPlayer().maxHealth;
+            pm.getPlayer().health = pm.getPlayer().getMaxHealth();
         }
     }
 
@@ -284,7 +281,7 @@ public class Party extends Observable implements Constants {
         if (member.player.submorsels < 0) {
             member.player.submorsels = 100;
             member.player.food = Utils.adjustValue(member.player.food, -1, 999900, 0);
-            member.player.health = Utils.adjustValue(member.player.health, 1, member.player.maxHealth, 0);
+            member.player.health = Utils.adjustValue(member.player.health, 1, member.player.getMaxHealth(), 0);
         }
     }
 
@@ -368,7 +365,7 @@ public class Party extends Observable implements Constants {
 
         public int getDamage() {
             int maxDamage = player.weapon.getWeapon().getDmax();
-            maxDamage += player.str;
+            maxDamage += player.str * 1.5;
             if (maxDamage > 255) {
                 maxDamage = 255;
             }
@@ -423,10 +420,10 @@ public class Party extends Observable implements Constants {
                     break;
 
                 case FULLHEAL:
-                    if (player.status == StatusType.DEAD || player.health == player.maxHealth) {
+                    if (player.status == StatusType.DEAD || player.health == player.getMaxHealth()) {
                         return false;
                     }
-                    player.health = player.maxHealth;
+                    player.health = player.getMaxHealth();
                     break;
 
                 case RESURRECT:
@@ -438,7 +435,7 @@ public class Party extends Observable implements Constants {
                     break;
 
                 case HEAL:
-                    if (player.status == StatusType.DEAD || player.health == player.maxHealth) {
+                    if (player.status == StatusType.DEAD || player.health == player.getMaxHealth()) {
                         return false;
                     }
                     player.health += 75 + (rand.nextInt(256) % 25);
@@ -456,8 +453,8 @@ public class Party extends Observable implements Constants {
                     return false;
             }
 
-            if (player.health > player.maxHealth) {
-                player.health = player.maxHealth;
+            if (player.health > player.getMaxHealth()) {
+                player.health = player.getMaxHealth();
             }
 
             return true;
@@ -528,9 +525,9 @@ public class Party extends Observable implements Constants {
 
             //check if they can wear it
             WeaponType wt = WeaponType.get(i);
-//            if (!wt.getWeapon().canUse(player.klass)) {
-//                return false;
-//            }
+            if (!wt.getWeapon().canUse(player.profession)) {
+                return false;
+            }
 
             //take off the old and put it in inventory
             if (player.weapon.ordinal() != 0) {
@@ -570,9 +567,9 @@ public class Party extends Observable implements Constants {
 
             //check if they can wear it
             ArmorType at = ArmorType.get(i);
-//            if (!at.getArmor().canUse(player.profession)) {
-//                return false;
-//            }
+            if (!at.getArmor().canUse(player.profession)) {
+                return false;
+            }
 
             //take off the old and put it in inventory
             if (player.armor.ordinal() != 0) {
@@ -618,15 +615,6 @@ public class Party extends Observable implements Constants {
             return player.armor.getArmor().getDefense();
         }
 
-    }
-
-    public boolean isJoinedInParty(String name) {
-        for (PartyMember pm : members) {
-            if (pm.getPlayer().name.equals(name)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public void endTurn(MapType mapType) throws PartyDeathException {
@@ -690,79 +678,80 @@ public class Party extends Observable implements Constants {
             CharacterRecord p = pm.getPlayer();
             sb1.append(pc(p.name)).append("  ").append(pc(p.race.toString())).
                     append("|").append(pc(p.profession.toString())).
-                    append("|").append(pc(p.sex.getDesc())).append("  ").append(p.status.getId()).
-                    append("|").append("MANA: ").append(p.mana).append("  LV: ").append(p.getLevel()).
+                    append("|").append(pc(p.sex.getDesc())).append(" STATUS: ").append(p.status).
+                    append("| |MANA: ").append(p.mana).append("  LV: ").append(p.getLevel()).
                     append("|" + "STR: ").append(p.str).append("  HEALTH: ").append(p.health).
-                    append("|" + "DEX: ").append(p.dex).append("  MAXHEALTH: ").append(p.maxHealth).
+                    append("|" + "DEX: ").append(p.dex).append("  MAXHEALTH: ").append(p.getMaxHealth()).
                     append("|" + "INT: ").append(p.intell).append("  EXP: ").append(p.exp).
                     append("|" + "WIS: ").append(p.wis).
-                    append("|" + "READIED: ").append(pc(p.weapon.toString())).
-                    append("|" + "WORN: ").append(pc(p.armor.toString())).
-                    append("|" + "TORCHES: ").append(p.torches).
-                    append("|" + "GEMS: ").append(p.gems).
-                    append("|" + "KEYS: ").append(p.keys).
-                    append("|" + "GOLD: ").append(p.gold).
-                    append("|" + "FOOD: ").append(p.food);
+                    append("| |READIED: ").append(p.weapon.getWeapon().getName()).
+                    append("|WORN: ").append(p.armor.getArmor().getName()).
+                    append("| |" + "TORCHES: ").append(p.torches).append(" GEMS: ").append(p.gems).
+                    append("|" + "KEYS: ").append(p.keys).append(" POWDERS: ").append(p.powder).
+                    append("|" + "GOLD: ").append(p.gold).append(" FOOD: ").append(p.food);
 
-            for (ArmorType t : ArmorType.values()) {
-                if (t == ArmorType.NONE) {
-                    continue;
+            sb1.append("| ");
+            
+            for (int i=1;i<p.armors.length;i++) {
+                sb1.append("|" + ArmorType.values()[i].getArmor().getName() + ": ").append(p.armors[i]);
+                i++;
+                if (i<p.armors.length) {
+                    sb1.append(" " + ArmorType.values()[i].getArmor().getName() + ": ").append(p.armors[i]);
                 }
-                sb1.append("|" + t + ": ").append(p.armors[t.ordinal()]);
             }
+            
+            sb1.append("| ");
+            
+            for (int i=1;i<p.weapons.length;i++) {
+                sb1.append("|" + WeaponType.values()[i].getWeapon().getName() + ": ").append(p.weapons[i]);
+                i++;
+                if (i<p.weapons.length) {
+                    sb1.append(" " + WeaponType.values()[i].getWeapon().getName() + ": ").append(p.weapons[i]);
+                }
+            }
+            
+            sb1.append("| ");
 
-            for (WeaponType t : WeaponType.values()) {
-                if (t == WeaponType.NONE) {
-                    continue;
-                }
-                sb1.append("|" + t + ": ").append(p.weapons[t.ordinal()]);
-            }
+            sb1.append("|MARK KINGS: ").append(p.marks[0]).append(" MARK SNAKE: ").append(p.marks[1]);
+            sb1.append("|MARK FIRE: ").append(p.marks[2]).append(" MARK FORCE: ").append(p.marks[3]);
+            sb1.append("|CARD DEATH: ").append(p.cards[0]).append(" CARD SOL: ").append(p.cards[1]);
+            sb1.append("|CARD LOVE: ").append(p.cards[2]).append(" CARD MOONS: ").append(p.cards[3]);
 
             sb1.append("~");
         }
 
-//
-//        for (Item item : Constants.Item.values()) {
-//            if (!item.isVisible()) {
-//                continue;
-//            }
-//            sb4.append((this.items & (1 << item.ordinal())) > 0 ? item.getDesc() + "|" : "");
-//        }
-//
         String[] ret = new String[1];
         ret[0] = sb1.toString();
 
         return ret;
     }
-    
+
     public Texture zstatsBox;
 
     public void renderZstats(int showZstats, BitmapFont font, Batch batch, int SCREEN_HEIGHT) {
 
         if (zstatsBox == null) {
-            Pixmap pixmap = new Pixmap(175, 490, Pixmap.Format.RGBA8888);
+            Pixmap pixmap = new Pixmap(195, 675, Pixmap.Format.RGBA8888);
             pixmap.setColor(0f, 0f, 0f, 0.65f);
-            pixmap.fillRectangle(0, 0, 175, 490);
+            pixmap.fillRectangle(0, 0, 195, 675);
             zstatsBox = new Texture(pixmap);
             pixmap.dispose();
         }
 
-        batch.draw(zstatsBox, 5, SCREEN_HEIGHT - 5 - 490);
+        batch.draw(zstatsBox, 10, SCREEN_HEIGHT - 15 - 675);
 
-        int rx = 10;
-        int ry = SCREEN_HEIGHT - 10;
+        int rx = 15;
+        int ry = SCREEN_HEIGHT - 25;
 
         String[] pages = getZstats();
         if (showZstats >= STATS_PLAYER1 && showZstats <= STATS_PLAYER4) {
-            // players
             String[] players = pages[0].split("\\~");
             for (int i = 0; i < players.length; i++) {
                 String[] lines = players[i].split("\\|");
                 if (i != showZstats - 1) {
                     continue;
                 }
-                rx = 10;
-                ry = SCREEN_HEIGHT - 10;
+                ry = SCREEN_HEIGHT - 25;
                 font.draw(batch, "Player " + (i + 1), rx, ry);
                 ry = ry - 18;
                 for (int j = 0; j < lines.length; j++) {
@@ -773,50 +762,17 @@ public class Party extends Observable implements Constants {
                     ry = ry - 18;
                 }
             }
-        } else if (showZstats == STATS_WEAPONS) {
-            String[] lines = pages[1].split("\\|");
-            font.draw(batch, "Weapons", rx, ry);
-            ry = ry - 18;
-            for (int j = 0; j < lines.length; j++) {
-                if (lines[j] == null || lines[j].length() < 1) {
-                    continue;
-                }
-                font.draw(batch, lines[j], rx, ry);
-                ry = ry - 18;
-            }
-        } else if (showZstats == STATS_ARMOR) {
-            String[] lines = pages[2].split("\\|");
-            font.draw(batch, "Armor", rx, ry);
-            ry = ry - 18;
-            for (int j = 0; j < lines.length; j++) {
-                if (lines[j] == null || lines[j].length() < 1) {
-                    continue;
-                }
-                font.draw(batch, lines[j], rx, ry);
-                ry = ry - 18;
-            }
-        } else if (showZstats == STATS_ITEMS) {
-            String[] lines = pages[3].split("\\|");
-            font.draw(batch, "Items", rx, ry);
-            ry = ry - 18;
-            for (int j = 0; j < lines.length; j++) {
-                if (lines[j] == null || lines[j].length() < 1) {
-                    continue;
-                }
-                font.draw(batch, lines[j], rx, ry);
-                ry = ry - 18;
-            }
         } else if (showZstats == STATS_SPELLS) {
-            String[] lines = pages[5].split("\\|");
-            font.draw(batch, "Spell Mixtures", rx, ry);
-            ry = ry - 18;
-            for (int j = 0; j < lines.length; j++) {
-                if (lines[j] == null || lines[j].length() < 1) {
-                    continue;
-                }
-                font.draw(batch, lines[j], rx, ry);
-                ry = ry - 18;
-            }
+//            String[] lines = pages[5].split("\\|");
+//            font.draw(batch, "Spell Mixtures", rx, ry);
+//            ry = ry - 18;
+//            for (int j = 0; j < lines.length; j++) {
+//                if (lines[j] == null || lines[j].length() < 1) {
+//                    continue;
+//                }
+//                font.draw(batch, lines[j], rx, ry);
+//                ry = ry - 18;
+//            }
         }
 
     }

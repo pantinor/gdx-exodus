@@ -19,6 +19,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -191,12 +192,12 @@ public class GameScreen extends BaseScreen {
             //context.loadJournalEntries();
             
             
-            
-            party.getMember(0).getPlayer().gems = 5;
+            party.getMember(1).getPlayer().gold = 5000;
+            party.getMember(1).getPlayer().keys = 5;
 
             //load the surface world first
             //loadNextMap(Maps.SOSARIA, sg.partyX, sg.partyY);
-            loadNextMap(Maps.SOSARIA, 224, 125);
+            loadNextMap(Maps.SOSARIA, 180, 73);
 
             //load the dungeon if save game starts in dungeon
             if (Maps.get(sg.location) != Maps.SOSARIA) {
@@ -441,12 +442,12 @@ public class GameScreen extends BaseScreen {
         //font.draw(batch, String.format("current map coords: %d, %d", (int)v.x, (int)v.y), 10, 480);
         //font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond(), 10, 460);
         Exodus.hud.render(batch, context.getParty());
-//
-//        Exodus.font.setColor(Color.WHITE);
-//        if (showZstats > 0) {
-//            context.getParty().getSaveGame().renderZstats(showZstats, Exodus.font, batch, Exodus.SCREEN_HEIGHT);
-//        }
-//
+
+        Exodus.font.setColor(Color.WHITE);
+        if (showZstats > 0) {
+            context.getParty().renderZstats(showZstats, Exodus.font, batch, Exodus.SCREEN_HEIGHT);
+        }
+
         if (context.getCurrentMap().getId() == Maps.SOSARIA.getId()) {
             batch.draw(moonAtlas.findRegion("phase_" + trammelphase), 360, Exodus.SCREEN_HEIGHT - 25, 25, 25);
             batch.draw(moonAtlas.findRegion("phase_" + feluccaphase), 380, Exodus.SCREEN_HEIGHT - 25, 25, 25);
@@ -582,10 +583,22 @@ public class GameScreen extends BaseScreen {
             } else {
                 log("Cannot save here!");
             }
-        } else if (keycode == Keys.L) {
+        } else if (keycode == Keys.Z) {
+            showZstats = showZstats + 1;
+            if (showZstats >= STATS_PLAYER1 && showZstats <= STATS_PLAYER4) {
+                if (showZstats > context.getParty().getMembers().size()) {
+                    showZstats = STATS_SPELLS;
+                }
+            }
+            if (showZstats > STATS_SPELLS) {
+                showZstats = STATS_NONE;
+            }            
         } else if (keycode == Keys.B) {
+            
             board((int) v.x, (int) v.y);
+            
         } else if (keycode == Keys.X) {
+            
             if (context.getTransportContext() == TransportContext.SHIP) {
                 Tile st = Exodus.baseTileSet.getTileByName("ship");
                 Drawable ship = new Drawable(context.getCurrentMap(), (int) v.x, (int) v.y, st, Exodus.standardAtlas);
@@ -620,7 +633,8 @@ public class GameScreen extends BaseScreen {
             Gdx.input.setInputProcessor(iia);
             return false;
 
-        } else if (keycode == Keys.T || keycode == Keys.O || keycode == Keys.J || keycode == Keys.L || keycode == Keys.A || keycode == Keys.G || keycode == Keys.R || keycode == Keys.W) {
+        } else if (keycode == Keys.T || keycode == Keys.O || keycode == Keys.J || keycode == Keys.L || 
+                keycode == Keys.A || keycode == Keys.G || keycode == Keys.R || keycode == Keys.W) {
             Gdx.input.setInputProcessor(sip);
             sip.setinitialKeyCode(keycode, context.getCurrentMap(), (int) v.x, (int) v.y);
             return false;

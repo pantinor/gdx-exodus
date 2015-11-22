@@ -54,14 +54,12 @@ public class TestMain extends Game {
             context.setParty(party);
             context.setCurrentMap(Maps.SOSARIA.getMap());
 
-            sg.players[0].maxHealth = 700;
             sg.players[0].health = 500;
             sg.players[0].exp = 350;
             sg.players[0].weapons[5] = 1;
             sg.players[0].armors[5] = 1;
             sg.players[0].weapon = WeaponType.BOW;
             
-            sg.players[1].maxHealth = 700;
             sg.players[1].health = 500;
             sg.players[1].exp = 350;
             sg.players[1].weapon = WeaponType.BOW_P4;

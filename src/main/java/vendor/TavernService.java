@@ -72,12 +72,12 @@ public class TavernService extends BaseVendor {
             case BUY_ALE_WITH_TIP:
                 member.getPlayer().adjustGold(-youPay);
                 displayToScreen("Here ye arr.");
-                Item item = vendor.getTavernInfo(tip);
+                Item item = getTavernInfo(tip);
                 if (item != null) {
-                    displayToScreen(String.format(item.getDescription(),vendor.getOwner()));
+                    displayToScreen(String.format(item.getDescription(), vendor.getOwner()));
                 } else {
                     displayToScreen("Thank you kindly.");
-                }    
+                }
                 displayToScreen("Somethin' else?");
                 state = ConvState.ANYTHING_ELSE;
                 break;
@@ -172,7 +172,18 @@ public class TavernService extends BaseVendor {
 
     }
 
-    public boolean checkCanPayFood() {
+    private Item getTavernInfo(int tip) {
+        for (Item i : vendor.getInventoryItems()) {
+            if (i.getType() == InventoryType.TAVERNINFO) {
+                if (tip / 10 == i.getPrice() / 10) {
+                    return i;
+                }
+            }
+        }
+        return null;
+    }
+
+    private boolean checkCanPayFood() {
 
         boolean ret = false;
 
@@ -185,7 +196,7 @@ public class TavernService extends BaseVendor {
         return ret;
     }
 
-    public boolean checkCanPayAle() {
+    private boolean checkCanPayAle() {
 
         boolean ret = false;
 
