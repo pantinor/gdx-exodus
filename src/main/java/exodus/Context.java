@@ -6,7 +6,6 @@ import objects.Aura;
 import objects.BaseMap;
 import objects.Creature;
 import objects.Drawable;
-//import objects.Party.PartyMember;
 import objects.Portal;
 import objects.Tile;
 
@@ -180,75 +179,71 @@ public class Context implements Constants {
 
     public void saveGame(float x, float y, float z, Direction orientation, Maps map) {
 
-//        if (map == Maps.WORLD) {
-//            party.getSaveGame().x = (int) x;
-//            party.getSaveGame().y = (int) y;
-//            party.getSaveGame().dngx = (int) x;
-//            party.getSaveGame().dngy = (int) y;
-//            party.getSaveGame().dnglevel = 0;
-//            party.getSaveGame().orientation = 0;
-//        } else {
-//            Portal p = Maps.WORLD.getMap().getPortal(map.getId());
-//            party.getSaveGame().x = (int) x;
-//            party.getSaveGame().y = (int) y;
-//            party.getSaveGame().dngx = (p == null ? (int) x : p.getX());
-//            party.getSaveGame().dngy = (p == null ? (int) y : p.getY());
-//            party.getSaveGame().dnglevel = (int) z;
-//            party.getSaveGame().orientation = orientation.getVal() - 1;
-//        }
-//
-//        party.getSaveGame().location = map.getId();
-//
-//        Stage surfaceStage = Maps.WORLD.getMap().getSurfaceMapStage();
-//        if (surfaceStage != null) {
-//            party.getSaveGame().resetMonsters();
-//            Drawable[] objects = new Drawable[24];
-//            int count = 0;
-//            for (Actor a : surfaceStage.getActors()) {
-//                if (a instanceof Drawable) {
-//                    Drawable d = (Drawable) a;
-//                    objects[count] = d;
-//                    if (count > 23) {
-//                        break;
-//                    }
-//                    count++;
-//                }
-//            }
-//            for (int i = 0; i < 24; i++) {
-//                if (objects[i] != null) {
-//                    party.getSaveGame().objects_save_tileids[i] = (byte) objects[i].getTile().getIndex();
-//                    party.getSaveGame().objects_save_x[i] = (byte) objects[i].getCx();
-//                    party.getSaveGame().objects_save_y[i] = (byte) objects[i].getCy();
-//                }
-//            }
-//
-//            List<Creature> monsters = Maps.WORLD.getMap().getCreatures();
-//            for (int i = 0; i < 8 && monsters.size() > i; i++) {
-//                Tile tile = Ultima4.baseTileSet.getTileByName(monsters.get(i).getTile().toString());
-//                if (tile == null) {
-//                    continue;
-//                }
-//                party.getSaveGame().monster_save_tileids[i] = (byte) tile.getIndex();
-//                party.getSaveGame().monster_save_x[i] = (byte) monsters.get(i).currentX;
-//                party.getSaveGame().monster_save_y[i] = (byte) monsters.get(i).currentY;
-//            }
-//        }
-//
-//        try {
-//            party.getSaveGame().write(PARTY_SAV_BASE_FILENAME);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        try {
-//            File file = new File("journal.save");
-//            JAXBContext jaxbContext = JAXBContext.newInstance(JournalEntries.class);
-//            Marshaller marshaller = jaxbContext.createMarshaller();
-//            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-//            marshaller.marshal(this.journalEntries, file);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        if (map == Maps.SOSARIA) {
+            party.getSaveGame().partyX = (int) x;
+            party.getSaveGame().partyY = (int) y;
+            party.getSaveGame().dnglevel = 0;
+            party.getSaveGame().orientation = 0;
+        } else {
+            Portal p = Maps.SOSARIA.getMap().getPortal(map.getId());
+            party.getSaveGame().partyX = (int) x;
+            party.getSaveGame().partyX = (int) y;
+            party.getSaveGame().dnglevel = (int) z;
+            party.getSaveGame().orientation = orientation.getVal() - 1;
+        }
+
+        party.getSaveGame().location = map.getId();
+
+        Stage surfaceStage = Maps.SOSARIA.getMap().getSurfaceMapStage();
+        if (surfaceStage != null) {
+            party.getSaveGame().resetMonsters();
+            Drawable[] objects = new Drawable[24];
+            int count = 0;
+            for (Actor a : surfaceStage.getActors()) {
+                if (a instanceof Drawable) {
+                    Drawable d = (Drawable) a;
+                    objects[count] = d;
+                    if (count > 23) {
+                        break;
+                    }
+                    count++;
+                }
+            }
+            for (int i = 0; i < 24; i++) {
+                if (objects[i] != null) {
+                    party.getSaveGame().objects_save_tileids[i] = (byte) objects[i].getTile().getIndex();
+                    party.getSaveGame().objects_save_x[i] = (byte) objects[i].getCx();
+                    party.getSaveGame().objects_save_y[i] = (byte) objects[i].getCy();
+                }
+            }
+
+            List<Creature> monsters = Maps.SOSARIA.getMap().getCreatures();
+            for (int i = 0; i < 8 && monsters.size() > i; i++) {
+                Tile tile = Exodus.baseTileSet.getTileByName(monsters.get(i).getTile().toString());
+                if (tile == null) {
+                    continue;
+                }
+                party.getSaveGame().monster_save_tileids[i] = (byte) tile.getIndex();
+                party.getSaveGame().monster_save_x[i] = (byte) monsters.get(i).currentX;
+                party.getSaveGame().monster_save_y[i] = (byte) monsters.get(i).currentY;
+            }
+        }
+
+        try {
+            party.getSaveGame().write(PARTY_SAV_BASE_FILENAME);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            File file = new File("journal.save");
+            JAXBContext jaxbContext = JAXBContext.newInstance(JournalEntries.class);
+            Marshaller marshaller = jaxbContext.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            marshaller.marshal(this.journalEntries, file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public JournalEntries getJournal() {
@@ -279,26 +274,25 @@ public class Context implements Constants {
         }
 
         if (fromShip && toShip) {
-            //return Maps.SHIPSHIP_CON;
+            return Maps.SHIPSHIP_CON;
         }
 
         if (toShip) {
-            //return Maps.SHORSHIP_CON;
+            return Maps.SHORSHIP_CON;
         } else if (fromShip && tileUnderneathAvatar.getRule() == TileRule.water) {
-            //return Maps.SHIPSEA_CON;
+            return Maps.SHIPSEA_CON;
         } else if (tileUnderneathAvatar.getRule() == TileRule.water) {
-            //return Maps.SHORE_CON;
+            return Maps.SHORE_CON;
         } else if (fromShip && tileUnderneathAvatar.getRule() != TileRule.water) {
-            //return Maps.SHIPSHOR_CON;
+            return Maps.SHIPSHOR_CON;
         }
 
         if (tileUnderneathAvatar.getCombatMap() != null) {
             return tileUnderneathAvatar.getCombatMap();
         }
 
-        //return Maps.BRICK_CON;
+        return Maps.BRICK_CON;
         
-        return null;
     }
 
     public Aura getAura() {

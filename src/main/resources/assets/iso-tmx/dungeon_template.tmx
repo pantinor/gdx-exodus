@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="isometric" renderorder="right-down" width="64" height="64" tilewidth="64" tileheight="32" backgroundcolor="#000000" nextobjectid="28">
+<properties>
+<property name="title" value="%s"/>
+</properties>
+<tileset firstgid="1" name="collision" tilewidth="64" tileheight="32">
+<image source="./dungeon/tiled_collision.png" width="960" height="32"/>
+</tileset>
+<tileset firstgid="16" name="dungeon" tilewidth="64" tileheight="128">
+<image source="./dungeon/tiled_dungeon.png" width="1024" height="1920"/>
+</tileset>
+<tileset firstgid="256" name="set_rules" tilewidth="64" tileheight="32">
+<image source="./dungeon/set_rules.png" width="128" height="128"/>
+</tileset>
+<tileset firstgid="264" name="tiled_dungeon_2x2" tilewidth="128" tileheight="64">
+<tileoffset x="0" y="16"/>
+<image source="./dungeon/tiled_dungeon_2x2.png" width="512" height="256"/>
+</tileset>
+<tileset firstgid="280" name="door_left" tilewidth="64" tileheight="128">
+<tileoffset x="-16" y="-8"/>
+<image source="./dungeon/door_left.png" width="128" height="128"/>
+</tileset>
+<tileset firstgid="282" name="door_right" tilewidth="64" tileheight="128">
+<tileoffset x="16" y="-8"/>
+<image source="./dungeon/door_right.png" width="128" height="128"/>
+</tileset>
+<tileset firstgid="284" name="stairs" tilewidth="256" tileheight="256">
+<tileoffset x="0" y="48"/>
+<image source="./dungeon/stairs.png" width="1024" height="256"/>
+</tileset>
+<layer name="background1" width="64" height="64" visible="1">
+<data encoding="csv">
+%s
+</data>
+</layer>
+<layer name="background2" width="64" height="64" visible="0">
+<data encoding="csv">
+%s
+</data>
+</layer>
+<layer name="background3" width="64" height="64" visible="0">
+<data encoding="csv">
+%s
+</data>
+</layer>
+<layer name="background4" width="64" height="64" visible="0">
+<data encoding="csv">
+%s
+</data>
+</layer>
+<layer name="background5" width="64" height="64" visible="0">
+<data encoding="csv">
+%s
+</data>
+</layer>
+<layer name="background6" width="64" height="64" visible="0">
+<data encoding="csv">
+%s
+</data>
+</layer>
+<layer name="background7" width="64" height="64" visible="0">
+<data encoding="csv">
+%s
+</data>
+</layer>
+<layer name="background8" width="64" height="64" visible="0">
+<data encoding="csv">
+%s
+</data>
+</layer>
+<layer name="object1" width="64" height="64" visible="0">
+<data encoding="csv">
+%s
+</data>
+</layer>
+<layer name="object2" width="64" height="64" visible="0">
+<data encoding="csv">
+%s
+</data>
+</layer>
+<layer name="object3" width="64" height="64" visible="0">
+<data encoding="csv">
+%s
+</data>
+</layer>
+<layer name="object4" width="64" height="64" visible="0">
+<data encoding="csv">
+%s
+</data>
+</layer>
+<layer name="object5" width="64" height="64" visible="0">
+<data encoding="csv">
+%s
+</data>
+</layer>
+<layer name="object6" width="64" height="64" visible="0">
+<data encoding="csv">
+%s
+</data>
+</layer>
+<layer name="object7" width="64" height="64" visible="0">
+<data encoding="csv">
+%s
+</data>
+</layer>
+<layer name="object8" width="64" height="64" visible="0">
+<data encoding="csv">
+%s
+</data>
+</layer>
+<layer name="collision1" width="64" height="64" visible="1">
+<data encoding="csv">
+%s
+</data>
+</layer>
+<layer name="collision2" width="64" height="64" visible="0">
+<data encoding="csv">
+%s
+</data>
+</layer>
+<layer name="collision3" width="64" height="64" visible="0">
+<data encoding="csv">
+%s
+</data>
+</layer>
+<layer name="collision4" width="64" height="64" visible="0">
+<data encoding="csv">
+%s
+</data>
+</layer>
+<layer name="collision5" width="64" height="64" visible="0">
+<data encoding="csv">
+%s
+</data>
+</layer>
+<layer name="collision6" width="64" height="64" visible="0">
+<data encoding="csv">
+%s
+</data>
+</layer>
+<layer name="collision7" width="64" height="64" visible="0">
+<data encoding="csv">
+%s
+</data>
+</layer>
+<layer name="collision8" width="64" height="64" visible="0">
+<data encoding="csv">
+%s
+</data>
+</layer>
+</map>

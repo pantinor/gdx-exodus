@@ -1,5 +1,6 @@
 package objects;
 
+import com.badlogic.gdx.graphics.Color;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -10,8 +11,10 @@ import org.apache.commons.lang3.StringUtils;
 import exodus.Constants;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.math.Vector3;
+import util.Utils;
 import util.XORShiftRandom;
 
 @XmlRootElement(name = "creature")
@@ -62,6 +65,8 @@ public class Creature implements Constants {
     private CreatureType tile;
     private Animation anim;
     private Decal decal;
+    private TextureRegion healthBar = new TextureRegion(Utils.fillRectangle(32, 3, Color.GREEN, .5f));
+
     public int currentX;
     public int currentY;
     public int currentLevel;//only for dungeon wandering creatures
@@ -450,6 +455,7 @@ public class Creature implements Constants {
 
     public void setHP(int h) {
         this.hp = h;
+        this.adjustHealthBar(h);
     }
 
     public CreatureStatus getDamageStatus() {
@@ -574,6 +580,24 @@ public class Creature implements Constants {
 
     public void setVisible(boolean isVisible) {
         this.isVisible = isVisible;
+    }
+    
+    public TextureRegion getHealthBar() {
+        return this.healthBar;
+    }
+
+    private void adjustHealthBar(int current) {
+        double percent = (double) current / 100;
+        double bar = percent * (double) 32;
+        if (current < 0) {
+            bar = 0;
+        }
+        if (bar > 32) {
+            bar = 32;
+        }
+        if (this.healthBar != null) {
+            this.healthBar.setRegion(0, 0, (int) bar, 3);
+        }
     }
 
 }

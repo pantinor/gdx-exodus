@@ -9,8 +9,10 @@ import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -34,12 +36,14 @@ import exodus.Exodus;
 import exodus.Party.PartyMember;
 import exodus.Sound;
 import exodus.Sounds;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import javax.imageio.ImageIO;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import objects.BaseMap;
@@ -47,7 +51,6 @@ import objects.Creature;
 import objects.Drawable;
 import objects.Moongate;
 import objects.Person;
-import objects.PersonRole;
 import objects.Portal;
 import objects.ProjectileActor;
 import objects.Tile;
@@ -103,36 +106,6 @@ public class Utils implements Constants {
             v = min;
         }
         return v;
-    }
-
-    public static Pixmap createPixmap(int width, int height, BufferedImage image, int sx, int sy) {
-
-        int imgWidth = image.getWidth();
-        int imgHeight = image.getHeight();
-
-        Pixmap pix = new Pixmap(width, height, Pixmap.Format.RGBA8888);
-        pix.setColor(0f, 0f, 0f, 1f);
-        pix.fillRectangle(0, 0, width, height);
-
-        int[] pixels = image.getRGB(0, 0, imgWidth, imgHeight, null, 0, width);
-
-        for (int x = 0; x < imgWidth; x++) {
-            for (int y = 0; y < imgHeight; y++) {
-                int pixel = pixels[y * width + x];
-                pix.drawPixel(sx + x, sy + y, getRGBA(pixel));
-            }
-        }
-
-        return pix;
-    }
-
-    private static int getRGBA(int rgb) {
-        int a = rgb >> 24;
-        a &= 0x000000ff;
-        int rest = rgb & 0x00ffffff;
-        rest <<= 8;
-        rest |= a;
-        return rest;
     }
 
     public static void setMapTiles(BaseMap map, TileSet ts) throws Exception {
@@ -919,15 +892,195 @@ public class Utils implements Constants {
             return res;
         }
 
-        //if ((combatMap.getId() == Maps.ABYSS.getId() && !wt.getWeapon().getMagic()) || !attackHit(attacker, creature)) {
-        //    Ultima4.hud.add("Missed!\n");
-        //    res = AttackResult.MISS;
-        //} else {
-        Sounds.play(Sound.NPC_STRUCK);
-        dealDamage(attacker, creature, attacker.getDamage());
-        res = AttackResult.HIT;
-        //}
+        if (!attackHit(attacker, creature)) {
+            Exodus.hud.add("Missed!\n");
+            res = AttackResult.MISS;
+        } else {
+            Sounds.play(Sound.NPC_STRUCK);
+            dealDamage(attacker, creature, attacker.getDamage());
+            res = AttackResult.HIT;
+        }
 
         return res;
     }
+
+    //was used for TMX type dungeon maps
+    public static Texture peerGem(TiledMapTileLayer layer, String[] ids, TextureAtlas atlas, int cx, int cy) throws Exception {
+        FileTextureData d = (FileTextureData) (atlas.getRegions().first().getTexture().getTextureData());
+        InputStream is = ClassLoader.class.getResourceAsStream("/assets/graphics/" + d.getFileHandle().file().getName());
+        BufferedImage sheet = ImageIO.read(is);
+        BufferedImage canvas = new BufferedImage(32 * layer.getWidth(), 32 * layer.getHeight(), BufferedImage.TYPE_INT_ARGB);
+
+        for (int y = 0; y < layer.getHeight(); y++) {
+            for (int x = 0; x < layer.getWidth(); x++) {
+                String val = ids[layer.getCell(x, layer.getHeight() - y - 1).getTile().getId()];
+                DungeonTile tile = DungeonTile.getTileByName(val);
+                if (tile == null) {
+                    val = "brick_floor";
+                }
+                if (x == cx && y == cy) {
+                    val = "avatar";
+                }
+                TextureAtlas.AtlasRegion ar = (TextureAtlas.AtlasRegion) atlas.findRegion(val);
+                BufferedImage sub = sheet.getSubimage(ar.getRegionX(), ar.getRegionY(), 32, 32);
+                canvas.getGraphics().drawImage(sub, x * 32, y * 32, 32, 32, null);
+            }
+        }
+
+        java.awt.Image tmp = canvas.getScaledInstance(20 * 32, 20 * 32, Image.SCALE_AREA_AVERAGING);
+        BufferedImage scaledCanvas = new BufferedImage(20 * 32, 20 * 32, BufferedImage.TYPE_INT_ARGB);
+        scaledCanvas.getGraphics().drawImage(tmp, 0, 0, null);
+
+        Pixmap p = Utils.createPixmap(scaledCanvas.getWidth(), scaledCanvas.getHeight(), scaledCanvas, 0, 0);
+
+        Texture t = new Texture(p);
+        p.dispose();
+
+        return t;
+    }
+
+    //used for telescope viewing or in towns
+    public static Texture peerGem(Maps map, TextureAtlas atlas) throws Exception {
+
+        Texture t = null;
+
+        if (map.getMap().getType() == MapType.city) {
+            FileTextureData d = (FileTextureData) (atlas.getRegions().first().getTexture().getTextureData());
+            InputStream is = ClassLoader.class.getResourceAsStream("/assets/graphics/" + d.getFileHandle().file().getName());
+            BufferedImage sheet = ImageIO.read(is);
+            BufferedImage canvas = new BufferedImage(64 * 32, 64 * 32, BufferedImage.TYPE_INT_ARGB);
+
+            for (int y = 0; y < 64; y++) {
+                for (int x = 0; x < 64; x++) {
+                    Tile ct = map.getMap().getTile(x, y);
+                    TextureAtlas.AtlasRegion ar = (TextureAtlas.AtlasRegion) atlas.findRegion(ct.getName());
+                    BufferedImage sub = sheet.getSubimage(ar.getRegionX(), ar.getRegionY(), 32, 32);
+                    canvas.getGraphics().drawImage(sub, x * 32, y * 32, 32, 32, null);
+                }
+            }
+
+            java.awt.Image tmp = canvas.getScaledInstance(20 * 32, 20 * 32, Image.SCALE_AREA_AVERAGING);
+            BufferedImage scaledCanvas = new BufferedImage(20 * 32, 20 * 32, BufferedImage.TYPE_INT_ARGB);
+            scaledCanvas.getGraphics().drawImage(tmp, 0, 0, null);
+
+            Pixmap p = createPixmap(
+                    Exodus.SCREEN_WIDTH,
+                    Exodus.SCREEN_HEIGHT,
+                    scaledCanvas,
+                    (Exodus.SCREEN_WIDTH - scaledCanvas.getWidth()) / 2,
+                    (Exodus.SCREEN_HEIGHT - scaledCanvas.getHeight()) / 2);
+
+            t = new Texture(p);
+            p.dispose();
+
+        } else if (map.getMap().getType() == MapType.dungeon) {
+            //NO OP not needed since I added the minimap already on the HUD
+        }
+
+        return t;
+
+    }
+
+    //used for view gem on the world map only
+    public static Texture peerGem(BaseMap worldMap, int avatarX, int avatarY, TextureAtlas atlas) throws Exception {
+        FileTextureData d = (FileTextureData) (atlas.getRegions().first().getTexture().getTextureData());
+        InputStream is = ClassLoader.class.getResourceAsStream("/assets/graphics/" + d.getFileHandle().file().getName());
+        BufferedImage sheet = ImageIO.read(is);
+        BufferedImage canvas = new BufferedImage(32 * 64, 32 * 64, BufferedImage.TYPE_INT_ARGB);
+
+        int startX = avatarX - 32;
+        int startY = avatarY - 32;
+        int endX = avatarX + 32;
+        int endY = avatarY + 32;
+        int indexX = 0;
+        int indexY = 0;
+        for (int y = startY; y < endY; y++) {
+            for (int x = startX; x < endX; x++) {
+                int cx = x;
+                if (x < 0) {
+                    cx = 256 + x;
+                } else if (x >= 256) {
+                    cx = x - 256;
+                }
+                int cy = y;
+                if (y < 0) {
+                    cy = 256 + y;
+                } else if (y >= 256) {
+                    cy = y - 256;
+                }
+                Tile ct = worldMap.getTile(cx, cy);
+                TextureAtlas.AtlasRegion ar = (TextureAtlas.AtlasRegion) atlas.findRegion(ct.getName());
+                BufferedImage sub = sheet.getSubimage(ar.getRegionX(), ar.getRegionY(), 32, 32);
+                canvas.getGraphics().drawImage(sub, indexX * 32, indexY * 32, 32, 32, null);
+
+                Creature cr = worldMap.getCreatureAt(cx, cy);
+                if (cr != null) {
+                    canvas.getGraphics().fillRect(indexX * 32, indexY * 32, 32, 32);
+                }
+
+                indexX++;
+            }
+            indexX = 0;
+            indexY++;
+        }
+
+        //add avatar in the middle
+        canvas.getGraphics().fillRect((32 * 64) / 2, (32 * 64) / 2, 32, 32);
+
+        java.awt.Image tmp = canvas.getScaledInstance(20 * 32, 20 * 32, Image.SCALE_AREA_AVERAGING);
+        BufferedImage scaledCanvas = new BufferedImage(20 * 32, 20 * 32, BufferedImage.TYPE_INT_ARGB);
+        scaledCanvas.getGraphics().drawImage(tmp, 0, 0, null);
+
+        Pixmap p = createPixmap(
+                Exodus.SCREEN_WIDTH,
+                Exodus.SCREEN_HEIGHT,
+                scaledCanvas,
+                (Exodus.SCREEN_WIDTH - scaledCanvas.getWidth()) / 2,
+                (Exodus.SCREEN_HEIGHT - scaledCanvas.getHeight()) / 2);
+
+        Texture t = new Texture(p);
+        p.dispose();
+        return t;
+
+    }
+
+    public static Pixmap createPixmap(int width, int height, BufferedImage image, int sx, int sy) {
+
+        int imgWidth = image.getWidth();
+        int imgHeight = image.getHeight();
+
+        Pixmap pix = new Pixmap(width, height, Pixmap.Format.RGBA8888);
+        pix.setColor(0f, 0f, 0f, 1f);
+        pix.fillRectangle(0, 0, width, height);
+
+        int[] pixels = image.getRGB(0, 0, imgWidth, imgHeight, null, 0, width);
+
+        for (int x = 0; x < imgWidth; x++) {
+            for (int y = 0; y < imgHeight; y++) {
+                int pixel = pixels[y * width + x];
+                pix.drawPixel(sx + x, sy + y, getRGBA(pixel));
+            }
+        }
+
+        return pix;
+    }
+
+    private static int getRGBA(int rgb) {
+        int a = rgb >> 24;
+        a &= 0x000000ff;
+        int rest = rgb & 0x00ffffff;
+        rest <<= 8;
+        rest |= a;
+        return rest;
+    }
+
+    public static Texture fillRectangle(int width, int height, Color color, float alpha) {
+        Pixmap pix = new Pixmap(width, height, Pixmap.Format.RGBA8888);
+        pix.setColor(color.r, color.g, color.b, alpha);
+        pix.fillRectangle(0, 0, width, height);
+        Texture t = new Texture(pix);
+        pix.dispose();
+        return t;
+    }
+
 }

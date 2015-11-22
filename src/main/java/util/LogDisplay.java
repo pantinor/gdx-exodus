@@ -65,8 +65,8 @@ public class LogDisplay {
             if (pm.getPlayer().status == StatusType.POISONED) {
                 Exodus.smallFont.setColor(Color.GREEN);
             }
-            if (pm.getPlayer().status == StatusType.COLD) {
-                Exodus.smallFont.setColor(Color.CYAN);
+            if (pm.getPlayer().status == StatusType.ASH) {
+                Exodus.smallFont.setColor(Color.FIREBRICK);
             }
             if (pm.getPlayer().status == StatusType.DEAD) {
                 Exodus.smallFont.setColor(Color.DARK_GRAY);

@@ -102,8 +102,8 @@ public class Party extends Observable implements Constants {
     }
 
     public int adjustShipHull(int val) {
-        //saveGame.shiphull = Utils.adjustValue(saveGame.shiphull, val, 50, 0);
-        return 0;//saveGame.shiphull;
+        saveGame.shiphull = Utils.adjustValue(saveGame.shiphull, val, 50, 0);
+        return saveGame.shiphull;
     }
 
     public void damageParty(int minDamage, int maxDamage) throws PartyDeathException {
@@ -288,13 +288,9 @@ public class Party extends Observable implements Constants {
         }
     }
 
-    public void adjustGold(PartyMember member, int v) {
-        member.player.gold = Utils.adjustValue(member.player.gold, v, 9999, 0);
-    }
-
     public int getChestGold(PartyMember member) {
         int gold = rand.nextInt(50) + rand.nextInt(8) + 10;
-        adjustGold(member, gold);
+        member.player.adjustGold(gold);
         return gold;
     }
 
@@ -437,6 +433,7 @@ public class Party extends Observable implements Constants {
                     if (player.status != StatusType.DEAD) {
                         return false;
                     }
+                    player.health = 1;
                     player.status = StatusType.GOOD;
                     break;
 
@@ -447,18 +444,12 @@ public class Party extends Observable implements Constants {
                     player.health += 75 + (rand.nextInt(256) % 25);
                     break;
 
-                case CAMPHEAL:
-                    if (player.status == StatusType.DEAD || player.health == player.maxHealth) {
+                case RECALL:
+                    if (player.status != StatusType.ASH) {
                         return false;
                     }
-                    player.health += 99 + (rand.nextInt(256) & 119);
-                    break;
-
-                case INNHEAL:
-                    if (player.status == StatusType.DEAD || player.health == player.maxHealth) {
-                        return false;
-                    }
-                    player.health += 100 + (rand.nextInt(50) * 2);
+                    player.health = 1;
+                    player.status = StatusType.GOOD;
                     break;
 
                 default:
@@ -499,9 +490,9 @@ public class Party extends Observable implements Constants {
          */
         public WeaponType loseWeapon() {
             int weapon = player.weapon.ordinal();
-            if (player.qtyWeapons[weapon] > 0) {
-                --player.qtyWeapons[weapon];
-                int w = player.qtyWeapons[weapon] + 1;
+            if (player.weapons[weapon] > 0) {
+                --player.weapons[weapon];
+                int w = player.weapons[weapon] + 1;
                 return WeaponType.get(w);
             } else {
                 player.weapon = WeaponType.NONE;
@@ -519,7 +510,7 @@ public class Party extends Observable implements Constants {
             if (i == 0) {
                 //take off the old and put it in inventory
                 if (player.weapon.ordinal() != 0) {
-                    player.qtyWeapons[player.weapon.ordinal()]++;
+                    player.weapons[player.weapon.ordinal()]++;
                 }
                 player.weapon = WeaponType.NONE;
                 return true;
@@ -531,7 +522,7 @@ public class Party extends Observable implements Constants {
             }
 
             //check if it is in the inventory
-            if (player.qtyWeapons[i] <= 0) {
+            if (player.weapons[i] <= 0) {
                 return false;
             }
 
@@ -543,11 +534,11 @@ public class Party extends Observable implements Constants {
 
             //take off the old and put it in inventory
             if (player.weapon.ordinal() != 0) {
-                player.qtyWeapons[player.weapon.ordinal()]++;
+                player.weapons[player.weapon.ordinal()]++;
             }
 
             player.weapon = wt;
-            player.qtyWeapons[i]--;
+            player.weapons[i]--;
             return true;
         }
 
@@ -561,7 +552,7 @@ public class Party extends Observable implements Constants {
             if (i == 0) {
                 //take off the old and put it in inventory
                 if (player.armor.ordinal() != 0) {
-                    player.qtyArmors[player.armor.ordinal()]++;
+                    player.armors[player.armor.ordinal()]++;
                 }
                 player.armor = ArmorType.NONE;
                 return true;
@@ -573,7 +564,7 @@ public class Party extends Observable implements Constants {
             }
 
             //check if it is in the inventory
-            if (player.qtyArmors[i] <= 0) {
+            if (player.armors[i] <= 0) {
                 return false;
             }
 
@@ -585,11 +576,11 @@ public class Party extends Observable implements Constants {
 
             //take off the old and put it in inventory
             if (player.armor.ordinal() != 0) {
-                player.qtyArmors[player.armor.ordinal()]++;
+                player.armors[player.armor.ordinal()]++;
             }
 
             player.armor = at;
-            player.qtyArmors[i]--;
+            player.armors[i]--;
             return true;
         }
 
@@ -671,12 +662,12 @@ public class Party extends Observable implements Constants {
             }
         }
 
-//        if (context.getCurrentMap().getId() == Maps.SOSARIA.getId() && saveGame.shiphull < 50 && rand.nextInt(4) == 0) {
-//            saveGame.shiphull++;
-//            if (saveGame.shiphull > 50) {
-//                saveGame.shiphull = 50;
-//            }
-//        }
+        if (context.getCurrentMap().getId() == Maps.SOSARIA.getId() && saveGame.shiphull < 50 && rand.nextInt(4) == 0) {
+            saveGame.shiphull++;
+            if (saveGame.shiphull > 50) {
+                saveGame.shiphull = 50;
+            }
+        }
     }
 
     public Context getContext() {
@@ -717,14 +708,14 @@ public class Party extends Observable implements Constants {
                 if (t == ArmorType.NONE) {
                     continue;
                 }
-                sb1.append("|" + t + ": ").append(p.qtyArmors[t.ordinal()]);
+                sb1.append("|" + t + ": ").append(p.armors[t.ordinal()]);
             }
 
             for (WeaponType t : WeaponType.values()) {
                 if (t == WeaponType.NONE) {
                     continue;
                 }
-                sb1.append("|" + t + ": ").append(p.qtyWeapons[t.ordinal()]);
+                sb1.append("|" + t + ": ").append(p.weapons[t.ordinal()]);
             }
 
             sb1.append("~");

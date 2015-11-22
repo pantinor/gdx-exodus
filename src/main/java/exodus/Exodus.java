@@ -37,7 +37,7 @@ import objects.MapSet;
 import objects.TileSet;
 import objects.WeaponSet;
 import util.Utils;
-//import vendor.VendorClassSet;
+import vendor.VendorClassSet;
 
 public class Exodus extends Game {
 
@@ -68,7 +68,7 @@ public class Exodus extends Game {
     public static WeaponSet weapons;
     public static ArmorSet armors;
     public static CreatureSet creatures;
-    //public static VendorClassSet vendorClassSet;
+    public static VendorClassSet vendorClassSet;
     public static TextureAtlas standardAtlas;
 
     public static TextureRegion magicHitTile;
@@ -184,8 +184,9 @@ public class Exodus extends Game {
             maps.init(baseTileSet);
             maps.init(MapType.combat, u4TileSet);//set combat maps with the u4 tile set
 
-            //vendorClassSet = (VendorClassSet) Utils.loadXml("vendor.xml", VendorClassSet.class);
-            //vendorClassSet.init();
+            vendorClassSet = (VendorClassSet) Utils.loadXml("assets/xml/vendor.xml", VendorClassSet.class);
+            vendorClassSet.init();
+            
             weapons = (WeaponSet) Utils.loadXml("assets/xml/weapons.xml", WeaponSet.class);
             armors = (ArmorSet) Utils.loadXml("assets/xml/armors.xml", ArmorSet.class);
             creatures = (CreatureSet) Utils.loadXml("assets/xml/creatures.xml", CreatureSet.class);
@@ -199,17 +200,7 @@ public class Exodus extends Game {
 
         startScreen = new StartScreen(this);
 
-        //setScreen(new GameScreen(this));
         setScreen(startScreen);
-    }
-
-    private static Texture fillRectangle(int width, int height, Color color) {
-        Pixmap pix = new Pixmap(width, height, Pixmap.Format.RGBA8888);
-        pix.setColor(color);
-        pix.fillRectangle(0, 0, width, height);
-        Texture t = new Texture(pix);
-        pix.dispose();
-        return t;
     }
 
 }

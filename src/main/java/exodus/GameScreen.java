@@ -46,6 +46,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import exodus.Party.PartyMember;
 import util.PartyDeathException;
+import util.Utils;
 
 public class GameScreen extends BaseScreen {
 
@@ -70,7 +71,7 @@ public class GameScreen extends BaseScreen {
     Array<AtlasRegion> moongateTextures = new Array<>();
     public static int phase = 0, trammelphase = 0, trammelSubphase = 0, feluccaphase = 0;
 
-    //public SecondaryInputProcessor sip;
+    public SecondaryInputProcessor sip;
 
     public GameTimer gameTimer = new GameTimer();
 
@@ -98,7 +99,8 @@ public class GameScreen extends BaseScreen {
         Maps.SOSARIA.getMap().setSurfaceMapStage(mapObjectsStage);
         projectilesStage = new Stage(mapViewPort);
 
-        //sip = new SecondaryInputProcessor(this, stage);
+        sip = new SecondaryInputProcessor(this, stage);
+        
         SequenceAction seq1 = Actions.action(SequenceAction.class);
         seq1.addAction(Actions.delay(.25f));
         seq1.addAction(Actions.run(gameTimer));
@@ -187,10 +189,14 @@ public class GameScreen extends BaseScreen {
             Party party = new Party(sg);
             context.setParty(party);
             //context.loadJournalEntries();
+            
+            
+            
+            party.getMember(0).getPlayer().gems = 5;
 
             //load the surface world first
             //loadNextMap(Maps.SOSARIA, sg.partyX, sg.partyY);
-            loadNextMap(Maps.SOSARIA, 224, 26);
+            loadNextMap(Maps.SOSARIA, 224, 125);
 
             //load the dungeon if save game starts in dungeon
             if (Maps.get(sg.location) != Maps.SOSARIA) {
@@ -205,44 +211,44 @@ public class GameScreen extends BaseScreen {
             mainAvatar = avatarAnim;
 
             
-//            switch (sg.transport) {
-//                case 31:
-//                    mainAvatar = avatarAnim;
-//                    break;
-//                case 16:
-//                case 17:
-//                case 18:
-//                case 19:
-//                    mainAvatar = shipAnim;
-//                    break;
-//                case 20:
-//                case 21:
-//                    mainAvatar = horseAnim;
-//                    break;
-//            }
+            switch (sg.transport) {
+                case 31:
+                    mainAvatar = avatarAnim;
+                    break;
+                case 16:
+                case 17:
+                case 18:
+                case 19:
+                    mainAvatar = shipAnim;
+                    break;
+                case 20:
+                case 21:
+                    mainAvatar = horseAnim;
+                    break;
+            }
 
-//            //load objects to surface stage
-//            for (int i=0;i<24;i++) {
-//                if (sg.objects_save_tileids[i] != 0 && sg.objects_save_x[i] != 0 && sg.objects_save_y[i] != 0) {
-//                    Tile t = Exodus.baseTileSet.getTileByIndex(sg.objects_save_tileids[i] & 0xff);
-//                    Drawable d = new Drawable(Maps.SOSARIA.getMap(), sg.objects_save_x[i] & 0xff, sg.objects_save_y[i] & 0xff, t, Exodus.standardAtlas);
-//                    Vector3 v = getMapPixelCoords(sg.objects_save_x[i] & 0xff, sg.objects_save_y[i] & 0xff);
-//                    d.setX(v.x);
-//                    d.setY(v.y);
-//                    mapObjectsStage.addActor(d);
-//                }
-//            }
-//            //load monsters to surface map
-//            for (int i=0;i<8;i++) {
-//                if (sg.monster_save_tileids[i] != 0 && sg.monster_save_x[i] != 0 && sg.monster_save_y[i] != 0) {
-//                    Tile t = Exodus.baseTileSet.getTileByIndex(sg.monster_save_tileids[i] & 0xff);
-//                    Creature cr = Exodus.creatures.getInstance(CreatureType.get(t.getName()), Exodus.standardAtlas);
-//                    cr.currentX = sg.monster_save_x[i] & 0xff;
-//                    cr.currentY = sg.monster_save_y[i] & 0xff;
-//                    cr.currentPos = getMapPixelCoords(cr.currentX, cr.currentY);
-//                    Maps.WORLD.getMap().addCreature(cr);
-//                }
-//            }
+            //load objects to surface stage
+            for (int i=0;i<24;i++) {
+                if (sg.objects_save_tileids[i] != 0 && sg.objects_save_x[i] != 0 && sg.objects_save_y[i] != 0) {
+                    Tile t = Exodus.baseTileSet.getTileByIndex(sg.objects_save_tileids[i] & 0xff);
+                    Drawable d = new Drawable(Maps.SOSARIA.getMap(), sg.objects_save_x[i] & 0xff, sg.objects_save_y[i] & 0xff, t, Exodus.standardAtlas);
+                    Vector3 v = getMapPixelCoords(sg.objects_save_x[i] & 0xff, sg.objects_save_y[i] & 0xff);
+                    d.setX(v.x);
+                    d.setY(v.y);
+                    mapObjectsStage.addActor(d);
+                }
+            }
+            //load monsters to surface map
+            for (int i=0;i<8;i++) {
+                if (sg.monster_save_tileids[i] != 0 && sg.monster_save_x[i] != 0 && sg.monster_save_y[i] != 0) {
+                    Tile t = Exodus.baseTileSet.getTileByIndex(sg.monster_save_tileids[i] & 0xff);
+                    Creature cr = Exodus.creatures.getInstance(CreatureType.get(t.getName()), Exodus.standardAtlas);
+                    cr.currentX = sg.monster_save_x[i] & 0xff;
+                    cr.currentY = sg.monster_save_y[i] & 0xff;
+                    cr.currentPos = getMapPixelCoords(cr.currentX, cr.currentY);
+                    Maps.SOSARIA.getMap().addCreature(cr);
+                }
+            }
         }
 
         context.getParty().addObserver(this);
@@ -544,34 +550,11 @@ public class GameScreen extends BaseScreen {
             avatarDirection = Direction.SOUTH.getVal() - 1;
 
         } else if (keycode == Keys.F && context.getTransportContext() == TransportContext.SHIP) {
+            
             log("Fire Cannon > ");
             ShipInputAdapter sia = new ShipInputAdapter(v);
             Gdx.input.setInputProcessor(sia);
             return false;
-
-        } else if (keycode == Keys.K || keycode == Keys.D) {
-
-//            if (context.getCurrentMap().getId() == Maps.WORLD.getId()) {
-//                if (keycode == Keys.K && context.getTransportContext() == TransportContext.BALLOON) {
-//                    context.getParty().getSaveGame().balloonstate = 1;
-//                    log("Klimb altitude");
-//                } else if (keycode == Keys.D && context.getTransportContext() == TransportContext.BALLOON) {
-//                    if (ct.getRule().has(TileAttrib.canlandballoon)) {
-//                        context.getParty().getSaveGame().balloonstate = 0;
-//                        renderer.getFOV().calculateFOV(context.getCurrentMap().getShadownMap(), (int) v.x, (int) v.y, 17f);
-//                        log("Land balloon");
-//                    } else {
-//                        log("Not here!");
-//                    }
-//                }
-//            } else {
-//                Portal p = context.getCurrentMap().getPortal(v.x, v.y, 0);
-//                if (p != null) {
-//                    loadNextMap(Maps.get(p.getDestmapid()), p.getStartx(), p.getStarty());
-//                    log(p.getMessage());
-//                    return false;
-//                }
-//            }
 
         } else if (keycode == Keys.E) {
 
@@ -593,15 +576,42 @@ public class GameScreen extends BaseScreen {
 
             }
         } else if (keycode == Keys.Q) {
-
+            if (context.getCurrentMap().getId() == Maps.SOSARIA.getId()) {
+                context.saveGame(v.x, v.y, 0, null, Maps.SOSARIA);
+                log("Saved Game.");
+            } else {
+                log("Cannot save here!");
+            }
         } else if (keycode == Keys.L) {
-
+        } else if (keycode == Keys.B) {
+            board((int) v.x, (int) v.y);
+        } else if (keycode == Keys.X) {
+            if (context.getTransportContext() == TransportContext.SHIP) {
+                Tile st = Exodus.baseTileSet.getTileByName("ship");
+                Drawable ship = new Drawable(context.getCurrentMap(), (int) v.x, (int) v.y, st, Exodus.standardAtlas);
+                ship.setX(newMapPixelCoords.x);
+                ship.setY(newMapPixelCoords.y);
+                mapObjectsStage.addActor(ship);
+            } else if (context.getTransportContext() == TransportContext.HORSE) {
+                Creature cr = Exodus.creatures.getInstance(CreatureType.horse, Exodus.standardAtlas);
+                cr.currentX = (int) v.x;
+                cr.currentY = (int) v.y;
+                context.getCurrentMap().addCreature(cr);
+            }
+            context.getParty().setTransport(Exodus.baseTileSet.getTileByIndex(0x1f));
+            mainAvatar = avatarAnim;
         } else if (keycode == Keys.S) {
-
+            BaseMap bm = context.getCurrentMap();
+            ItemMapLabels l = bm.searchLocation(this, context.getParty(), (int) v.x, (int) v.y, 0);
+            if (l != null) {
+                log("You found " + l.getDesc() + ".");
+            } else {
+                log("Nothing here!");
+            }
         } else if (keycode == Keys.M) {
 
         } else if (keycode == Keys.P) {
-            //peerGem();
+            peerGem();
         } else if (keycode == Keys.U) {
 
             log("Use Item:");
@@ -611,8 +621,8 @@ public class GameScreen extends BaseScreen {
             return false;
 
         } else if (keycode == Keys.T || keycode == Keys.O || keycode == Keys.J || keycode == Keys.L || keycode == Keys.A || keycode == Keys.G || keycode == Keys.R || keycode == Keys.W) {
-            //Gdx.input.setInputProcessor(sip);
-            //sip.setinitialKeyCode(keycode, context.getCurrentMap(), (int) v.x, (int) v.y);
+            Gdx.input.setInputProcessor(sip);
+            sip.setinitialKeyCode(keycode, context.getCurrentMap(), (int) v.x, (int) v.y);
             return false;
 
         } else if (keycode == Keys.C) {
@@ -636,11 +646,6 @@ public class GameScreen extends BaseScreen {
 
         int nx = (int) currentTile.x;
         int ny = (int) currentTile.y;
-
-//        if (context.getParty().getMember(0).getPlayer().status == StatusType.SLEEPING) {
-//            finishTurn(nx, ny);
-//            return false;
-//        }
 
         if (dir == Direction.NORTH) {
             ny = (int) currentTile.y - 1;
@@ -749,6 +754,9 @@ public class GameScreen extends BaseScreen {
         Cell cell = layer.getCell(x, context.getCurrentMap().getWidth() - 1 - y);
         TiledMapTile tmt = new StaticTiledMapTile(texture);
         tmt.setId(y * context.getCurrentMap().getWidth() + x);
+        if (cell == null) {
+            System.err.printf("null cell in %s %d %d\n",context.getCurrentMap().getId(),x,y);
+        }
         cell.setTile(tmt);
         context.getCurrentMap().setTile(Exodus.baseTileSet.getTileByName(name), x, y);
     }
@@ -1111,14 +1119,17 @@ public class GameScreen extends BaseScreen {
 
     }
 
-    public void peerGem(PartyMember pm) {
-        if (pm.getPlayer().gems > 0) {
-            pm.getPlayer().gems--;
-            log("Peer at a Gem!");
-            Gdx.input.setInputProcessor(new PeerGemInputAdapter());
-        } else {
-            log("Thou dost have no gems!");
+    public void peerGem() {
+        //find first party member which has gems
+        for (PartyMember pm : context.getParty().getMembers()) {
+            if (pm.getPlayer().gems > 0) {
+                pm.getPlayer().gems--;
+                log("Peer at a Gem!");
+                Gdx.input.setInputProcessor(new PeerGemInputAdapter());
+                return;
+            }
         }
+        log("Thou dost have no gems!");
     }
 
     public void peerTelescope() {
@@ -1142,9 +1153,9 @@ public class GameScreen extends BaseScreen {
                 Texture t = null;
                 if (context.getCurrentMap().getId() == Maps.SOSARIA.getId()) {
                     Vector3 v = getCurrentMapCoords();
-                    //t = Utils.peerGem(context.getCurrentMap(), (int) v.x, (int) v.y, Exodus.standardAtlas);
+                    t = Utils.peerGem(context.getCurrentMap(), (int) v.x, (int) v.y, Exodus.standardAtlas);
                 } else {
-                    //t = Utils.peerGem(Maps.get(context.getCurrentMap().getId()), Exodus.standardAtlas);
+                    t = Utils.peerGem(Maps.get(context.getCurrentMap().getId()), Exodus.standardAtlas);
                 }
                 img = new Image(t);
                 img.setX(0);
@@ -1181,7 +1192,7 @@ public class GameScreen extends BaseScreen {
                 Maps map = Maps.get(keycode - Keys.A + 1);
                 log(Keys.toString(keycode).toUpperCase() + " - " + map.getLabel());
                 try {
-                    Texture t = null;//Utils.peerGem(map, Exodus.standardAtlas);
+                    Texture t = Utils.peerGem(map, Exodus.standardAtlas);
                     img = new Image(t);
                     img.setX(0);
                     img.setY(0);
@@ -1190,7 +1201,7 @@ public class GameScreen extends BaseScreen {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            } else { //if (keycode == Keys.ENTER || keycode == Keys.SPACE) {
+            } else if (keycode == Keys.ENTER || keycode == Keys.SPACE) {
                 if (img != null) {
                     img.remove();
                 }

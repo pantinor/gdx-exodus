@@ -332,6 +332,7 @@ public class CombatScreen extends BaseScreen {
                 continue;
             }
             renderer.getBatch().draw(cr.getAnim().getKeyFrame(time, true), cr.currentPos.x, cr.currentPos.y);
+            renderer.getBatch().draw(cr.getHealthBar(), cr.currentPos.x, cr.currentPos.y-4);
         }
 
         for (PartyMember p : party.getMembers()) {
@@ -513,25 +514,28 @@ public class CombatScreen extends BaseScreen {
 
         if (next.x > combatMap.getWidth() - 1 || next.x < 0 || next.y > combatMap.getHeight() - 1 || next.y < 0) {
 
-            if (combatMap.getType() == MapType.dungeon && !party.isOKtoExitDirection(dir)) {
-                log("Cannot exit in that direction!");
                 Sounds.play(Sound.BLOCKED);
                 return false;
-            } else {
-                PartyMember ap = party.getActivePartyMember();
-                ap.fled = true;
-                ap.combatMapExitDirection = dir;
-                Sounds.play(Sound.FLEE);
-
-                if (party.getAbleCombatPlayers() == 0) {
-                    end();
-                    return false;
-                } else {
-                    int ni = party.getNextActiveIndex();
-                    Creature nextActivePlayer = party.getMember(ni).combatCr;
-                    cursor.setPos(nextActivePlayer.currentPos);
-                }
-            }
+            
+//            if (combatMap.getType() == MapType.dungeon && !party.isOKtoExitDirection(dir)) {
+//                log("Cannot exit in that direction!");
+//                Sounds.play(Sound.BLOCKED);
+//                return false;
+//            } else {
+//                PartyMember ap = party.getActivePartyMember();
+//                ap.fled = true;
+//                ap.combatMapExitDirection = dir;
+//                Sounds.play(Sound.FLEE);
+//
+//                if (party.getAbleCombatPlayers() == 0) {
+//                    end();
+//                    return false;
+//                } else {
+//                    int ni = party.getNextActiveIndex();
+//                    Creature nextActivePlayer = party.getMember(ni).combatCr;
+//                    cursor.setPos(nextActivePlayer.currentPos);
+//                }
+//            }
 
         } else {
 
@@ -1101,13 +1105,13 @@ public class CombatScreen extends BaseScreen {
             StringBuilder sb = new StringBuilder();
             if (ready) {
                 for (char ch = 'a'; ch <= 'p'; ch++) {
-                    if (pm.getPlayer().qtyWeapons[ch - 'a'] > 0) {
+                    if (pm.getPlayer().weapons[ch - 'a'] > 0) {
                         sb.append(Character.toUpperCase(ch)).append(" - ").append(WeaponType.get(ch - 'a'));
                     }
                 }
             } else {
                 for (char ch = 'a'; ch <= 'h'; ch++) {
-                    if (pm.getPlayer().qtyArmors[ch - 'a'] > 0) {
+                    if (pm.getPlayer().armors[ch - 'a'] > 0) {
                         sb.append(Character.toUpperCase(ch)).append(" - ").append(ArmorType.get(ch - 'a'));
                     }
                 }

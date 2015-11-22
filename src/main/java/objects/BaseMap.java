@@ -72,7 +72,7 @@ public class BaseMap implements Constants {
         }
         return null;
     }
-    
+
     public Moongate getMoongate(String name) {
         if (moongates == null) {
             return null;
@@ -96,7 +96,7 @@ public class BaseMap implements Constants {
         }
         return null;
     }
-    
+
     public Portal getPortal(float x, float y, float z) {
         if (portals == null) {
             return null;
@@ -187,6 +187,16 @@ public class BaseMap implements Constants {
     @XmlTransient
     public List<Person> getPeople() {
         return people;
+    }
+    
+    public Person resetTalkingFlags() {
+        for (Person p : people) {
+            if (p == null) {
+                continue;
+            }
+            p.setTalking(false);
+        }
+        return null;
     }
 
     public void setPeople(List<Person> people) {
@@ -534,6 +544,10 @@ public class BaseMap implements Constants {
                 if (cr.getWontattack()) {
                     if (cr.getTile() == CreatureType.whirlpool) {
                         screen.context.damageShip(-1, 10);
+                        Exodus.hud.add("A huge swirling WhirlPool engulfs you and your ship dragging both to a watery grave!");
+                        Exodus.hud.add("As the water enters your lungs you pass into Darkness!");
+                        Exodus.hud.add("You awaken on the shores of a forgotten Land.");
+                        Exodus.hud.add("Your ship and crew lost to the sea!");
                         screen.loadNextMap(Maps.AMBROSIA, 32, 58);
                         break;
                     } else if (cr.getTile() == CreatureType.twister) {
@@ -1202,8 +1216,7 @@ public class BaseMap implements Constants {
 
         return null;
     }
-    
-    
+
     @XmlTransient
     public List<PartyMember> getCombatPlayers() {
         return combatPlayers;

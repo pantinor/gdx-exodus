@@ -822,7 +822,6 @@ public interface Constants {
 
         GOOD("G"),
         POISONED("P"),
-        COLD("C"),
         ASH("A"),
         DEAD("D");
 
@@ -1115,7 +1114,7 @@ public interface Constants {
 
         gem,
         key,
-        sextant,
+        powder,
         torch;
     }
 
@@ -1182,8 +1181,7 @@ public interface Constants {
         FULLHEAL,
         RESURRECT,
         HEAL,
-        CAMPHEAL,
-        INNHEAL;
+        RECALL;
     }
 
     public enum InventoryType {
@@ -1197,6 +1195,7 @@ public interface Constants {
         TAVERN,
         HEALER,
         TAVERNINFO,
+        ORACLEINFO,
         TINKER,
         HORSE;
     }

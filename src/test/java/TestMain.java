@@ -54,15 +54,22 @@ public class TestMain extends Game {
             context.setParty(party);
             context.setCurrentMap(Maps.SOSARIA.getMap());
 
-            sg.players[0].qtyWeapons[5] = 1;
-            sg.players[0].qtyArmors[5] = 1;
+            sg.players[0].maxHealth = 700;
+            sg.players[0].health = 500;
+            sg.players[0].exp = 350;
+            sg.players[0].weapons[5] = 1;
+            sg.players[0].armors[5] = 1;
             sg.players[0].weapon = WeaponType.BOW;
-//            
-//            sg.players[1].maxHealth = 700;
-//            sg.players[1].weapon = WeaponType.BOW_P4;
+            
+            sg.players[1].maxHealth = 700;
+            sg.players[1].health = 500;
+            sg.players[1].exp = 350;
+            sg.players[1].weapon = WeaponType.BOW_P4;
+            
+            Maps m = Maps.GRASS_CON;
 
-            TiledMap tmap = new UltimaTiledMapLoader(Maps.BRUSH_CON, Exodus.standardAtlas, Maps.BRUSH_CON.getMap().getWidth(), Maps.BRUSH_CON.getMap().getHeight(), 32, 32).load();
-            CombatScreen sc = new CombatScreen(null, context, Maps.SOSARIA, Maps.BRUSH_CON.getMap(), tmap, CreatureType.troll, Exodus.creatures, Exodus.standardAtlas);
+            TiledMap tmap = new UltimaTiledMapLoader(m, Exodus.standardAtlas, m.getMap().getWidth(), m.getMap().getHeight(), 32, 32).load();
+            CombatScreen sc = new CombatScreen(null, context, Maps.SOSARIA, m.getMap(), tmap, CreatureType.guard, Exodus.creatures, Exodus.standardAtlas);
             
             setScreen(sc);
             //atlas = a1;

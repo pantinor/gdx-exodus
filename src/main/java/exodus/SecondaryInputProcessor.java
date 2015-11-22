@@ -2,7 +2,6 @@ package exodus;
 
 import objects.BaseMap;
 import objects.Creature;
-//import objects.Party.PartyMember;
 import objects.Person;
 import objects.Tile;
 import util.Utils;
@@ -14,22 +13,21 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import exodus.Party.PartyMember;
-//import vendor.TinkerDialog;
 
 public class SecondaryInputProcessor extends InputAdapter implements Constants {
 
-    private BaseScreen screen;
-    private Stage stage;
+    private final BaseScreen screen;
+    private final Stage stage;
+
     private int initialKeyCode;
     private BaseMap bm;
     private int currentX;
     private int currentY;
-    //used for flaming oil only
-    private Direction rangeInputModeDirection = null;
+    private PartyMember member;
+    private StringBuilder buffer;
+
     //only for dungeon screen
     private DungeonTile dngTile;
-
-    private StringBuilder buffer;
 
     public SecondaryInputProcessor(BaseScreen screen, Stage stage) {
         this.screen = screen;
@@ -37,21 +35,23 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
     }
 
     public void setinitialKeyCode(int k, BaseMap bm, int x, int y) {
+
         this.initialKeyCode = k;
         this.bm = bm;
         this.currentX = x;
         this.currentY = y;
-        buffer = new StringBuilder();
+        this.member = null;
+        this.buffer = new StringBuilder();
 
         switch (k) {
             case Keys.T:
-                screen.log("TALK> ");
+                screen.log("TALK> Which party member?");
                 break;
             case Keys.O:
                 screen.log("OPEN> ");
                 break;
             case Keys.U:
-                screen.log("UNLOCK> ");
+                screen.log("UNLOCK> Which party member?");
                 break;
             case Keys.L:
                 screen.log("LOOK> ");
@@ -60,9 +60,13 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                 screen.log("ATTACK> ");
                 break;
             case Keys.G:
+                screen.log("GET> Which party member? ");
+                break;
             case Keys.R:
+                screen.log("READY> Which party member? ");
+                break;
             case Keys.W:
-                screen.log("Which party member?");
+                screen.log("WEAR> Which party member? ");
                 break;
 
         }
@@ -98,41 +102,59 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
 
         if (screen.scType == ScreenType.MAIN) {
 
+            GameScreen gameScreen = (GameScreen) screen;
+
             Window dialog = null;
 
             if (initialKeyCode == Keys.T) {
 
-                screen.logAppend(dir.toString());
-
-                Tile tile = bm.getTile(x, y);
-                if (tile.getRule() == TileRule.signs) {
-                    //talking to vendor so get the vendor on other side of sign
-                    switch (dir) {
-                        case NORTH:
-                            y = y - 1;
-                            break;
-                        case SOUTH:
-                            y = y + 1;
-                            break;
-                        case EAST:
-                            x = x + 1;
-                            break;
-                        case WEST:
-                            x = x - 1;
-                            break;
-                    }
+                if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
+                    member = gameScreen.context.getParty().getMember(keycode - 7 - 1);
+                    screen.log("Direction? ");
+                    return false;
                 }
 
-                if (bm.getPeople() != null) {
-                    Person p = bm.getPersonAt(x, y);
-                    if (p != null && (p.getConversation() != null || p.getRole() != null)) {
-                        Gdx.input.setInputProcessor(stage);
-                        //TODO
+                if (this.member != null) {
+                    screen.logAppend(dir.toString());
+
+                    Tile tile = bm.getTile(x, y);
+                    if (tile.getRule() == TileRule.signs) {
+                        //talking to vendor so get the vendor on other side of sign
+                        switch (dir) {
+                            case NORTH:
+                                y = y - 1;
+                                break;
+                            case SOUTH:
+                                y = y + 1;
+                                break;
+                            case EAST:
+                                x = x + 1;
+                                break;
+                            case WEST:
+                                x = x - 1;
+                                break;
+                        }
+                    }
+
+                    if (bm.getPeople() != null) {
+                        Person p = bm.getPersonAt(x, y);
+                        if (p != null) {
+                            if (p.getVendor() != null) {
+                                Gdx.input.setInputProcessor(stage);
+                                dialog = new ConversationDialog(this.member, p, (GameScreen) screen, stage).show(stage);
+                            } else if (p.getConversation() != null) {
+                                screen.log(p.getConversation());
+                            } else {
+                                screen.log("Funny, no response! ");
+                            }
+                        } else {
+                            screen.log("Funny, no response! ");
+                        }
                     } else {
                         screen.log("Funny, no response! ");
                     }
                 } else {
-                    screen.log("Funny, no response! ");
+                    screen.log("Nobody selected!");
                 }
 
             } else if (initialKeyCode == Keys.O) {
@@ -155,30 +177,27 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
 
             } else if (initialKeyCode == Keys.R) {
 
-                if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_8) {
+                if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
                     Gdx.input.setInputProcessor(new ReadyWearInputAdapter(screen.context.getParty().getMember(keycode - 7 - 1), true));
                     return false;
                 }
 
             } else if (initialKeyCode == Keys.W) {
 
-                if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_8) {
+                if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
                     Gdx.input.setInputProcessor(new ReadyWearInputAdapter(screen.context.getParty().getMember(keycode - 7 - 1), false));
                     return false;
                 }
 
             } else if (initialKeyCode == Keys.G) {
 
-                if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_8) {
-                    GameScreen gameScreen = (GameScreen) screen;
+                if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
                     gameScreen.getChest(keycode - 7 - 1, x, y);
                 }
 
             } else if (initialKeyCode == Keys.A) {
 
                 screen.logAppend(dir.toString());
-
-                GameScreen gameScreen = (GameScreen) screen;
 
                 for (Creature c : bm.getCreatures()) {
                     if (c.currentX == x && c.currentY == y) {
@@ -198,8 +217,6 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
 
         } else if (screen.scType == ScreenType.SHRINE) {
 
-
-
         } else if (screen.scType == ScreenType.COMBAT) {
 
             CombatScreen combatScreen = (CombatScreen) screen;
@@ -211,36 +228,9 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                 PartyMember attacker = combatScreen.party.getActivePartyMember();
                 WeaponType wt = attacker.getPlayer().weapon;
 
-                if (rangeInputModeDirection != null) {
-                    switch (rangeInputModeDirection) {
-                        case NORTH:
-                            y = y - 1;
-                            break;
-                        case SOUTH:
-                            y = y + 1;
-                            break;
-                        case EAST:
-                            x = x + 1;
-                            break;
-                        case WEST:
-                            x = x - 1;
-                            break;
-                    }
-                    if (keycode >= Keys.NUM_0 && keycode <= Keys.NUM_9) {
-                        Sounds.play(Sound.PC_ATTACK);
-                        Utils.animateAttack(stage, combatScreen, attacker, rangeInputModeDirection, x, y, keycode - 7);
-
-                    } else {
-                        screen.log("Invalid range!");
-                    }
-                    rangeInputModeDirection = null;
-
-                } else {
-
-                    Sounds.play(Sound.PC_ATTACK);
-                    int range = wt.getWeapon().getRange();
-                    Utils.animateAttack(stage, combatScreen, attacker, dir, x, y, range);
-                }
+                Sounds.play(Sound.PC_ATTACK);
+                int range = wt.getWeapon().getRange();
+                Utils.animateAttack(stage, combatScreen, attacker, dir, x, y, range);
 
                 Gdx.input.setInputProcessor(new InputMultiplexer(screen, stage));
                 return false;
@@ -291,7 +281,7 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                     case FOUNTAIN_ACID:
                     case FOUNTAIN_CURE:
                     case FOUNTAIN_POISON:
-                        if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_8) {
+                        if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
                             dngScreen.dungeonDrinkFountain(dngTile, keycode - 7 - 1);
                         }
                         break;
@@ -299,7 +289,7 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                     case MARK_SNAKE:
                     case MARK_FIRE:
                     case MARK_FORCE:
-                        if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_8) {
+                        if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
                             dngScreen.getMark(dngTile, keycode - 7 - 1);
                         }
                         break;
@@ -309,20 +299,20 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
 
             } else if (initialKeyCode == Keys.G) {
 
-                if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_8) {
+                if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
                     dngScreen.getChest(keycode - 7 - 1, currentX, currentY);
                 }
 
             } else if (initialKeyCode == Keys.R) {
 
-                if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_8) {
+                if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
                     Gdx.input.setInputProcessor(new ReadyWearInputAdapter(screen.context.getParty().getMember(keycode - 7 - 1), true));
                     return false;
                 }
 
             } else if (initialKeyCode == Keys.W) {
 
-                if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_8) {
+                if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
                     Gdx.input.setInputProcessor(new ReadyWearInputAdapter(screen.context.getParty().getMember(keycode - 7 - 1), false));
                     return false;
                 }
@@ -335,79 +325,6 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
         screen.finishTurn(currentX, currentY);
         return false;
     }
-
-//    class StoneColorsInputAdapter extends InputAdapter {
-//
-//        public int pos = 1;
-//        public Stone st1;
-//        public Stone st2;
-//        public Stone st3;
-//        public Stone st4;
-//        CombatScreen combatScreen;
-//
-//        public StoneColorsInputAdapter(CombatScreen combatScreen) {
-//            this.combatScreen = combatScreen;
-//        }
-//
-//        @Override
-//        public boolean keyUp(int keycode) {
-//            if (keycode == Keys.ENTER) {
-//                if (buffer.length() < 1) {
-//                    return false;
-//                }
-//                String color = buffer.toString().toUpperCase();
-//                try {
-//                    Stone stone = Stone.valueOf(Stone.class, color);
-//
-//                    if ((screen.context.getParty().getSaveGame().stones & stone.getLoc()) == 0) {
-//                        screen.log("None owned!");
-//                        Gdx.input.setInputProcessor(new InputMultiplexer(screen, stage));
-//                        combatScreen.finishPlayerTurn();
-//                        return false;
-//                    }
-//
-//                    switch (pos) {
-//                        case 1:
-//                            st1 = stone;
-//                            break;
-//                        case 2:
-//                            st2 = stone;
-//                            break;
-//                        case 3:
-//                            st3 = stone;
-//                            break;
-//                        case 4:
-//                            st4 = stone;
-//                            break;
-//                    }
-//
-//                    if (pos == 4) {
-//                        Gdx.input.setInputProcessor(new InputMultiplexer(screen, stage));
-//                        combatScreen.useStones(st1, st2, st3, st4);
-//                    } else {
-//                        buffer = new StringBuilder();
-//                        pos++;
-//                        screen.log(pos + ": ");
-//                    }
-//
-//                } catch (IllegalArgumentException e) {
-//                    screen.log("None owned!");
-//                    Gdx.input.setInputProcessor(new InputMultiplexer(screen, stage));
-//                    combatScreen.finishPlayerTurn();
-//                }
-//
-//            } else if (keycode == Keys.BACKSPACE) {
-//                if (buffer.length() > 0) {
-//                    buffer.deleteCharAt(buffer.length() - 1);
-//                    screen.logDeleteLastChar();
-//                }
-//            } else if (keycode >= 29 && keycode <= 54) {
-//                buffer.append(Keys.toString(keycode).toLowerCase());
-//                screen.logAppend(Keys.toString(keycode).toLowerCase());
-//            }
-//            return false;
-//        }
-//    }
 
     public class ReadyWearInputAdapter extends InputAdapter {
 
@@ -425,7 +342,7 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                         screen.log(Character.toUpperCase(ch) + " - " + WeaponType.get(ch - 'a'));
                         continue;
                     }
-                    if (pm.getPlayer().qtyWeapons[wt.ordinal()] > 0) {
+                    if (pm.getPlayer().weapons[wt.ordinal()] > 0) {
                         screen.log(Character.toUpperCase(ch) + " - " + WeaponType.get(ch - 'a'));
                     } else if (pm.getPlayer().weapon == wt) {
                         screen.log(Character.toUpperCase(ch) + " - " + WeaponType.get(ch - 'a'));
@@ -438,7 +355,7 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                         screen.log(Character.toUpperCase(ch) + " - " + ArmorType.get(ch - 'a'));
                         continue;
                     }
-                    if (pm.getPlayer().qtyArmors[at.ordinal()] > 0) {
+                    if (pm.getPlayer().armors[at.ordinal()] > 0) {
                         screen.log(Character.toUpperCase(ch) + " - " + ArmorType.get(ch - 'a'));
                     } else if (pm.getPlayer().armor == at) {
                         screen.log(Character.toUpperCase(ch) + " - " + ArmorType.get(ch - 'a'));

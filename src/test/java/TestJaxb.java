@@ -1,5 +1,6 @@
 
 import exodus.Constants;
+import static exodus.Constants.PARTY_SAV_BASE_FILENAME;
 import exodus.Constants.WeaponType;
 import exodus.Exodus;
 import exodus.StartScreen;
@@ -47,29 +48,35 @@ public class TestJaxb {
         }
     }
 
-    //@Test
+    @Test
     public void testReadSaveGame() throws Exception {
 
         SaveGame sg = new SaveGame();
-
-        sg.pc1 = 0xff;
-        sg.pc2 = 0xff;
-        sg.pc3 = 0xff;
-        sg.pc4 = 0xff;
-
-        for (int x = 0; x < 4; x++) {
-            CharacterRecord avatar = new CharacterRecord();
-            avatar.name = "char_" + x;
-            avatar.health = 199;
-            avatar.food = 30000;
-            avatar.gold = 200;
-            avatar.torches = 2;
-            avatar.qtyWeapons[WeaponType.EXOTIC.ordinal()] = 0xFE;
-            sg.players[x] = avatar;
+        try {
+            sg.read(PARTY_SAV_BASE_FILENAME);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        
+        int x = 0;
+        
+//        sg.pc1 = 0xff;
+//        sg.pc2 = 0xff;
+//        sg.pc3 = 0xff;
+//        sg.pc4 = 0xff;
+//
+//        for (int x = 0; x < 4; x++) {
+//            CharacterRecord avatar = new CharacterRecord();
+//            avatar.name = "char_" + x;
+//            avatar.health = 199;
+//            avatar.food = 30000;
+//            avatar.gold = 200;
+//            avatar.torches = 2;
+//            avatar.qtyWeapons[WeaponType.EXOTIC.ordinal()] = 0xFE;
+//            sg.players[x] = avatar;
+//        }
 
         //sg.write(Constants.PARTY_SAV_BASE_FILENAME);
-
         //sg.write("test.sav");
     }
 

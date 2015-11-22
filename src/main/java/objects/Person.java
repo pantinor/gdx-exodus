@@ -5,6 +5,7 @@ import exodus.Constants;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
+import vendor.Vendor;
 
 public class Person implements Constants {
 
@@ -24,7 +25,7 @@ public class Person implements Constants {
     private Vector3 currentPos;
     private String conversation;
     private boolean isTalking = false;
-    private PersonRole role;
+    private Vendor vendor;
     private Creature emulatingCreature;
     private boolean removedFromMap;
 
@@ -105,7 +106,7 @@ public class Person implements Constants {
 
     @Override
     public String toString() {
-        return String.format("Person [id=%s, start_x=%s, start_y=%s, dialogId=%s, role=%s tileIndex=%s conv: %s]", id, start_x, start_y, dialogId, role, tileIndex, 
+        return String.format("Person [id=%s, start_x=%s, start_y=%s, dialogId=%s, tileIndex=%s conv: %s]", id, start_x, start_y, dialogId, tileIndex, 
                 conversation == null ? "Good Day!" : conversation);
     }
 
@@ -165,12 +166,12 @@ public class Person implements Constants {
         this.isTalking = isTalking;
     }
 
-    public PersonRole getRole() {
-        return role;
+    public Vendor getVendor() {
+        return vendor;
     }
 
-    public void setRole(PersonRole role) {
-        this.role = role;
+    public void setVendor(Vendor v) {
+        this.vendor = v;
     }
 
     public Creature getEmulatingCreature() {

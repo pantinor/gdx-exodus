@@ -10,9 +10,9 @@ import org.apache.commons.lang3.StringUtils;
 import exodus.Constants;
 import util.Utils;
 
-import com.badlogic.gdx.Gdx;
 import com.google.common.io.LittleEndianDataInputStream;
 import com.google.common.io.LittleEndianDataOutputStream;
+import exodus.Party;
 import util.XORShiftRandom;
 
 public class SaveGame implements Constants {
@@ -25,6 +25,9 @@ public class SaveGame implements Constants {
     public int numberInParty;
     public int partyX;
     public int partyY;
+    public int dnglevel;
+    public int orientation;
+    public int shiphull;
     public int pc1;
     public int pc2;
     public int pc3;
@@ -60,14 +63,14 @@ public class SaveGame implements Constants {
         dos.writeByte(numberInParty);
         dos.writeByte(partyX);
         dos.writeByte(partyY);
+        dos.writeByte(dnglevel);
+        dos.writeByte(orientation);
+        dos.writeByte(shiphull);
+
         dos.writeByte(pc1);
         dos.writeByte(pc2);
         dos.writeByte(pc3);
         dos.writeByte(pc4);
-
-        dos.writeByte(0);
-        dos.writeByte(0);
-        dos.writeByte(0);
 
         for (int i = 0; i < 4; i++) {
             if (players[i] == null) {
@@ -103,7 +106,7 @@ public class SaveGame implements Constants {
         InputStream is;
         LittleEndianDataInputStream dis = null;
         try {
-            is = new FileInputStream(Gdx.files.internal(strFilePath).file());
+            is = new FileInputStream(strFilePath);
             dis = new LittleEndianDataInputStream(is);
         } catch (Exception e) {
             throw new Exception("Cannot read save file");
@@ -119,14 +122,14 @@ public class SaveGame implements Constants {
         numberInParty = dis.readByte() & 0xff;
         partyX = dis.readByte() & 0xff;
         partyY = dis.readByte() & 0xff;
+        dnglevel = dis.readByte() & 0xff;
+        orientation = dis.readByte() & 0xff;
+        shiphull = dis.readByte() & 0xff;
+
         pc1 = dis.readByte() & 0xff;
         pc2 = dis.readByte() & 0xff;
         pc3 = dis.readByte() & 0xff;
         pc4 = dis.readByte() & 0xff;
-
-        dis.readByte();
-        dis.readByte();
-        dis.readByte();
 
         for (int i = 0; i < 4; i++) {
             players[i] = new CharacterRecord();
@@ -155,7 +158,7 @@ public class SaveGame implements Constants {
         } catch (Exception e) {
 
         }
-        
+
         //set initial start
         if (partyX == 0 && partyY == 0) {
             partyX = 182;
@@ -169,7 +172,7 @@ public class SaveGame implements Constants {
     public static class CharacterRecord {
 
         public String name = null;
-        public int portaitIndex = 11+2*16;
+        public int portaitIndex = 11 + 2 * 16;
         public int markKings;
         public int markSnake;
         public int markFire;
@@ -201,8 +204,8 @@ public class SaveGame implements Constants {
         public ArmorType armor = ArmorType.NONE;
         public WeaponType weapon = WeaponType.NONE;
 
-        public int[] qtyWeapons = new int[WeaponType.values().length];
-        public int[] qtyArmors = new int[ArmorType.values().length];
+        public int[] weapons = new int[WeaponType.values().length];
+        public int[] armors = new int[ArmorType.values().length];
 
         public int write(LittleEndianDataOutputStream dos) throws Exception {
             if (name == null || name.length() < 1) {
@@ -254,14 +257,14 @@ public class SaveGame implements Constants {
                 if (t == ArmorType.NONE) {
                     continue;
                 }
-                dos.writeByte(qtyArmors[t.ordinal()]);
+                dos.writeByte(armors[t.ordinal()]);
             }
 
             for (WeaponType t : WeaponType.values()) {
                 if (t == WeaponType.NONE) {
                     continue;
                 }
-                dos.writeByte(qtyWeapons[t.ordinal()]);
+                dos.writeByte(weapons[t.ordinal()]);
             }
 
             dos.writeShort(portaitIndex);
@@ -320,14 +323,14 @@ public class SaveGame implements Constants {
                 if (t == ArmorType.NONE) {
                     continue;
                 }
-                qtyArmors[t.ordinal()] = dis.readByte();
+                armors[t.ordinal()] = dis.readByte();
             }
 
             for (WeaponType t : WeaponType.values()) {
                 if (t == WeaponType.NONE) {
                     continue;
                 }
-                qtyWeapons[t.ordinal()] = dis.readByte();
+                weapons[t.ordinal()] = dis.readByte();
             }
 
             portaitIndex = dis.readShort();
@@ -394,6 +397,10 @@ public class SaveGame implements Constants {
             mana = Utils.adjustValueMax(mana, pts, getMaxMana());
         }
 
+        public void adjustGold(int v) {
+            gold = Utils.adjustValue(gold, v, 9999, 0);
+        }
+
         public boolean advanceLevel() {
             if (getLevel() == getMaxLevel()) {
                 return false;
@@ -408,7 +415,7 @@ public class SaveGame implements Constants {
             dex += rand.nextInt(8) + 1;
             intell += rand.nextInt(8) + 1;
             wis += rand.nextInt(8) + 1;
-            
+
             if (str > this.race.getMaxStr()) {
                 str = this.race.getMaxStr();
             }
