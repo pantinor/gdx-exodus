@@ -114,6 +114,9 @@ public class Exodus extends Game {
         parameter.size = 96;
         ultimaFont = generator.generateFont(parameter);
         
+        parameter.size = 48;
+        BitmapFont smallUltimaFont = generator.generateFont(parameter);
+        
         generator.dispose();
 
 
@@ -123,6 +126,7 @@ public class Exodus extends Game {
         skin.add("journal", font, BitmapFont.class);
         skin.add("death-screen", largeFont, BitmapFont.class);
         skin.add("ultima", ultimaFont, BitmapFont.class);
+        skin.add("small-ultima", smallUltimaFont, BitmapFont.class);
 
         Label.LabelStyle ls = skin.get("default", Label.LabelStyle.class);
         ls.font = font;

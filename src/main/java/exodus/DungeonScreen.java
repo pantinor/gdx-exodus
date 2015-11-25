@@ -43,6 +43,7 @@ import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
+import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.MathUtils;
@@ -67,7 +68,7 @@ public class DungeonScreen extends BaseScreen {
     private SpriteBatch batch;
     private DecalBatch decalBatch;
 
-    //public CameraInputController inputController;
+    public CameraInputController inputController;
     public AssetManager assets;
 
     //3d models
@@ -155,13 +156,14 @@ public class DungeonScreen extends BaseScreen {
         assets.update(2000);
 
         //convert the collada dae format to the g3db format (do not use the obj format)
-        //C:\Users\Paul\Desktop\blender>fbx-conv-win32.exe -o G3DB ./Chess/pawn.dae ./pawn.g3db
+        //export from sketchup to collada dae format, then open dae in blender and export to the fbx format, then convert fbx to the g3db like below
+        //C:\Users\Paul\Desktop\blender>fbx-conv-win32.exe -o G3DB ./Chess/pawn.fbx ./pawn.g3db
         ModelLoader<?> gloader = new G3dModelLoader(new UBJsonReader());
         fountainModel = gloader.loadModel(Gdx.files.classpath("assets/graphics/fountain2.g3db"));
         ladderModel = gloader.loadModel(Gdx.files.classpath("assets/graphics/ladder.g3db"));
         chestModel = gloader.loadModel(Gdx.files.classpath("assets/graphics/chest.g3db"));
         orbModel = gloader.loadModel(Gdx.files.classpath("assets/graphics/orb.g3db"));
-        avatarModel = gloader.loadModel(Gdx.files.classpath("assets/graphics/avatar.g3db"));
+        avatarModel = gloader.loadModel(Gdx.files.classpath("assets/graphics/wizard.g3db"));
         //blocksModel = gloader.loadModel(Gdx.files.internal("assets/graphics/box.g3db"));
 
         Pixmap pixmap = new Pixmap(MM_BKGRND_DIM, MM_BKGRND_DIM, Format.RGBA8888);
@@ -186,6 +188,10 @@ public class DungeonScreen extends BaseScreen {
         camera.far = 1000f;
 
         decalBatch = new DecalBatch(new CameraGroupStrategy(camera));
+        
+//        inputController = new CameraInputController(camera);
+//        inputController.rotateLeftKey = inputController.rotateRightKey = inputController.forwardKey = inputController.backwardKey = 0;
+//        inputController.translateUnits = 30f;
 
         ModelBuilder builder = new ModelBuilder();
         lightModel = builder.createSphere(.1f, .1f, .1f, 10, 10, new Material(ColorAttribute.createDiffuse(1, 1, 1, 1)), Usage.Position);
@@ -543,8 +549,8 @@ public class DungeonScreen extends BaseScreen {
             modelInstances.add(in);
         } else if (tile == DungeonTile.TIME_LORD) {
             ModelInstance instance = new ModelInstance(avatarModel, tx, 0, tz);
-            instance.nodes.get(0).scale.set(.01f, .01f, .01f);
-            instance.transform.rotate(new Vector3(0, 1, 0), 0);//rotation 0
+            instance.transform.scale(.010f, .010f, .010f);
+            instance.transform.rotate(0, 1, 0, 55);//rotation 75
             instance.calculateTransforms();
             DungeonTileModelInstance in = new DungeonTileModelInstance(instance, tile, level);
             in.x = (int) tx;
@@ -1116,6 +1122,14 @@ public class DungeonScreen extends BaseScreen {
                 stage.addActor(label);
                 label.addAction(sequence(Actions.moveTo(32*6, 32*8, 2f), Actions.fadeOut(2f), Actions.removeActor(label)));
                 break;
+            case TIME_LORD:
+                Label greet = new Label("Greetings!\nI am the Time Lord.\nTo seal EXODUS,\nremember this..\nThere is only one way.\nLove, Sol.... Moon, Death.", 
+                        Exodus.skin, "small-ultima", Color.BLUE);
+                greet.setPosition(32*6, 32*10);
+                stage.addActor(greet);
+                greet.addAction(sequence(Actions.moveTo(32*6, 32*6, 4f), Actions.fadeOut(1f), Actions.removeActor(greet)));
+                break;
+                
         }
     }
 
