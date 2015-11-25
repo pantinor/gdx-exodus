@@ -152,11 +152,12 @@ public class CombatScreen extends BaseScreen {
             int startX = (Integer) obj.getProperties().get("startX");
             int startY = (Integer) obj.getProperties().get("startY");
 
-            if (index + 1 > party.getMembers().size()) {
+            if (index >= party.getMembers().size()) {
                 continue;
             }
-
-            Creature c = creatureSet.getInstance(CreatureType.get(party.getMember(index).getPlayer().profession.getTile()), a1);
+            
+            String t = party.getMember(index).getPlayer().profession.getTile();
+            Creature c = creatureSet.getInstance(CreatureType.get(t), a1);
             c.currentX = startX;
             c.currentY = startY;
             c.currentPos = getMapPixelCoords(startX, startY);

@@ -50,7 +50,11 @@ public class Drawable extends Actor {
 
         batch.draw(texture, getX(), getY(), 32, 32);
     }
-
+    
+    public TextureRegion getTexture() {
+        return this.texture;
+    }
+    
     public int getShipHull() {
         return shipHull;
     }

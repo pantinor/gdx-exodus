@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
@@ -532,8 +533,7 @@ public class Utils implements Constants {
 
             Tile tile = combatMap.getTile(nx, ny);
 
-            boolean canAttackOverSolid = (tile != null && tile.getRule() != null
-                    && tile.getRule().has(TileAttrib.halberdattackover) && weaponCanAttackThroughObjects);
+            boolean canAttackOverSolid = (tile != null && tile.getRule() != null && weaponCanAttackThroughObjects);
 
             if (!blocked || canAttackOverSolid || isCannonBall) {
                 path.add(new AttackVector(nx, ny));
@@ -1082,5 +1082,5 @@ public class Utils implements Constants {
         pix.dispose();
         return t;
     }
-
+    
 }

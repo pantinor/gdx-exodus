@@ -70,6 +70,12 @@ public class TileSet {
                 t.setCombatMap(Maps.GRASS_CON);
             } else if (t.getName().equals("dungeon_floor")) {
                 t.setCombatMap(Maps.DUNGEON_CON);
+            } else if (t.getName().equals("door")) {
+                t.setCombatMap(Maps.BRICK_CON);
+            } else if (t.getName().equals("secret_door")) {
+                t.setCombatMap(Maps.BRICK_CON);
+            } else if (t.getName().equals("locked_door")) {
+                t.setCombatMap(Maps.BRICK_CON);
             } else {
                 //System.err.printf("could not find combat map for %s\n",t.getName());
             }

@@ -161,7 +161,6 @@ public interface Constants {
         onWaterOnlyReplacement(0x004000),
         livingthing(0x008000),
         lockeddoor(0x010000),
-        halberdattackover(0x020000),
         secretdoor(0x040000);
         private int val;
 
@@ -183,7 +182,7 @@ public interface Constants {
         grass(TileAttrib.canlandballoon.getVal() | TileAttrib.replacement.getVal()),
         brush(0, TileSpeed.VSLOW, TileEffect.NONE),
         hills(0, TileSpeed.VVSLOW, TileEffect.NONE),
-        mountains(TileAttrib.unwalkable.getVal() | TileAttrib.unflyable.getVal() | TileAttrib.halberdattackover.getVal() | TileAttrib.creatureunwalkable.getVal()),
+        mountains(TileAttrib.unwalkable.getVal() | TileAttrib.unflyable.getVal() | TileAttrib.creatureunwalkable.getVal()),
         lcb(TileAttrib.unwalkable.getVal() | TileAttrib.creatureunwalkable.getVal()),
         lcb_entrance(TileAttrib.creatureunwalkable.getVal()),
         ship(TileAttrib.ship.getVal() | TileAttrib.creatureunwalkable.getVal()),
@@ -191,19 +190,19 @@ public interface Constants {
         floors(TileAttrib.replacement.getVal()),
         balloon(TileAttrib.balloon.getVal() | TileAttrib.creatureunwalkable.getVal()),
         person(TileAttrib.livingthing.getVal() | TileAttrib.unwalkable.getVal()),
-        solid(TileAttrib.unwalkable.getVal() | TileAttrib.halberdattackover.getVal() | TileAttrib.rangeattackover.getVal()),
-        walls(TileAttrib.unwalkable.getVal() | TileAttrib.halberdattackover.getVal() | TileAttrib.unflyable.getVal()),
-        locked_door(TileAttrib.unwalkable.getVal() | TileAttrib.lockeddoor.getVal() | TileAttrib.halberdattackover.getVal()),
-        door(TileAttrib.unwalkable.getVal() | TileAttrib.door.getVal() | TileAttrib.halberdattackover.getVal()),
-        secret_door(TileAttrib.secretdoor.getVal() | TileAttrib.halberdattackover.getVal()),
+        solid(TileAttrib.unwalkable.getVal() | TileAttrib.rangeattackover.getVal()),
+        walls(TileAttrib.unwalkable.getVal() | TileAttrib.unflyable.getVal()),
+        locked_door(TileAttrib.unwalkable.getVal() | TileAttrib.lockeddoor.getVal() | TileAttrib.creatureunwalkable.getVal() | TileAttrib.unflyable.getVal()),
+        door(TileAttrib.unwalkable.getVal() | TileAttrib.door.getVal() | TileAttrib.creatureunwalkable.getVal() | TileAttrib.unflyable.getVal()),
+        secret_door(TileAttrib.secretdoor.getVal() | TileAttrib.creatureunwalkable.getVal() | TileAttrib.unflyable.getVal()),
         chest(TileAttrib.chest.getVal()),
-        poison_field(TileAttrib.dispelable.getVal() | TileAttrib.halberdattackover.getVal(), TileSpeed.VVSLOW, TileEffect.POISON),
-        energy_field(TileAttrib.dispelable.getVal() | TileAttrib.unflyable.getVal() | TileAttrib.unwalkable.getVal() | TileAttrib.creatureunwalkable.getVal() | TileAttrib.halberdattackover.getVal(), TileSpeed.VVSLOW, TileEffect.ELECTRICITY),
-        fire_field(TileAttrib.dispelable.getVal() | TileAttrib.halberdattackover.getVal(), TileSpeed.VVSLOW, TileEffect.FIRE),
-        sleep_field(TileAttrib.dispelable.getVal() | TileAttrib.halberdattackover.getVal(), TileSpeed.VVSLOW, TileEffect.SLEEP),
-        lava(TileAttrib.replacement.getVal() | TileAttrib.halberdattackover.getVal(), TileSpeed.VVSLOW, TileEffect.LAVA),
-        signs(TileAttrib.unwalkable.getVal() | TileAttrib.unflyable.getVal() | TileAttrib.halberdattackover.getVal() | TileAttrib.rangeattackover.getVal()),
-        spacers(TileAttrib.unwalkable.getVal() | TileAttrib.halberdattackover.getVal() | TileAttrib.rangeattackover.getVal()),
+        poison_field(TileAttrib.dispelable.getVal(), TileSpeed.VVSLOW, TileEffect.POISON),
+        energy_field(TileAttrib.dispelable.getVal() | TileAttrib.unflyable.getVal() | TileAttrib.unwalkable.getVal() | TileAttrib.creatureunwalkable.getVal(), TileSpeed.VVSLOW, TileEffect.ELECTRICITY),
+        fire_field(TileAttrib.dispelable.getVal(), TileSpeed.VVSLOW, TileEffect.FIRE),
+        sleep_field(TileAttrib.dispelable.getVal(), TileSpeed.VVSLOW, TileEffect.SLEEP),
+        lava(TileAttrib.replacement.getVal(), TileSpeed.VVSLOW, TileEffect.LAVA),
+        signs(TileAttrib.unwalkable.getVal() | TileAttrib.unflyable.getVal() | TileAttrib.rangeattackover.getVal()),
+        spacers(TileAttrib.unwalkable.getVal() | TileAttrib.rangeattackover.getVal()),
         monster(TileAttrib.livingthing.getVal() & TileAttrib.unwalkable.getVal());
 
         private int attribs = 0;
@@ -1139,8 +1138,9 @@ public interface Constants {
         dragon(51),
         balron(52),
         grass(60),
-        floor(61),
-        chest(62);
+        brick_floor(61),
+        chest(62),
+        cleric(63);
 
         private final int intValue;
         private final int dungeonSpawnWeight;
@@ -1197,7 +1197,7 @@ public interface Constants {
         }
     }
 
-    public static final int MAX_CREATURES_ON_MAP = 4;
+    public static final int MAX_CREATURES_ON_MAP = 10;
     public static final int MAX_WANDERING_CREATURES_IN_DUNGEON = 2;
     public static final int MAX_CREATURE_DISTANCE = 24;
 

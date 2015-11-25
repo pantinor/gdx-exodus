@@ -44,6 +44,7 @@ public class CreatureSet {
 
     public Creature getInstance(CreatureType type, TextureAtlas atlas1) {
         for (Creature cr : creatures) {
+            //System.err.printf("%s %s %s\n", type, cr.getTile(), cr.getName());
             if (cr.getTile() == type) {
 
                 Creature newCr = new Creature(cr);

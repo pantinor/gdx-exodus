@@ -12,7 +12,6 @@ import util.Utils;
 
 import com.google.common.io.LittleEndianDataInputStream;
 import com.google.common.io.LittleEndianDataOutputStream;
-import exodus.Party;
 import util.XORShiftRandom;
 
 public class SaveGame implements Constants {

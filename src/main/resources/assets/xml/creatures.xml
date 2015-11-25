@@ -63,8 +63,9 @@
 	<creature id="51" encounterSize="4" name="Dragon" tile="dragon" basehp="224" exp="15" ranged="true" worldrangedtile="hit_flash" rangedhittile="hit_flash" rangedmisstile="hit_flash" flies="true" resists="fire" leader="52" />
 	<creature id="52" encounterSize="1" name="Balron" tile="balron" basehp="255" exp="16" ranged="true" rangedhittile="random" rangedmisstile="random" flies="true" casts="sleep" resists="fire" />
         
-        <creature id="60" encounterSize="15" name="Grass" tile="grass" basehp="48" exp="4" />
-        <creature id="61" encounterSize="15" name="Chest" tile="chest" basehp="48" exp="4" />
-        <creature id="62" encounterSize="15" name="Floor" tile="brick_floor" basehp="48" exp="4" />
+        <creature id="60" encounterSize="6" name="Grass" tile="grass" basehp="48" exp="4" />
+        <creature id="61" encounterSize="6" name="Chest" tile="chest" basehp="48" exp="4" />
+        <creature id="62" encounterSize="6" name="Floor" tile="brick_floor" basehp="48" exp="4" />
+	<creature id="63" name="Cleric" tile="cleric" basehp="64" exp="10" good="true" wontattack="true" />
         
 </creatures>

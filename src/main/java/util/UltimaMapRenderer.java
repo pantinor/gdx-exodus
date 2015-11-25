@@ -40,7 +40,9 @@ import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import exodus.Context;
+import objects.Drawable;
 
 public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constants {
 
@@ -77,7 +79,7 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
     }
 
     @Override
-    public void render() {
+    public void render() {        
         beginRender();
         for (MapLayer layer : map.getLayers()) {
             if (layer.isVisible()) {
@@ -207,7 +209,7 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
             }
             y -= layerTileHeight;
         }
-
+        
         if (bm.getPeople() != null) {
             for (Person p : bm.getPeople()) {
 
@@ -240,6 +242,10 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
                 }
 
             }
+        }
+        
+        for (Drawable dr : bm.getObjects()) {
+            draw(dr.getTexture(), dr.getX(), dr.getY(), dr.getCx(), dr.getCy());
         }
     }
 

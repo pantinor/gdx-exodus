@@ -36,6 +36,8 @@ public class MapSet {
             }
 
             if (m.getType() == MapType.world || m.getType() == MapType.city) {
+                
+                m.setObjects();
 
                 float[][] shadowMap = new float[m.getWidth()][m.getHeight()];
                 for (int y = 0; y < m.getHeight(); y++) {

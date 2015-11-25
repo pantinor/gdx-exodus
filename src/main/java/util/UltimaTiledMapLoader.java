@@ -131,14 +131,14 @@ public class UltimaTiledMapLoader implements Constants {
         MapLayer player = new MapLayer();
         player.setName("Player Positions");
 
-        Position[] playerPos = new Position[8];
-        for (int i = 0; i < 8; i++) {
+        Position[] playerPos = new Position[4];
+        for (int i = 0; i < 4; i++) {
             playerPos[i] = new Position(i, (int) bytes[i + 32], 0);
         }
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 4; i++) {
             playerPos[i].startY = (int) bytes[i + 40];
         }
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 4; i++) {
             MapObject object = new MapObject();
             object.getProperties().put("index", playerPos[i].index);
             object.getProperties().put("startX", playerPos[i].startX);

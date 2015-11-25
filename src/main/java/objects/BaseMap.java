@@ -47,10 +47,10 @@ public class BaseMap implements Constants {
 
     private final List<Creature> creatures = new ArrayList<>();
     private List<PartyMember> combatPlayers;
-    private Stage surfaceMapStage;
 
     private List<Moongate> moongates;
     private List<Person> people;
+    private List<Drawable> objects = new ArrayList<>();;
 
     private Tile[] tiles;
     private float[][] shadownMap;
@@ -188,7 +188,7 @@ public class BaseMap implements Constants {
     public List<Person> getPeople() {
         return people;
     }
-    
+
     public Person resetTalkingFlags() {
         for (Person p : people) {
             if (p == null) {
@@ -312,19 +312,6 @@ public class BaseMap implements Constants {
         if (x + (y * width) >= tiles.length) {
             return null;
         }
-
-        //allows walking on chests frigates horses and balloons
-        if (surfaceMapStage != null) {
-            for (Actor a : surfaceMapStage.getActors()) {
-                if (a instanceof Drawable) {
-                    Drawable d = (Drawable) a;
-                    if (d.getCx() == x && d.getCy() == y) {
-                        return d.getTile();
-                    }
-                }
-            }
-        }
-
         return tiles[x + (y * width)];
     }
 
@@ -523,8 +510,8 @@ public class BaseMap implements Constants {
                 int broadsidesDirs = Direction.getBroadsidesDirectionMask(cr.sailDir);
                 if (relDirMask > 0 && (dist == 3 || dist == 2) && Direction.isDirInMask(relDirMask, broadsidesDirs)) {
                     Direction fireDir = Direction.getByMask(relDirMask);
-                    AttackVector av = Utils.enemyfireCannon(screen.context, surfaceMapStage, this, fireDir, cr.currentX, cr.currentY, avatarX, avatarY);
-                    Utils.animateCannonFire(screen, screen.projectilesStage, this, av, cr.currentX, cr.currentY, false);
+                    //AttackVector av = Utils.enemyfireCannon(screen.context, this.objects, this, fireDir, cr.currentX, cr.currentY, avatarX, avatarY);
+                    //Utils.animateCannonFire(screen, screen.projectilesStage, this, av, cr.currentX, cr.currentY, false);
                     continue;
                 } else if (relDirMask > 0 && (dist == 3 || dist == 2) && !Direction.isDirInMask(relDirMask, broadsidesDirs) && Utils.rand.nextInt(2) == 0) {
                     cr.sailDir = Direction.goBroadsides(broadsidesDirs);
@@ -548,7 +535,7 @@ public class BaseMap implements Constants {
                         Exodus.hud.add("As the water enters your lungs you pass into Darkness!");
                         Exodus.hud.add("You awaken on the shores of a forgotten Land.");
                         Exodus.hud.add("Your ship and crew lost to the sea!");
-                        screen.loadNextMap(Maps.AMBROSIA, 32, 58);
+                        screen.loadNextMap(Maps.AMBROSIA, 32, 54);
                         break;
                     } else if (cr.getTile() == CreatureType.twister) {
                         if (screen.context.getTransportContext() == TransportContext.SHIP) {
@@ -696,9 +683,11 @@ public class BaseMap implements Constants {
                     }
                 } else {
                     TransportContext tc = context.getTransportContext();
-                    if (tc == null || id != Maps.SOSARIA.getId() || tc == TransportContext.FOOT) {
-                        if (!rule.has(TileAttrib.unwalkable) || rule == TileRule.ship || rule.has(TileAttrib.chest) || rule == TileRule.horse || rule == TileRule.balloon) {
+                    if (tc == TransportContext.SHIP) {
+                        if (rule.has(TileAttrib.sailable)) {
                             canmove = true;
+                        } else {
+                            canmove = false;
                         }
                     } else if (tc == TransportContext.HORSE) {
                         if (!rule.has(TileAttrib.creatureunwalkable) && !rule.has(TileAttrib.unwalkable)) {
@@ -706,11 +695,15 @@ public class BaseMap implements Constants {
                         } else {
                             canmove = false;
                         }
-                    } else if (tc == TransportContext.SHIP) {
-                        if (rule.has(TileAttrib.sailable)) {
+                    } else if (tc == null || tc == TransportContext.FOOT) {
+                        if (!rule.has(TileAttrib.unwalkable) || rule == TileRule.ship || rule.has(TileAttrib.chest) || rule == TileRule.horse) {
                             canmove = true;
-                        } else {
-                            canmove = false;
+                        }
+                        for (Drawable dr : this.objects) {
+                            if (dr.getTile().getRule() == TileRule.ship && dr.getCx() == x && dr.getCy() == y) {
+                                canmove = true;
+                                break;
+                            }
                         }
                     }
                 }
@@ -720,8 +713,7 @@ public class BaseMap implements Constants {
 
             //NPCs cannot go thru the secret doors or walk where the avatar is
             if (cr != null) {
-                if ((tile.getIndex() == 73 && !cr.getIncorporeal())
-                        || (avatarX == x && avatarY == y && !cr.getCanMoveOntoAvatar())) {
+                if ((tile.getIndex() == 73 && !cr.getIncorporeal()) || (avatarX == x && avatarY == y && !cr.getCanMoveOntoAvatar())) {
                     canmove = false;
                 }
             }
@@ -1226,12 +1218,43 @@ public class BaseMap implements Constants {
         this.combatPlayers = combatPlayers;
     }
 
-    public Stage getSurfaceMapStage() {
-        return surfaceMapStage;
+    public List<Drawable> getObjects() {
+        return this.objects;
     }
 
-    public void setSurfaceMapStage(Stage surfaceMapStage) {
-        this.surfaceMapStage = surfaceMapStage;
+    public void setObjects() {
+
+        //init any ships or chests etc
+        for (int y = 0; y < getHeight(); y++) {
+            for (int x = 0; x < getWidth(); x++) {
+                Tile tile = getTile(x, y);
+                if (tile != null) {
+                    if (tile.getName().equals("ship")) {
+                        addObject(tile, x, y);
+                    } else if (tile.getName().equals("chest")) {
+                        addObject(tile, x, y);
+                    }
+                }
+                
+            }
+        }
+    }
+    
+    public Drawable addObject(Tile tile, int x, int y) {
+        Drawable dr = new Drawable(this, x, y, tile, Exodus.standardAtlas);
+        Vector3 v = new Vector3(x * tilePixelWidth, getHeight() * tilePixelHeight - y * tilePixelHeight - tilePixelHeight, 0);
+        dr.setX(v.x);
+        dr.setY(v.y);
+        switch (tile.getName()) {
+            case "ship":
+                setTile(Exodus.baseTileSet.getTileByName("water"), x, y);
+                break;
+            case "chest":
+                setTile(Exodus.baseTileSet.getTileByName("brick_floor"), x, y);
+                break;
+        }
+        this.objects.add(dr);
+        return dr;
     }
 
 }
