@@ -177,12 +177,10 @@ public class CombatScreen extends BaseScreen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(this);
-        party.addObserver(this);
     }
 
     @Override
     public void hide() {
-        party.deleteObserver(this);
     }
 
     @Override
@@ -788,8 +786,8 @@ public class CombatScreen extends BaseScreen {
             action = CombatAction.RANGED;
         } else if (creature.castsSleep() && rand.nextInt(100) <= 25 && context.getAura().getType() != AuraType.NEGATE) {
             action = CombatAction.CAST_SLEEP;
-        } else if (creature.getDamageStatus() == CreatureStatus.FLEEING) {
-            action = CombatAction.FLEE;
+        //} else if (creature.getDamageStatus() == CreatureStatus.FLEEING) {
+            //action = CombatAction.FLEE;
         } else {
             action = CombatAction.ATTACK;
         }

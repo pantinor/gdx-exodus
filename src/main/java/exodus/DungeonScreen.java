@@ -133,12 +133,10 @@ public class DungeonScreen extends BaseScreen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(new InputMultiplexer(this, stage));
-        context.getParty().addObserver(this);
     }
 
     @Override
     public void hide() {
-        context.getParty().deleteObserver(this);
     }
 
     public void init() {
@@ -1015,13 +1013,7 @@ public class DungeonScreen extends BaseScreen {
             //mainGame.setScreen(new MixtureScreen(mainGame, this, Exodus.skin, context.getParty()));
         } else if (keycode == Keys.S) {
             if (tile == DungeonTile.ALTAR) {
-                log("Search Altar");
-                ItemMapLabels l = dngMap.getMap().searchLocation(this, context.getParty(), x, y, currentLevel);
-                if (l != null) {
-                    log("You found " + l.getDesc() + ".");
-                } else {
-                    log("Nothing!");
-                }
+
             } else {
 
                 if (tile.getValue() >= 144 && tile.getValue() <= 148) {

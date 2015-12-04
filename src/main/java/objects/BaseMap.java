@@ -50,7 +50,8 @@ public class BaseMap implements Constants {
 
     private List<Moongate> moongates;
     private List<Person> people;
-    private List<Drawable> objects = new ArrayList<>();;
+    private final List<Drawable> objects = new ArrayList<>();
+    ;
 
     private Tile[] tiles;
     private float[][] shadownMap;
@@ -269,6 +270,15 @@ public class BaseMap implements Constants {
         for (Creature cre : creatures) {
             if (cre.currentX == x && cre.currentY == y) {
                 return cre;
+            }
+        }
+        return null;
+    }
+
+    public Drawable getObjectAt(int x, int y) {
+        for (Drawable obj : objects) {
+            if (obj.getCx() == x && obj.getCy() == y) {
+                return obj;
             }
         }
         return null;
@@ -510,15 +520,16 @@ public class BaseMap implements Constants {
                 int broadsidesDirs = Direction.getBroadsidesDirectionMask(cr.sailDir);
                 if (relDirMask > 0 && (dist == 3 || dist == 2) && Direction.isDirInMask(relDirMask, broadsidesDirs)) {
                     Direction fireDir = Direction.getByMask(relDirMask);
-                    //AttackVector av = Utils.enemyfireCannon(screen.context, this.objects, this, fireDir, cr.currentX, cr.currentY, avatarX, avatarY);
-                    //Utils.animateCannonFire(screen, screen.projectilesStage, this, av, cr.currentX, cr.currentY, false);
+                    AttackVector av = Utils.enemyfireCannon(screen.context, this.objects, this, fireDir, cr.currentX, cr.currentY, avatarX, avatarY);
+                    Utils.animateCannonFire(screen, screen.projectilesStage, this, av, cr.currentX, cr.currentY, false);
                     continue;
                 } else if (relDirMask > 0 && (dist == 3 || dist == 2) && !Direction.isDirInMask(relDirMask, broadsidesDirs) && Utils.rand.nextInt(2) == 0) {
                     cr.sailDir = Direction.goBroadsides(broadsidesDirs);
                     continue;
                 } else if (dist <= 1) {
                     if (Direction.isDirInMask(relDirMask, broadsidesDirs)) {
-                        //screen.attackAt(Maps.SHIPSHIP_CON, cr);
+                        Maps cm = screen.context.getCombatMap(cr, this, cr.currentX, cr.currentY, avatarX, avatarY);
+                        screen.attackAt(cm, cr);
                         break;
                     } else {
                         cr.sailDir = Direction.goBroadsides(broadsidesDirs);
@@ -683,13 +694,13 @@ public class BaseMap implements Constants {
                     }
                 } else {
                     TransportContext tc = context.getTransportContext();
-                    if (tc == TransportContext.SHIP) {
+                    if (tc == TransportContext.SHIP && this.type != MapType.combat) {
                         if (rule.has(TileAttrib.sailable)) {
                             canmove = true;
                         } else {
                             canmove = false;
                         }
-                    } else if (tc == TransportContext.HORSE) {
+                    } else if (tc == TransportContext.HORSE && this.type != MapType.combat) {
                         if (!rule.has(TileAttrib.creatureunwalkable) && !rule.has(TileAttrib.unwalkable)) {
                             canmove = true;
                         } else {
@@ -823,7 +834,8 @@ public class BaseMap implements Constants {
         }
     }
 
-    public ItemMapLabels searchLocation(BaseScreen screen, Party p, int x, int y, int z) {
+    public ItemMapLabels searchLocation(BaseScreen screen, Party p, PartyMember pm, int x, int y, int z) {
+
         SaveGame sg = p.getSaveGame();
 
         if (labels == null) {
@@ -844,360 +856,57 @@ public class BaseMap implements Constants {
         ItemMapLabels label = ItemMapLabels.valueOf(ItemMapLabels.class, tmp.getName());
         boolean added = false;
 
-        int conditions = label.getConditions();
-//
-//        if ((conditions & SC_NEWMOONS) > 0 && !(GameScreen.trammelphase == 0 && GameScreen.feluccaphase == 0)) {
-//            return null;
-//        }
-//
-//        if ((conditions & SC_FULLAVATAR) > 0) {
-//            for (int i = 0; i < 8; i++) {
-//                if (sg.karma[i] != 0) {
-//                    return null;
-//                }
-//            }
-//        }
-//
-//        if ((conditions & SC_REAGENTDELAY) > 0 && (sg.moves & 0xF0) == sg.lastreagent) {
-//            return null;
-//        }
-//
-//        switch (label) {
-//
-//            case bell:
-//                if ((sg.items & Item.BELL.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.items |= Item.BELL.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 400;
-//                added = true;
-//                break;
-//            case blackstone:
-//                if ((sg.stones & Stone.BLACK.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.stones |= Stone.BLACK.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 200;
-//                added = true;
-//                break;
-//            case bluestone:
-//                if ((sg.stones & Stone.BLUE.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.stones |= Stone.BLUE.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 200;
-//                added = true;
-//                break;
-//            case book:
-//                if ((sg.items & Item.BOOK.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.items |= Item.BOOK.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 400;
-//                added = true;
-//                break;
-//            case candle:
-//                if ((sg.items & Item.CANDLE.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.items |= Item.CANDLE.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 400;
-//                added = true;
-//                break;
-//            case compassionrune:
-//                if ((sg.runes & Virtue.COMPASSION.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.runes |= Virtue.COMPASSION.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 100;
-//                added = true;
-//                break;
-//            case greenstone:
-//                if ((sg.stones & Stone.GREEN.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.stones |= Stone.GREEN.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 200;
-//                added = true;
-//                break;
-//            case honestyrune:
-//                if ((sg.runes & Virtue.HONESTY.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.runes |= Virtue.HONESTY.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 100;
-//                added = true;
-//                break;
-//            case honorrune:
-//                if ((sg.runes & Virtue.HONOR.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.runes |= Virtue.HONOR.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 100;
-//                added = true;
-//                break;
-//            case horn:
-//                if ((sg.items & Item.HORN.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.items |= Item.HORN.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 400;
-//                added = true;
-//                break;
-//            case humilityrune:
-//                if ((sg.runes & Virtue.HUMILITY.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.runes |= Virtue.HUMILITY.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 100;
-//                added = true;
-//                break;
-//            case justicerune:
-//                if ((sg.runes & Virtue.JUSTICE.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.runes |= Virtue.JUSTICE.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 100;
-//                added = true;
-//                break;
-//            case orangestone:
-//                if ((sg.stones & Stone.ORANGE.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.stones |= Stone.ORANGE.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 200;
-//                added = true;
-//                break;
-//            case purplestone:
-//                if ((sg.stones & Stone.PURPLE.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.stones |= Stone.PURPLE.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 200;
-//                added = true;
-//                break;
-//            case redstone:
-//                if ((sg.stones & Stone.RED.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.stones |= Stone.RED.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 200;
-//                added = true;
-//                break;
-//            case sacrificerune:
-//                if ((sg.runes & Virtue.SACRIFICE.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.runes |= Virtue.SACRIFICE.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 100;
-//                added = true;
-//                break;
-//            case skull:
-//                if ((sg.items & Item.SKULL.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.items |= Item.SKULL.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 400;
-//                added = true;
-//                break;
-//            case spiritualityrune:
-//                if ((sg.runes & Virtue.SPIRITUALITY.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.runes |= Virtue.SPIRITUALITY.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 100;
-//                added = true;
-//                break;
-//            case valorrune:
-//                if ((sg.runes & Virtue.VALOR.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.runes |= Virtue.VALOR.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 100;
-//                added = true;
-//                break;
-//            case wheel:
-//                if ((sg.items & Item.WHEEL.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.items |= Item.WHEEL.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 400;
-//                added = true;
-//                break;
-//            case whitestone:
-//                if ((sg.stones & Stone.WHITE.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.stones |= Stone.WHITE.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 200;
-//                added = true;
-//                break;
-//            case yellowstone:
-//                if ((sg.stones & Stone.YELLOW.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.stones |= Stone.YELLOW.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 200;
-//                added = true;
-//                break;
-//
-//            case mysticarmor:
-//                if (sg.armor[ArmorType.MYSTICROBE.ordinal()] > 0) {
-//                    break;
-//                }
-//                sg.armor[ArmorType.MYSTICROBE.ordinal()] += 8; //all party members would have it
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 400;
-//                sg.lastreagent = sg.moves & 0xF0;
-//                added = true;
-//                break;
-//            case mysticswords:
-//                if (sg.weapons[WeaponType.MYSTICSWORD.ordinal()] > 0) {
-//                    break;
-//                }
-//                sg.weapons[WeaponType.MYSTICSWORD.ordinal()] += 8;
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 400;
-//                sg.lastreagent = sg.moves & 0xF0;
-//                added = true;
-//                break;
-//
-//            case mandrake1:
-//            case mandrake2:
-//                sg.reagents[Reagent.MANDRAKE.ordinal()] += new XORShiftRandom().nextInt(8) + 2;
-//                if (sg.reagents[Reagent.MANDRAKE.ordinal()] > 99) {
-//                    sg.reagents[Reagent.MANDRAKE.ordinal()] = 99;
-//                }
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                sg.lastreagent = sg.moves & 0xF0;
-//                added = true;
-//                break;
-//            case nightshade1:
-//            case nightshade2:
-//                sg.reagents[Reagent.NIGHTSHADE.ordinal()] += new XORShiftRandom().nextInt(8) + 2;
-//                if (sg.reagents[Reagent.NIGHTSHADE.ordinal()] > 99) {
-//                    sg.reagents[Reagent.NIGHTSHADE.ordinal()] = 99;
-//                }
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                sg.lastreagent = sg.moves & 0xF0;
-//                added = true;
-//                break;
-//
-//            case telescope:
-//                if (screen instanceof GameScreen) {
-//                    GameScreen gameScreen = (GameScreen) screen;
-//                    gameScreen.peerTelescope();
-//                }
-//                break;
-//            case balloon:
-//                break;
-//            case lockelake:
-//                break;
-//
-//            case maskofminax:
-//                if ((sg.items & Item.MASK_MINAX.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.items |= Item.MASK_MINAX.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 200;
-//                sg.lastreagent = sg.moves & 0xF0;
-//                added = true;
-//                break;
-//
-//            case rageofgod:
-//                if ((sg.items & Item.RAGE_GOD.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.items |= Item.RAGE_GOD.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 400;
-//                sg.lastreagent = sg.moves & 0xF0;
-//                added = true;
-//                break;
-//                
-//            case ironrunemold:
-//                if ((sg.items & Item.RUNE_MOLD.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.items |= Item.RUNE_MOLD.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 200;
-//                sg.lastreagent = sg.moves & 0xF0;
-//                added = true;
-//                break;
-//
-//            case blackironore:
-//                if ((sg.items & Item.IRON_ORE.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.items |= Item.IRON_ORE.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 200;
-//                sg.lastreagent = sg.moves & 0xF0;
-//                added = true;
-//                break;
-//                
-//            case magicparchment:
-//                if ((sg.items & Item.PARCH.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.items |= Item.PARCH.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 200;
-//                sg.lastreagent = sg.moves & 0xF0;
-//                added = true;
-//                break;
-//
-//            case greedrune:
-//                if ((sg.items & Item.GREED_RUNE.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.items |= Item.GREED_RUNE.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 200;
-//                sg.lastreagent = sg.moves & 0xF0;
-//                added = true;
-//                break;
-//                
-//            case songhumility:
-//                if ((sg.items & Item.SONG_HUM.getLoc()) > 0) {
-//                    break;
-//                }
-//                sg.items |= Item.SONG_HUM.getLoc();
-//                p.adjustKarma(KarmaAction.FOUND_ITEM);
-//                expPoints = 400;
-//                sg.lastreagent = sg.moves & 0xF0;
-//                added = true;
-//                break;
-//
-//            default:
-//                break;
-//
-//        }
-//
+        switch (label) {
+            case CARD_OF_DEATH:
+                if (pm.getPlayer().cards[0] > 0) {
+                    break;
+                }
+                pm.getPlayer().cards[0]++;
+                expPoints = 100;
+                added = true;
+                break;
+            case CARD_OF_SOL:
+                if (pm.getPlayer().cards[1] > 0) {
+                    break;
+                }
+                pm.getPlayer().cards[1]++;
+                expPoints = 100;
+                added = true;
+                break;
+            case CARD_OF_MOONS:
+                if (pm.getPlayer().cards[2] > 0) {
+                    break;
+                }
+                pm.getPlayer().cards[2]++;
+                expPoints = 100;
+                added = true;
+                break;
+            case CARD_OF_LOVE:
+                if (pm.getPlayer().cards[3] > 0) {
+                    break;
+                }
+                pm.getPlayer().cards[3]++;
+                expPoints = 100;
+                added = true;
+                break;
+            case EXOTIC_ARMOR:
+                if (pm.getPlayer().armors[ArmorType.EXOTIC.ordinal()] > 0) {
+                    break;
+                }
+                pm.getPlayer().armors[ArmorType.EXOTIC.ordinal()] ++;
+                expPoints = 100;
+                added = true;
+                break;
+            case EXOTIC_WEAPON:
+                if (pm.getPlayer().weapons[WeaponType.EXOTIC.ordinal()] > 0) {
+                    break;
+                }
+                pm.getPlayer().weapons[WeaponType.EXOTIC.ordinal()] ++;
+                expPoints = 100;
+                added = true;
+                break;
+        }
+
         if (expPoints > 0) {
             p.getMember(0).awardXP(expPoints);
         }
@@ -1235,11 +944,11 @@ public class BaseMap implements Constants {
                         addObject(tile, x, y);
                     }
                 }
-                
+
             }
         }
     }
-    
+
     public Drawable addObject(Tile tile, int x, int y) {
         Drawable dr = new Drawable(this, x, y, tile, Exodus.standardAtlas);
         Vector3 v = new Vector3(x * tilePixelWidth, getHeight() * tilePixelHeight - y * tilePixelHeight - tilePixelHeight, 0);

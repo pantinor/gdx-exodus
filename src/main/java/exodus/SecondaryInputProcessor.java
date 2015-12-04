@@ -53,8 +53,8 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
             case Keys.J:
                 screen.log("JIMMY> Which party member?");
                 break;
-            case Keys.L:
-                screen.log("LOOK> ");
+            case Keys.S:
+                screen.log("SEARCH> Which party member?");
                 break;
             case Keys.A:
                 screen.log("ATTACK> ");
@@ -142,6 +142,15 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                             if (p.getVendor() != null) {
                                 Gdx.input.setInputProcessor(stage);
                                 dialog = new ConversationDialog(this.member, p, (GameScreen) screen, stage).show(stage);
+                            } else if (p.getTile().getName().equals("lord_british")) {
+                                
+                                if (this.member.getPlayer().meetLordBritish()) {
+                                    Sounds.play(Sound.MAGIC);
+                                    screen.log("Lord British says:\nThou hast been advanced!");
+                                } else {
+                                    screen.log("Lord British says:\nWelcome my child..\nExperience more! ");
+                                }
+                                
                             } else if (p.getConversation() != null) {
                                 screen.log(p.getConversation());
                             } else {
@@ -183,6 +192,18 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                     }
                 } else {
                     screen.log("Nobody selected!");
+                }
+                
+            } else if (initialKeyCode == Keys.S) {
+
+                if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
+                    ItemMapLabels l = bm.searchLocation(screen, gameScreen.context.getParty(), screen.context.getParty().getMember(keycode - 7 - 1), currentX, currentY, 0);
+                    if (l != null) {
+                        screen.log("You found " + l.getDesc() + ".");
+                    } else {
+                        screen.log("Nothing here!");
+                    }
+                    return false;
                 }
 
             } else if (initialKeyCode == Keys.R) {

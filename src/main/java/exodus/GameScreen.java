@@ -113,6 +113,12 @@ public class GameScreen extends BaseScreen {
         wp.currentX = 69;
         wp.currentY = 194;
         Maps.SOSARIA.getMap().addCreature(wp);
+        
+        
+        wp = Exodus.creatures.getInstance(CreatureType.pirate_ship, Exodus.standardAtlas);
+        wp.currentX = 200;
+        wp.currentY = 77;
+        Maps.SOSARIA.getMap().addCreature(wp);
 
         addButtons();
 
@@ -186,17 +192,18 @@ public class GameScreen extends BaseScreen {
             context.setParty(party);
             //context.loadJournalEntries();
 
-            party.getMember(1).getPlayer().gold = 5000;
-            party.getMember(1).getPlayer().keys = 5;
-
+            //party.getMember(0).getPlayer().exp = 315;
+            //party.getMember(0).getPlayer().keys = 50;
+            //party.getMember(0).getPlayer().gems = 50;
+            
             //load the surface world first
             loadNextMap(Maps.SOSARIA, sg.partyX, sg.partyY);
             //loadNextMap(Maps.AMBROSIA, 32, 54);
 
             //load the dungeon if save game starts in dungeon
             if (Maps.get(sg.location) != Maps.SOSARIA) {
-                //loadNextMap(Maps.get(sg.location), sg.x, sg.y, sg.x, sg.y, sg.dnglevel, Direction.getByValue(sg.orientation + 1), true);
-                //loadNextMap(Maps.ABYSS, 0, 0, 5, 5, 0, Direction.SOUTH, true);
+                loadNextMap(Maps.get(sg.location), sg.partyX, sg.partyY, sg.partyX, sg.partyY, sg.dnglevel, Direction.getByValue(sg.orientation), true);
+                //loadNextMap(Maps.TIME, 0, 0, 3, 1, 7, Direction.WEST, true);
                 //loadNextMap(Maps.DESTARD, 0, 0, 3, 5, 3, Direction.SOUTH, true);
                 //loadNextMap(Maps.DELVE_SORROWS, 0, 0, 3, 19, 1, Direction.EAST, true);
             }
@@ -241,13 +248,11 @@ public class GameScreen extends BaseScreen {
             }
         }
 
-        context.getParty().addObserver(this);
     }
 
     @Override
     public void hide() {
         gameTimer.active = false;
-        context.getParty().deleteObserver(this);
     }
 
     public void loadNextMap(Maps m, int x, int y) {
@@ -594,14 +599,6 @@ public class GameScreen extends BaseScreen {
             context.getParty().setTransport(Exodus.baseTileSet.getTileByIndex(0x1f));
             mainAvatar = avatarAnim;
             
-        } else if (keycode == Keys.S) {
-            BaseMap bm = context.getCurrentMap();
-            ItemMapLabels l = bm.searchLocation(this, context.getParty(), (int) v.x, (int) v.y, 0);
-            if (l != null) {
-                log("You found " + l.getDesc() + ".");
-            } else {
-                log("Nothing here!");
-            }
         } else if (keycode == Keys.M) {
 
         } else if (keycode == Keys.P) {
@@ -614,7 +611,7 @@ public class GameScreen extends BaseScreen {
             Gdx.input.setInputProcessor(iia);
             return false;
 
-        } else if (keycode == Keys.T || keycode == Keys.O || keycode == Keys.J || keycode == Keys.L
+        } else if (keycode == Keys.T || keycode == Keys.O || keycode == Keys.J || keycode == Keys.S
                 || keycode == Keys.A || keycode == Keys.G || keycode == Keys.R || keycode == Keys.W) {
             Gdx.input.setInputProcessor(sip);
             sip.setinitialKeyCode(keycode, context.getCurrentMap(), (int) v.x, (int) v.y);
@@ -739,7 +736,7 @@ public class GameScreen extends BaseScreen {
         TiledMapTile tmt = new StaticTiledMapTile(texture);
         tmt.setId(y * context.getCurrentMap().getWidth() + x);
         if (cell == null) {
-            System.err.printf("null cell in %s %d %d\n", context.getCurrentMap().getId(), x, y);
+            System.err.printf("null cell in %s %d %d %s\n", context.getCurrentMap().getId(), x, y, name);
         }
         cell.setTile(tmt);
         context.getCurrentMap().setTile(Exodus.baseTileSet.getTileByName(name), x, y);
@@ -1029,8 +1026,8 @@ public class GameScreen extends BaseScreen {
 
             if (fireDir != null) {
                 logAppend(fireDir.toString());
-                //AttackVector av = Utils.avatarfireCannon(context, context.getCurrentMap().getMapStage(), context.getCurrentMap(), fireDir, (int) pos.x, (int) pos.y);
-                //Utils.animateCannonFire(GameScreen.this, projectilesStage, context.getCurrentMap(), av, (int) pos.x, (int) pos.y, true);
+                AttackVector av = Utils.avatarfireCannon(context, context.getCurrentMap().getObjects(), context.getCurrentMap(), fireDir, (int) pos.x, (int) pos.y);
+                Utils.animateCannonFire(GameScreen.this, projectilesStage, context.getCurrentMap(), av, (int) pos.x, (int) pos.y, true);
             } else {
                 log("Broadsides only!");
             }

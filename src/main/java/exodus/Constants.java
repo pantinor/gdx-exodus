@@ -665,14 +665,6 @@ public interface Constants {
         }
     }
     
-    public enum Mark {
-        KINGS, SNAKE, FIRE, FORCE;
-    }
-    
-    public enum Card {
-        DEATH, SOL, LOVE, MOONS;
-    }
-
     public enum Profession {
 
         BARBARIAN("fighter"),
@@ -945,22 +937,13 @@ public interface Constants {
     public static final int SC_REAGENTDELAY = 0x04;
 
     public enum ItemMapLabels {
-
-        balloon("the Ballon", 0),
-        lockelake("Locke Lake", 0),
-        mandrake1("Mandrake Root", SC_NEWMOONS | SC_REAGENTDELAY),
-        mandrake2("Mandrake Root", SC_NEWMOONS | SC_REAGENTDELAY),
-        nightshade1("Nightshade", SC_NEWMOONS | SC_REAGENTDELAY),
-        nightshade2("Nightshade", SC_NEWMOONS | SC_REAGENTDELAY),
-        bell("the Bell of Courage", 0),
-        horn("the Silver Horn", 0),
-        wheel("the Wheel from the H.M.S. Cape", 0),
-        skull("the Skull of Modain the Wizard", SC_NEWMOONS),
-        candle("the Candle of Love", 0),
-        mysticarmor("Mystic Robes", SC_FULLAVATAR),
-        mysticswords("Mystic Swords", SC_FULLAVATAR),
-        blackstone("the Black Stone", SC_NEWMOONS),
-        rageofgod("the Rage of God", 0);
+        
+        EXOTIC_ARMOR("Exotic Armour", 0),
+        EXOTIC_WEAPON("Exotic Weapon", 0),
+        CARD_OF_DEATH("Card of Death", 0),
+        CARD_OF_SOL("Card of Sol", 0),
+        CARD_OF_MOONS("Card of Moons", 0),
+        CARD_OF_LOVE("Card of Love", 0);
 
         private String desc;
         private int conditions;

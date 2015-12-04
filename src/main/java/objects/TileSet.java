@@ -76,6 +76,10 @@ public class TileSet {
                 t.setCombatMap(Maps.BRICK_CON);
             } else if (t.getName().equals("locked_door")) {
                 t.setCombatMap(Maps.BRICK_CON);
+            } else if (t.getName().equals("water")) {
+                t.setCombatMap(Maps.SHIPSHIP_CON);    
+            } else if (t.getName().equals("sea")) {
+                t.setCombatMap(Maps.SHIPSHIP_CON);             
             } else {
                 //System.err.printf("could not find combat map for %s\n",t.getName());
             }

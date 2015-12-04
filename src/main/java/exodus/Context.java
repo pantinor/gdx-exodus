@@ -255,43 +255,6 @@ public class Context implements Constants {
         this.locationMask = locationMask;
     }
 
-    public Maps getCombatMapForTile(Tile combatantTile, TransportContext transport, int x, int y) {
-
-        boolean fromShip = false;
-        boolean toShip = false;
-
-        Tile tileUnderneathAvatar = currentMap.getTile(x, y);
-
-        if (transport == TransportContext.SHIP) {
-            fromShip = true;
-        }
-
-        if (combatantTile.getRule() == TileRule.ship) {
-            toShip = true;
-        }
-
-        if (fromShip && toShip) {
-            return Maps.SHIPSHIP_CON;
-        }
-
-        if (toShip) {
-            return Maps.SHORSHIP_CON;
-        } else if (fromShip && tileUnderneathAvatar.getRule() == TileRule.water) {
-            return Maps.SHIPSEA_CON;
-        } else if (tileUnderneathAvatar.getRule() == TileRule.water) {
-            return Maps.SHORE_CON;
-        } else if (fromShip && tileUnderneathAvatar.getRule() != TileRule.water) {
-            return Maps.SHIPSHOR_CON;
-        }
-
-        if (tileUnderneathAvatar.getCombatMap() != null) {
-            return tileUnderneathAvatar.getCombatMap();
-        }
-
-        return Maps.BRICK_CON;
-        
-    }
-
     public Aura getAura() {
         return aura;
     }
@@ -418,10 +381,10 @@ public class Context implements Constants {
     }
 
     public Maps getCombatMap(Creature c, BaseMap bm, int creatureX, int creatureY, int avatarX, int avatarY) {
-        Tile ct = bm.getTile(creatureX, creatureY);
-        Maps cm = ct.getCombatMap();
-
+        
+        Maps cm = bm.getTile(creatureX, creatureY).getCombatMap();
         TileRule ptr = bm.getTile(avatarX, avatarY).getRule();
+        
         if (c.getSwims() && !ptr.has(TileAttrib.unwalkable)) {
             cm = Maps.SHORE_CON;
         } else if (c.getSails() && !ptr.has(TileAttrib.unwalkable)) {

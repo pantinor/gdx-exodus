@@ -174,6 +174,7 @@ public class SaveGame implements Constants {
         public int portaitIndex = 11 + 2 * 16;
         public int[] marks = new int[4];
         public int[] cards = new int[4];
+        public int lordBritishLevel = 0;
         public int torches;
         public int inParty;
         public StatusType status = StatusType.GOOD;
@@ -223,6 +224,7 @@ public class SaveGame implements Constants {
             dos.writeByte(cards[1]);
             dos.writeByte(cards[2]);
             dos.writeByte(cards[3]);
+            dos.writeByte(lordBritishLevel);
             dos.writeByte(torches);
             dos.writeByte(inParty);
             dos.writeByte(status.ordinal());
@@ -259,8 +261,7 @@ public class SaveGame implements Constants {
             }
 
             dos.writeShort(portaitIndex);
-            
-            dos.writeByte(0);
+
             dos.writeByte(0);
             dos.writeByte(0);
 
@@ -285,13 +286,14 @@ public class SaveGame implements Constants {
             name = new String(nameArray).trim();
 
             marks[0] = dis.readByte();
-            marks[0]  = dis.readByte();
-            marks[0]  = dis.readByte();
-            marks[0]  = dis.readByte();
-            cards[0]  = dis.readByte();
-            cards[0]  = dis.readByte();
-            cards[0]  = dis.readByte();
-            cards[0]  = dis.readByte();
+            marks[1] = dis.readByte();
+            marks[2] = dis.readByte();
+            marks[3] = dis.readByte();
+            cards[0] = dis.readByte();
+            cards[1] = dis.readByte();
+            cards[2] = dis.readByte();
+            cards[3] = dis.readByte();
+            lordBritishLevel = dis.readByte();
             torches = dis.readByte();
             inParty = dis.readByte();
             status = StatusType.get(dis.readByte());
@@ -328,8 +330,7 @@ public class SaveGame implements Constants {
             }
 
             portaitIndex = dis.readShort();
-            
-            dis.readByte();
+
             dis.readByte();
             dis.readByte();
             dis.readInt();
@@ -375,9 +376,10 @@ public class SaveGame implements Constants {
         }
 
         public int getLevel() {
-            return exp / 100 + 1;
+            int lvl = lordBritishLevel + 1;
+            return lvl;
         }
-        
+
         public int getMaxHealth() {
             return getLevel() * 100 + 50;
         }
@@ -390,32 +392,47 @@ public class SaveGame implements Constants {
             gold = Utils.adjustValue(gold, v, 9999, 0);
         }
 
-        public boolean advanceLevel() {
+        public boolean meetLordBritish() {
+
             if (getLevel() >= 25) {
                 return false;
             }
 
+            int expLvl = exp / 100;
+
+            if (expLvl <= lordBritishLevel) {
+                return false;
+            }
+
+            if (marks[0] == 0 && expLvl >= 5) {
+                return false;
+            }
+
+            int times = expLvl - lordBritishLevel;
+            lordBritishLevel = expLvl;
+
             status = StatusType.GOOD;
-            
             health = getMaxHealth();
 
-            /* improve stats by 1-8 each */
-            str += rand.nextInt(8) + 1;
-            dex += rand.nextInt(8) + 1;
-            intell += rand.nextInt(8) + 1;
-            wis += rand.nextInt(8) + 1;
+            for (int i = 0; i < times; i++) {
+                /* improve stats by 1-8 each */
+                str += rand.nextInt(8) + 1;
+                dex += rand.nextInt(8) + 1;
+                intell += rand.nextInt(8) + 1;
+                wis += rand.nextInt(8) + 1;
 
-            if (str > this.race.getMaxStr()) {
-                str = this.race.getMaxStr();
-            }
-            if (dex > this.race.getMaxDex()) {
-                dex = this.race.getMaxDex();
-            }
-            if (intell > this.race.getMaxInt()) {
-                intell = this.race.getMaxInt();
-            }
-            if (wis > this.race.getMaxWis()) {
-                wis = this.race.getMaxWis();
+                if (str > this.race.getMaxStr()) {
+                    str = this.race.getMaxStr();
+                }
+                if (dex > this.race.getMaxDex()) {
+                    dex = this.race.getMaxDex();
+                }
+                if (intell > this.race.getMaxInt()) {
+                    intell = this.race.getMaxInt();
+                }
+                if (wis > this.race.getMaxWis()) {
+                    wis = this.race.getMaxWis();
+                }
             }
             return true;
 

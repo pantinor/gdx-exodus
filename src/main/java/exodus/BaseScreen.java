@@ -20,7 +20,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import util.XORShiftRandom;
 
-public abstract class BaseScreen implements Screen, InputProcessor, Constants, Observer {
+public abstract class BaseScreen implements Screen, InputProcessor, Constants {
 
     public ScreenType scType;
 
@@ -109,51 +109,6 @@ public abstract class BaseScreen implements Screen, InputProcessor, Constants, O
     
     public abstract InputProcessor getPeerGemInputProcessor() ;
     
-    @Override
-    public void update(Observable obs, Object obj) {
-//        if (obj instanceof PartyEvent) {
-//            PartyEvent ev = (PartyEvent) obj;
-//            switch (ev) {
-//                case ACTIVE_PLAYER_CHANGED:
-//                    break;
-//                case ADVANCED_LEVEL:
-//                    log("Thou art now Level");
-//                    Sounds.play(Sound.MAGIC);
-//                    break;
-//                case POSITIVE_KARMA:
-//                    Sounds.play(Sound.POSITIVE_EFFECT);
-//                    break;
-//                case NEGATIVE_KARMA:
-//                    Sounds.play(Sound.NEGATIVE_EFFECT);
-//                    break;
-//                case INVENTORY_ADDED:
-//                    break;
-//                case LOST_EIGHTH:
-//                    log("Thou hast lost an eighth of avatarhood!");
-//                    Sounds.play(Sound.STEAL_ESSENCE);
-//                    break;
-//                case MEMBER_JOINED:
-//                    Sounds.play(Sound.POSITIVE_EFFECT);
-//                    break;
-//                case PARTY_REVIVED:
-//                case PARTY_DEATH:
-//                    break;
-//                case POISON_DAMAGE:
-//                    Sounds.play(Sound.POISON_DAMAGE);
-//                    break;
-//                case STARVING:
-//                    log("Starving!!!");
-//                    Sounds.play(Sound.NEGATIVE_EFFECT);
-//                    break;
-//                case TRANSPORT_CHANGED:
-//                    break;
-//                default:
-//                    break;
-//
-//            }
-//        }
-    }
-
     public abstract void partyDeath();
 
     @Override

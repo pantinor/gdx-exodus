@@ -16,13 +16,11 @@ import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
@@ -490,14 +488,14 @@ public class Utils implements Constants {
         return dirmask;
     }
 
-    public static AttackVector enemyfireCannon(Context context, Stage stage, BaseMap combatMap, Direction dir, int startX, int startY, int avatarX, int avatarY) throws PartyDeathException {
+    public static AttackVector enemyfireCannon(Context context, List<Drawable> objects, BaseMap combatMap, Direction dir, int startX, int startY, int avatarX, int avatarY) throws PartyDeathException {
 
         List<AttackVector> path = Utils.getDirectionalActionPath(combatMap, dir.getMask(), startX, startY, 1, 4, true, false, true);
 
         AttackVector target = null;
         int distance = 1;
         for (AttackVector v : path) {
-            AttackResult res = fireAt(context, stage, combatMap, v, false, avatarX, avatarY);
+            AttackResult res = fireAt(context, objects, combatMap, v, false, avatarX, avatarY);
             target = v;
             target.result = res;
             target.distance = distance;
@@ -505,6 +503,29 @@ public class Utils implements Constants {
                 break;
             }
             distance++;
+        }
+
+        return target;
+    }
+    
+    public static AttackVector avatarfireCannon(Context context, List<Drawable> objects, BaseMap combatMap, Direction dir, int startX, int startY) {
+
+        List<AttackVector> path = Utils.getDirectionalActionPath(combatMap, dir.getMask(), startX, startY, 1, 4, true, true, true);
+        AttackVector target = null;
+        try {
+            int distance = 1;
+            for (AttackVector v : path) {
+                AttackResult res = fireAt(context, objects, combatMap, v, true, 0, 0);
+                target = v;
+                target.result = res;
+                target.distance = distance;
+                if (res != AttackResult.NONE) {
+                    break;
+                }
+                distance++;
+            }
+        } catch (PartyDeathException e) {
+            //not happening
         }
 
         return target;
@@ -594,18 +615,15 @@ public class Utils implements Constants {
         stage.addActor(p);
     }
 
-    private static AttackResult fireAt(Context context, Stage stage, BaseMap combatMap, AttackVector target, boolean avatarAttack, int avatarX, int avatarY) throws PartyDeathException {
+    private static AttackResult fireAt(Context context, List<Drawable> objects, BaseMap combatMap, AttackVector target, boolean avatarAttack, int avatarX, int avatarY) throws PartyDeathException {
 
         AttackResult res = AttackResult.NONE;
 
         //check for ship
         Drawable ship = null;
-        for (Actor a : stage.getActors()) {
-            if (a instanceof Drawable) {
-                Drawable d = (Drawable) a;
-                if (d.getTile().getName().equals("ship") && d.getCx() == target.x && d.getCy() == target.y) {
-                    ship = d;
-                }
+        for (Drawable d : objects) {
+            if (d.getTile().getName().equals("ship") && d.getCx() == target.x && d.getCy() == target.y) {
+                ship = d;
             }
         }
 
@@ -956,6 +974,16 @@ public class Utils implements Constants {
                     TextureAtlas.AtlasRegion ar = (TextureAtlas.AtlasRegion) atlas.findRegion(ct.getName());
                     BufferedImage sub = sheet.getSubimage(ar.getRegionX(), ar.getRegionY(), 32, 32);
                     canvas.getGraphics().drawImage(sub, x * 32, y * 32, 32, 32, null);
+                    
+                    Person cr = map.getMap().getPersonAt(x, y);
+                    if (cr != null) {
+                        canvas.getGraphics().fillRect(x * 32, y * 32, 32, 32);
+                    }
+
+                    Drawable obj = map.getMap().getObjectAt(x, y);
+                    if (obj != null) {
+                        canvas.getGraphics().fillRect(x * 32, y * 32, 32, 32);
+                    }
                 }
             }
 
@@ -1015,6 +1043,11 @@ public class Utils implements Constants {
 
                 Creature cr = worldMap.getCreatureAt(cx, cy);
                 if (cr != null) {
+                    canvas.getGraphics().fillRect(indexX * 32, indexY * 32, 32, 32);
+                }
+                
+                Drawable obj = worldMap.getObjectAt(cx, cy);
+                if (obj != null) {
                     canvas.getGraphics().fillRect(indexX * 32, indexY * 32, 32, 32);
                 }
 

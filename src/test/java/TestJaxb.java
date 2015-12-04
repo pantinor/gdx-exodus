@@ -16,6 +16,7 @@ import objects.SaveGame;
 import objects.SaveGame.CharacterRecord;
 import objects.Tile;
 import objects.TileSet;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import vendor.OracleService;
 import vendor.VendorClassSet;
@@ -74,6 +75,54 @@ public class TestJaxb {
 
         //sg.write(Constants.PARTY_SAV_BASE_FILENAME);
         //sg.write("test.sav");
+    }
+    
+    //@Test
+    public void testAdvanceLevel() throws Exception {
+
+        CharacterRecord rec = new CharacterRecord();
+        rec.name = "Adventurer";
+        rec.exp = 0;
+        
+        rec.meetLordBritish();
+        Assert.assertEquals(rec.getLevel(), 1);
+        
+        rec.exp = 110;
+        Assert.assertEquals(rec.getLevel(), 1);
+        
+        rec.meetLordBritish();
+        Assert.assertEquals(rec.getLevel(), 2);
+        
+        rec.exp = 175;
+        Assert.assertEquals(rec.getLevel(), 2);
+        
+        rec.meetLordBritish();
+        Assert.assertEquals(rec.getLevel(), 2);
+        
+        rec.exp = 230;
+        Assert.assertEquals(rec.getLevel(), 2);
+        
+        rec.meetLordBritish();
+        Assert.assertEquals(rec.getLevel(), 3);
+        
+        rec.exp = 415;
+        Assert.assertEquals(rec.getLevel(), 3);
+        
+        rec.meetLordBritish();
+        Assert.assertEquals(rec.getLevel(), 5);
+        
+        rec.exp = 515;
+        rec.meetLordBritish();
+        Assert.assertEquals(rec.getLevel(), 5); 
+        
+        rec.exp = 615;
+        rec.meetLordBritish();
+        Assert.assertEquals(rec.getLevel(), 5);
+        
+        rec.marks[0] = 1;
+        rec.meetLordBritish();
+        Assert.assertEquals(rec.getLevel(), 7);    
+    
     }
     
     //@Test

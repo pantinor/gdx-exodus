@@ -64,7 +64,7 @@ public class TestMain extends Game {
             sg.players[1].exp = 350;
             sg.players[1].weapon = WeaponType.BOW_P4;
             
-            Maps m = Maps.BRICK_CON;
+            Maps m = Maps.SHIPSEA_CON;
 
             TiledMap tmap = new UltimaTiledMapLoader(m, Exodus.standardAtlas, m.getMap().getWidth(), m.getMap().getHeight(), 32, 32).load();
             CombatScreen sc = new CombatScreen(null, context, Maps.SOSARIA, m.getMap(), tmap, CreatureType.daemon, Exodus.creatures, Exodus.standardAtlas);

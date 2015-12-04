@@ -276,15 +276,6 @@ public class Party extends Observable implements Constants {
         this.torchduration = torchduration;
     }
 
-    public void adjustFoodHealth(PartyMember member) {
-        member.player.submorsels -= 10;
-        if (member.player.submorsels < 0) {
-            member.player.submorsels = 100;
-            member.player.food = Utils.adjustValue(member.player.food, -1, 999900, 0);
-            member.player.health = Utils.adjustValue(member.player.health, 1, member.player.getMaxHealth(), 0);
-        }
-    }
-
     public int getChestGold(PartyMember member) {
         int gold = rand.nextInt(50) + rand.nextInt(8) + 10;
         member.player.adjustGold(gold);
@@ -628,26 +619,29 @@ public class Party extends Observable implements Constants {
             if (mapType != MapType.combat) {
 
                 if (member.player.status != StatusType.DEAD) {
-                    adjustFoodHealth(member);
+                    member.player.submorsels -= 10;
+                    if (member.player.submorsels < 0) {
+                        
+                        member.player.submorsels = 100;
+                        member.player.food = Utils.adjustValue(member.player.food, -1, 999900, 0);
+                        
+                        if (member.player.status == StatusType.POISONED) {
+                            member.applyDamage(1, false);
+                        } else {
+                            member.player.health = Utils.adjustValue(member.player.health, 1, member.player.getMaxHealth(), 0);
+                        }
+                        
+                        if (!member.isDisabled() && member.player.mana < member.player.getMaxMana()) {
+                            member.player.mana++;
+                        }
+                        
+                        if (member.player.food == 0) {
+                            member.applyDamage(1, false);
+                        }
+                    }
                 }
-
-                if (member.player.status == StatusType.POISONED) {
-                    member.applyDamage(2, false);
-                    setChanged();
-                    notifyObservers(PartyEvent.POISON_DAMAGE);
-                }
-
             }
 
-            if (!member.isDisabled() && member.player.mana < member.player.getMaxMana()) {
-                member.player.mana++;
-            }
-
-            if (member.player.food == 0) {
-                member.applyDamage(1, false);
-                setChanged();
-                notifyObservers(PartyEvent.STARVING);
-            }
         }
 
         if (context.getCurrentMap().getId() == Maps.SOSARIA.getId() && saveGame.shiphull < 50 && rand.nextInt(4) == 0) {
@@ -691,25 +685,25 @@ public class Party extends Observable implements Constants {
                     append("|" + "GOLD: ").append(p.gold).append(" FOOD: ").append(p.food);
 
             sb1.append("| ");
-            
-            for (int i=1;i<p.armors.length;i++) {
+
+            for (int i = 1; i < p.armors.length; i++) {
                 sb1.append("|" + ArmorType.values()[i].getArmor().getName() + ": ").append(p.armors[i]);
                 i++;
-                if (i<p.armors.length) {
+                if (i < p.armors.length) {
                     sb1.append(" " + ArmorType.values()[i].getArmor().getName() + ": ").append(p.armors[i]);
                 }
             }
-            
+
             sb1.append("| ");
-            
-            for (int i=1;i<p.weapons.length;i++) {
+
+            for (int i = 1; i < p.weapons.length; i++) {
                 sb1.append("|" + WeaponType.values()[i].getWeapon().getName() + ": ").append(p.weapons[i]);
                 i++;
-                if (i<p.weapons.length) {
+                if (i < p.weapons.length) {
                     sb1.append(" " + WeaponType.values()[i].getWeapon().getName() + ": ").append(p.weapons[i]);
                 }
             }
-            
+
             sb1.append("| ");
 
             sb1.append("|MARK KINGS: ").append(p.marks[0]).append(" MARK SNAKE: ").append(p.marks[1]);
