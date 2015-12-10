@@ -183,6 +183,23 @@ public class Utils implements Constants {
                         tiles[x + y * map.getWidth()] = tile;
                     }
                 }
+            } else if (map.getType() == MapType.shrine) {
+                int pos = 0;
+                for (int y = 0; y < map.getHeight(); y++) {
+                    for (int x = 0; x < map.getWidth(); x++) {
+                        int index = bytes[pos] & 0xff;
+                        pos++;
+                        Tile tile = ts.getTileByIndex(index);
+                        if (tile == null) {
+                            System.out.println("Tile index cannot be found: " + index + " using index 127 for black space.");
+                            tile = ts.getTileByIndex(127);
+                        }
+                        if (tile.getIndex() == 31) { //avatar position
+                            tile = ts.getTileByIndex(4);
+                        }
+                        tiles[x + y * map.getWidth()] = tile;
+                    }
+                }
             }
 
             map.setTiles(tiles);
@@ -507,7 +524,7 @@ public class Utils implements Constants {
 
         return target;
     }
-    
+
     public static AttackVector avatarfireCannon(Context context, List<Drawable> objects, BaseMap combatMap, Direction dir, int startX, int startY) {
 
         List<AttackVector> path = Utils.getDirectionalActionPath(combatMap, dir.getMask(), startX, startY, 1, 4, true, true, true);
@@ -974,7 +991,7 @@ public class Utils implements Constants {
                     TextureAtlas.AtlasRegion ar = (TextureAtlas.AtlasRegion) atlas.findRegion(ct.getName());
                     BufferedImage sub = sheet.getSubimage(ar.getRegionX(), ar.getRegionY(), 32, 32);
                     canvas.getGraphics().drawImage(sub, x * 32, y * 32, 32, 32, null);
-                    
+
                     Person cr = map.getMap().getPersonAt(x, y);
                     if (cr != null) {
                         canvas.getGraphics().fillRect(x * 32, y * 32, 32, 32);
@@ -1045,7 +1062,7 @@ public class Utils implements Constants {
                 if (cr != null) {
                     canvas.getGraphics().fillRect(indexX * 32, indexY * 32, 32, 32);
                 }
-                
+
                 Drawable obj = worldMap.getObjectAt(cx, cy);
                 if (obj != null) {
                     canvas.getGraphics().fillRect(indexX * 32, indexY * 32, 32, 32);
@@ -1115,5 +1132,5 @@ public class Utils implements Constants {
         pix.dispose();
         return t;
     }
-    
+
 }

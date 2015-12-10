@@ -185,7 +185,8 @@ public class Exodus extends Game {
             maps = (MapSet) Utils.loadXml("assets/xml/maps.xml", MapSet.class);
             maps.init(baseTileSet);
             maps.init(MapType.combat, u4TileSet);//set combat maps with the u4 tile set
-
+            maps.init(MapType.shrine, u4TileSet);//set combat maps with the u4 tile set
+            
             vendorClassSet = (VendorClassSet) Utils.loadXml("assets/xml/vendor.xml", VendorClassSet.class);
             vendorClassSet.init();
             

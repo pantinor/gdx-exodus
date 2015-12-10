@@ -52,26 +52,28 @@ public interface Constants {
         BRICK_CON(33, ""),
         BRIDGE_CON(34, ""),
         BRUSH_CON(35, ""),
-        CAMP_CON(36, ""),
         DNG0_CON(37, ""),
         DNG1_CON(38, ""),
         DNG2_CON(39, ""),
         DNG3_CON(40, ""),
-        DNG4_CON(41, ""),
         DNG5_CON(42, ""),
         DNG6_CON(43, ""),
         DUNGEON_CON(44, ""),
         FOREST_CON(45, ""),
         GRASS_CON(46, ""),
         HILL_CON(47, ""),
-        INN_CON(48, ""),
         MARSH_CON(49, ""),
         SHIPSEA_CON(50, ""),
         SHIPSHIP_CON(51, ""),
         SHIPSHOR_CON(52, ""),
         SHORE_CON(53, ""),
-        SHORSHIP_CON(54, "");
-
+        SHORSHIP_CON(54, ""),
+        SHRINE_OF_WISDOM(55, "Shrine of Wisdom"),
+        SHRINE_OF_DEXTERITY(56, "Shrine of Dexterity"),
+        SHRINE_OF_INTELLIGENCE(57, "Shrine of Intelligence"),
+        SHRINE_OF_STRENGTH(58, "Shrine of Sterngth"),
+        ;
+        
         private int id;
         private String label;
         private BaseMap baseMap;

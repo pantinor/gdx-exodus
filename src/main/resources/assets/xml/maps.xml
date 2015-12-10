@@ -64,7 +64,17 @@
         <label name="CARD_OF_SOL" x="45" y="52" />
         <label name="CARD_OF_MOONS" x="6" y="6" />
         <label name="CARD_OF_LOVE" x="4" y="36" />
+        <portal name="WISDOM" x="55" y="27" destmapid="55" startx="1" starty="1" />
+        <portal name="DEXTERITY" x="45" y="52" destmapid="56" startx="1" starty="1" />
+        <portal name="INTELLIGENCE" x="6" y="6" destmapid="57" startx="1" starty="1" />
+        <portal name="STRENGTH" x="4" y="36" destmapid="58" startx="1" starty="1" />
+        <portal name="WHIRLPOOL" x="32" y="58" destmapid="0" startx="1" starty="1" />
     </map>
+    
+    <map id="55" type="shrine" fname="shrine.con" width="11" height="11" levels="1" borderbehavior="fixed" music="ALIVE" />
+    <map id="56" type="shrine" fname="shrine.con" width="11" height="11" levels="1" borderbehavior="fixed" music="ALIVE" />
+    <map id="57" type="shrine" fname="shrine.con" width="11" height="11" levels="1" borderbehavior="fixed" music="ALIVE" />
+    <map id="58" type="shrine" fname="shrine.con" width="11" height="11" levels="1" borderbehavior="fixed" music="ALIVE" />
     
     <map id="14" type="dungeon" fname="perinian.ult" width="16" height="16" levels="8" borderbehavior="exit" music="DUNGEON">
         <label name="MARK_KINGS" x="15" y="11" z="0" />
@@ -176,19 +186,16 @@
     <map id="33" type="combat" fname="brick.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
     <map id="34" type="combat" fname="bridge.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
     <map id="35" type="combat" fname="brush.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
-    <map id="36" type="combat" fname="camp.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
     <map id="37" type="combat" fname="dng0.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   <!-- Walls -->
     <map id="38" type="combat" fname="dng1.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   <!-- Up ladder -->
     <map id="39" type="combat" fname="dng2.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   <!-- Down ladder -->
     <map id="40" type="combat" fname="dng3.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   <!-- Up-down ladder -->
-    <map id="41" type="combat" fname="dng4.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   <!-- Chest -->
     <map id="42" type="combat" fname="dng5.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   <!-- Doorway -->
     <map id="43" type="combat" fname="dng6.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   <!-- Secret Door -->
     <map id="44" type="combat" fname="dungeon.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   <!-- Dungeon -->
     <map id="45" type="combat" fname="forest.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
     <map id="46" type="combat" fname="grass.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
     <map id="47" type="combat" fname="hill.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
-    <map id="48" type="combat" fname="inn.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
     <map id="49" type="combat" fname="marsh.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
     <map id="50" type="combat" fname="shipsea.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
     <map id="51" type="combat" fname="shipship.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />

@@ -113,8 +113,7 @@ public class GameScreen extends BaseScreen {
         wp.currentX = 69;
         wp.currentY = 194;
         Maps.SOSARIA.getMap().addCreature(wp);
-        
-        
+
         wp = Exodus.creatures.getInstance(CreatureType.pirate_ship, Exodus.standardAtlas);
         wp.currentX = 200;
         wp.currentY = 77;
@@ -142,7 +141,7 @@ public class GameScreen extends BaseScreen {
             tmp2.add(corps.get(0));
         }
         corpseAnim = new Animation(0.25f, tmp2);
-        
+
         tmp = new Array<>(4);
         AtlasRegion ar = new AtlasRegion(horse.get(0));
         ar.flip(true, false);
@@ -195,10 +194,10 @@ public class GameScreen extends BaseScreen {
             //party.getMember(0).getPlayer().exp = 315;
             //party.getMember(0).getPlayer().keys = 50;
             //party.getMember(0).getPlayer().gems = 50;
-            
+
             //load the surface world first
             loadNextMap(Maps.SOSARIA, sg.partyX, sg.partyY);
-            //loadNextMap(Maps.AMBROSIA, 32, 54);
+            //loadNextMap(Maps.AMBROSIA, 15, 59);
 
             //load the dungeon if save game starts in dungeon
             if (Maps.get(sg.location) != Maps.SOSARIA) {
@@ -271,6 +270,13 @@ public class GameScreen extends BaseScreen {
             if (restoreSG) {
                 sc.restoreSaveGameLocation(dngx, dngy, dngLevel, orientation);
             }
+            mainGame.setScreen(sc);
+
+        } else if (baseMap.getType() == MapType.shrine) {
+
+            map = new UltimaTiledMapLoader(m, Exodus.standardAtlas, baseMap.getWidth(), baseMap.getHeight(), tilePixelWidth, tilePixelHeight).load();
+            context.setCurrentTiledMap(map);
+            ShrineScreen sc = new ShrineScreen(m, this, context.getParty(), map, Exodus.standardAtlas, Exodus.standardAtlas);
             mainGame.setScreen(sc);
 
         } else {
@@ -395,7 +401,7 @@ public class GameScreen extends BaseScreen {
         camera.position.set(newMapPixelCoords.x + 5 * tilePixelWidth, newMapPixelCoords.y, 0);
 
         camera.update();
-        
+
         renderer.setView(camera.combined,
                 camera.position.x - tilePixelWidth * 15, //this is voodoo
                 camera.position.y - tilePixelHeight * 10,
@@ -595,10 +601,10 @@ public class GameScreen extends BaseScreen {
                 cr.currentY = (int) v.y;
                 context.getCurrentMap().addCreature(cr);
             }
-            
+
             context.getParty().setTransport(Exodus.baseTileSet.getTileByIndex(0x1f));
             mainAvatar = avatarAnim;
-            
+
         } else if (keycode == Keys.M) {
 
         } else if (keycode == Keys.P) {
@@ -657,6 +663,16 @@ public class GameScreen extends BaseScreen {
             if (nx > bm.getWidth() - 1 || nx < 0 || ny > bm.getHeight() - 1 || ny < 0) {
                 Portal p = Maps.SOSARIA.getMap().getPortal(bm.getId());
                 loadNextMap(Maps.SOSARIA, p.getX(), p.getY());
+                return false;
+            }
+        }
+        
+        if (context.getCurrentMap().getId() == Maps.AMBROSIA.getId()) {
+            Portal p = Maps.AMBROSIA.getMap().getPortal(nx, ny, 0);
+            if (p != null && p.getName().equals("WHIRLPOOL")) {
+                int dx = Utils.getRandomBetween(192,212);
+                int dy = Utils.getRandomBetween(0,32);
+                loadNextMap(Maps.SOSARIA, dx, dy);
                 return false;
             }
         }
@@ -1052,7 +1068,6 @@ public class GameScreen extends BaseScreen {
                 break;
             }
         }
-        
 
         if (chest == null) {
             //check tile too, ie in cities

@@ -149,7 +149,8 @@ public class Portal implements Constants {
     public void setMapTileId(int mapTileId) {
         this.mapTileId = mapTileId;
     }
-
+    
+    @XmlAttribute
     public String getName() {
         return name;
     }

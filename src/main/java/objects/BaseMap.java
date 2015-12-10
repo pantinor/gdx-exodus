@@ -13,8 +13,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import exodus.Constants;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import exodus.BaseScreen;
 import exodus.Context;
@@ -546,6 +544,7 @@ public class BaseMap implements Constants {
                         Exodus.hud.add("As the water enters your lungs you pass into Darkness!");
                         Exodus.hud.add("You awaken on the shores of a forgotten Land.");
                         Exodus.hud.add("Your ship and crew lost to the sea!");
+                        screen.context.getParty().setTransport(Exodus.baseTileSet.getTileByName("grass"));
                         screen.loadNextMap(Maps.AMBROSIA, 32, 54);
                         break;
                     } else if (cr.getTile() == CreatureType.twister) {
@@ -706,7 +705,7 @@ public class BaseMap implements Constants {
                         } else {
                             canmove = false;
                         }
-                    } else if (tc == null || tc == TransportContext.FOOT) {
+                    } else {
                         if (!rule.has(TileAttrib.unwalkable) || rule == TileRule.ship || rule.has(TileAttrib.chest) || rule == TileRule.horse) {
                             canmove = true;
                         }
@@ -893,7 +892,7 @@ public class BaseMap implements Constants {
                 if (pm.getPlayer().armors[ArmorType.EXOTIC.ordinal()] > 0) {
                     break;
                 }
-                pm.getPlayer().armors[ArmorType.EXOTIC.ordinal()] ++;
+                pm.getPlayer().armors[ArmorType.EXOTIC.ordinal()]++;
                 expPoints = 100;
                 added = true;
                 break;
@@ -901,7 +900,7 @@ public class BaseMap implements Constants {
                 if (pm.getPlayer().weapons[WeaponType.EXOTIC.ordinal()] > 0) {
                     break;
                 }
-                pm.getPlayer().weapons[WeaponType.EXOTIC.ordinal()] ++;
+                pm.getPlayer().weapons[WeaponType.EXOTIC.ordinal()]++;
                 expPoints = 100;
                 added = true;
                 break;

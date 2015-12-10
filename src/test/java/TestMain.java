@@ -53,6 +53,7 @@ public class TestMain extends Game {
             Party party = new Party(sg);
             context.setParty(party);
             context.setCurrentMap(Maps.SOSARIA.getMap());
+            //party.setTransport(Exodus.baseTileSet.getTileByName("ship"));
 
             sg.players[0].health = 500;
             sg.players[0].exp = 350;
