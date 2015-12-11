@@ -207,6 +207,7 @@ public class ShrineScreen extends BaseScreen {
                 }
                 
                 log("Shazam!");
+                Sounds.play(Sound.DIVINE_INTERVENTION);
                 
                 c.adjustGold(amt * 100);
 

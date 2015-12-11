@@ -114,11 +114,6 @@ public class GameScreen extends BaseScreen {
         wp.currentY = 194;
         Maps.SOSARIA.getMap().addCreature(wp);
 
-        wp = Exodus.creatures.getInstance(CreatureType.pirate_ship, Exodus.standardAtlas);
-        wp.currentX = 200;
-        wp.currentY = 77;
-        Maps.SOSARIA.getMap().addCreature(wp);
-
         addButtons();
 
     }
@@ -672,6 +667,7 @@ public class GameScreen extends BaseScreen {
             if (p != null && p.getName().equals("WHIRLPOOL")) {
                 int dx = Utils.getRandomBetween(192,212);
                 int dy = Utils.getRandomBetween(0,32);
+                Sounds.play(Sound.WAVE);
                 loadNextMap(Maps.SOSARIA, dx, dy);
                 return false;
             }

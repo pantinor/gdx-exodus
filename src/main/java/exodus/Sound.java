@@ -35,6 +35,9 @@ public enum Sound {
     CANNON("cannon.mp3", false, 0.3f),
     SPIRITS("AncientSpirits.ogg", false, 0.3f),
     RAGE("RageOfGod.ogg", false, 0.3f),
+    DIVINE_INTERVENTION("divineint.ogg", false, 0.3f),
+    WAVE("chaowave.ogg", false, 0.3f),
+
     //music
     SPLASH("Exodus.mp3", true, 0.1f),
     OUTSIDE("Wander.mp3", true, 0.1f),
