@@ -1,4 +1,5 @@
 
+import exodus.Constants.CreatureType;
 import exodus.Constants.InventoryType;
 import exodus.Constants.Maps;
 import static exodus.Constants.PARTY_SAV_BASE_FILENAME;
@@ -7,6 +8,7 @@ import exodus.Party;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.util.Random;
 import javax.swing.JOptionPane;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
@@ -171,4 +173,33 @@ public class TestJaxb {
 
     }
 
+    
+    //@Test
+    public void testRandDung() throws Exception {
+        Random rand = new Random();
+        int currentLevel = 8;
+
+        for (int i = 0; i < 20; i++) {
+
+            int total = 0;
+            for (CreatureType ct : CreatureType.values()) {
+                total += (ct.getSpawnLevel() <= currentLevel) ? ct.getSpawnWeight() : 0;
+            }
+
+            int thresh = rand.nextInt(total);
+            CreatureType monster = null;
+
+            for (CreatureType ct : CreatureType.values()) {
+                thresh -= (ct.getSpawnLevel() <= currentLevel) ? ct.getSpawnWeight() : 0;
+                if (thresh < 0) {
+                    monster = ct;
+                    break;
+                }
+            }
+
+            System.out.printf("spawned on level %s : %s\n", currentLevel, monster.toString());
+        }
+    }
+    
+    
 }

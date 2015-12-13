@@ -540,7 +540,7 @@ public class BaseMap implements Constants {
                 if (cr.getWontattack()) {
                     if (cr.getTile() == CreatureType.whirlpool) {
                         screen.context.damageShip(-1, 10);
-                        Exodus.hud.add("A huge swirling WhirlPool engulfs you and your ship dragging both to a watery grave!");
+                        Exodus.hud.add("A huge swirling Whirlpool engulfs you and your ship dragging both to a watery grave!");
                         Exodus.hud.add("As the water enters your lungs you pass into Darkness!");
                         Exodus.hud.add("You awaken on the shores of a forgotten Land.");
                         Exodus.hud.add("Your ship and crew lost to the sea!");
@@ -907,7 +907,7 @@ public class BaseMap implements Constants {
         }
 
         if (expPoints > 0) {
-            p.getMember(0).awardXP(expPoints);
+            pm.awardXP(expPoints);
         }
 
         if (added) {

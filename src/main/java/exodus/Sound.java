@@ -37,7 +37,7 @@ public enum Sound {
     RAGE("RageOfGod.ogg", false, 0.3f),
     DIVINE_INTERVENTION("divineint.ogg", false, 0.3f),
     WAVE("chaowave.ogg", false, 0.3f),
-
+    GIGGLE("giggle.mp3", false, 0.3f),
     //music
     SPLASH("Exodus.mp3", true, 0.1f),
     OUTSIDE("Wander.mp3", true, 0.1f),

@@ -260,40 +260,6 @@ public class CombatScreen extends BaseScreen {
 
         return ncreatures;
     }
-
-    public void setAmbushingMonsters(BaseScreen returnScreen, int x, int y, TextureAtlas a1) {
-
-        CreatureType ct = Exodus.creatures.getRandomAmbushing();
-        fillCreatureTable(ct);
-
-        MapLayer mLayer = tmap.getLayers().get("Monster Positions");
-        Iterator<MapObject> iter = mLayer.getObjects().iterator();
-        while (iter.hasNext()) {
-            MapObject obj = iter.next();
-            int index = (Integer) obj.getProperties().get("index");
-            int startX = (Integer) obj.getProperties().get("startX");
-            int startY = (Integer) obj.getProperties().get("startY");
-
-            if (crSlots[index] == null) {
-                continue;
-            }
-
-            Creature c = creatureSet.getInstance(crSlots[index], a1);
-
-            c.currentX = startX;
-            c.currentY = startY;
-            c.currentPos = getMapPixelCoords(startX, startY);
-
-            combatMap.addCreature(c);
-        }
-
-        //for the chest when returning after combat
-        returnScreen.currentEncounter = creatureSet.getInstance(ct, a1);
-        returnScreen.currentEncounter.currentX = x;
-        returnScreen.currentEncounter.currentY = y;
-        returnScreen.currentEncounter.currentPos = returnScreen.getMapPixelCoords(x, y);
-
-    }
     
     @Override
     public Vector3 getMapPixelCoords(int x, int y) {

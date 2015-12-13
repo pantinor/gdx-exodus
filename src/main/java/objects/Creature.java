@@ -20,7 +20,6 @@ import util.XORShiftRandom;
 @XmlRootElement(name = "creature")
 public class Creature implements Constants {
 
-    private boolean ambushes;
     private boolean camouflage;
     private String camouflageTile;
     private boolean canMoveOntoAvatar;
@@ -57,10 +56,8 @@ public class Creature implements Constants {
     private String steals;
     private boolean swims;
     private boolean teleports;
-
     private boolean undead;
     private boolean wontattack;
-    private String worldrangedtile;
 
     private CreatureType tile;
     private Animation anim;
@@ -78,7 +75,6 @@ public class Creature implements Constants {
     }
 
     public Creature(Creature clone) {
-        this.ambushes = clone.ambushes;
         this.camouflage = clone.camouflage;
 
         this.isVisible = !this.camouflage;
@@ -118,15 +114,9 @@ public class Creature implements Constants {
         this.teleports = clone.teleports;
         this.undead = clone.undead;
         this.wontattack = clone.wontattack;
-        this.worldrangedtile = clone.worldrangedtile;
         this.tile = clone.tile;
 
         setRandomRanged();
-    }
-
-    @XmlAttribute
-    public boolean getAmbushes() {
-        return ambushes;
     }
 
     @XmlAttribute
@@ -300,15 +290,6 @@ public class Creature implements Constants {
         return wontattack;
     }
 
-    @XmlAttribute
-    public String getWorldrangedtile() {
-        return worldrangedtile;
-    }
-
-    public void setAmbushes(boolean ambushes) {
-        this.ambushes = ambushes;
-    }
-
     public void setBasehp(int basehp) {
         this.basehp = basehp;
     }
@@ -443,10 +424,6 @@ public class Creature implements Constants {
 
     public void setWontattack(boolean wontattack) {
         this.wontattack = wontattack;
-    }
-
-    public void setWorldrangedtile(String worldrangedtile) {
-        this.worldrangedtile = worldrangedtile;
     }
 
     public int getHP() {

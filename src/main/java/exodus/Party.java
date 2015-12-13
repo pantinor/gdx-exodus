@@ -292,6 +292,7 @@ public class Party extends Observable implements Constants {
                     break;
                 case LAVA:
                 case FIRE:
+                case GREMLINS:
                 case SLEEP:
                     if (rand.nextInt(2) == 0) {
                         members.get(i).applyEffect(effect);
@@ -310,6 +311,9 @@ public class Party extends Observable implements Constants {
     public void applyEffect(PartyMember pm, TileEffect effect) throws PartyDeathException {
         switch (effect) {
             case NONE:
+                break;
+            case GREMLINS:
+                pm.player.food = Utils.adjustValue(pm.player.food, -2, 999900, 0);
                 break;
             case ELECTRICITY:
                 pm.applyEffect(effect);
@@ -370,6 +374,9 @@ public class Party extends Observable implements Constants {
 
             switch (effect) {
                 case NONE:
+                    break;
+                case GREMLINS:
+                    applyDamage(16 + (rand.nextInt(32)), false);
                     break;
                 case LAVA:
                 case FIRE:
@@ -621,20 +628,20 @@ public class Party extends Observable implements Constants {
                 if (member.player.status != StatusType.DEAD) {
                     member.player.submorsels -= 10;
                     if (member.player.submorsels < 0) {
-                        
+
                         member.player.submorsels = 100;
                         member.player.food = Utils.adjustValue(member.player.food, -1, 999900, 0);
-                        
+
                         if (member.player.status == StatusType.POISONED) {
                             member.applyDamage(1, false);
                         } else {
                             member.player.health = Utils.adjustValue(member.player.health, 1, member.player.getMaxHealth(), 0);
                         }
-                        
+
                         if (!member.isDisabled() && member.player.mana < member.player.getMaxMana()) {
                             member.player.mana++;
                         }
-                        
+
                         if (member.player.food == 0) {
                             member.applyDamage(1, false);
                         }
@@ -706,10 +713,10 @@ public class Party extends Observable implements Constants {
 
             sb1.append("| ");
 
-            sb1.append("|MARK KINGS: ").append(p.marks[0]).append(" MARK SNAKE: ").append(p.marks[1]);
-            sb1.append("|MARK FIRE: ").append(p.marks[2]).append(" MARK FORCE: ").append(p.marks[3]);
+            sb1.append("|MARK KINGS: ").append(p.marks[0]).append(" MARK SNAKE: ").append(p.marks[2]);
+            sb1.append("|MARK FIRE: ").append(p.marks[1]).append(" MARK FORCE: ").append(p.marks[3]);
             sb1.append("|CARD DEATH: ").append(p.cards[0]).append(" CARD SOL: ").append(p.cards[1]);
-            sb1.append("|CARD LOVE: ").append(p.cards[2]).append(" CARD MOONS: ").append(p.cards[3]);
+            sb1.append("|CARD LOVE: ").append(p.cards[3]).append(" CARD MOONS: ").append(p.cards[2]);
 
             sb1.append("~");
         }

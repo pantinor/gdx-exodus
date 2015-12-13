@@ -186,13 +186,13 @@ public class GameScreen extends BaseScreen {
             context.setParty(party);
             //context.loadJournalEntries();
 
-            //party.getMember(0).getPlayer().exp = 315;
-            //party.getMember(0).getPlayer().keys = 50;
-            //party.getMember(0).getPlayer().gems = 50;
+            party.getMember(0).getPlayer().torches = 5;
+            party.getMember(0).getPlayer().keys = 50;
+            party.getMember(0).getPlayer().gems = 50;
 
             //load the surface world first
-            loadNextMap(Maps.SOSARIA, sg.partyX, sg.partyY);
-            //loadNextMap(Maps.AMBROSIA, 15, 59);
+            //loadNextMap(Maps.SOSARIA, sg.partyX, sg.partyY);
+            loadNextMap(Maps.SOSARIA, 224, 25);
 
             //load the dungeon if save game starts in dungeon
             if (Maps.get(sg.location) != Maps.SOSARIA) {

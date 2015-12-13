@@ -81,7 +81,7 @@ public class DungeonScreen extends BaseScreen {
 
     boolean showMiniMap = true;
 
-    boolean isTorchOn = true;
+    boolean isTorchOn = false;
     private Vector3 vdll = new Vector3(.04f, .04f, .04f);
     private Vector3 nll2 = new Vector3(1f, 0.8f, 0.6f);
     private Vector3 nll = new Vector3(.96f, .58f, 0.08f);
@@ -484,7 +484,7 @@ public class DungeonScreen extends BaseScreen {
         Exodus.font.draw(batch, this.dngMap.getLabel(), 315, Exodus.SCREEN_HEIGHT - 7);
         Exodus.font.draw(batch, "Level " + (currentLevel + 1), 515, Exodus.SCREEN_HEIGHT - 7);
         if (showZstats > 0) {
-            //context.getParty().getSaveGame().renderZstats(showZstats, Exodus.font, batch, Exodus.SCREEN_HEIGHT);
+            context.getParty().renderZstats(showZstats, Exodus.font, batch, Exodus.SCREEN_HEIGHT);
         }
         batch.end();
 
@@ -716,7 +716,7 @@ public class DungeonScreen extends BaseScreen {
         }
     }
 
-    public void moveMiniMapIcon() {
+    private void moveMiniMapIcon() {
         miniMapIcon.setX(xalignMM + OFST + (Math.round(currentPos.x) - 1) * DIM);
         miniMapIcon.setY(yalignMM + MM_BKGRND_DIM - OFST - (Math.round(currentPos.z)) * DIM);
     }
@@ -994,8 +994,14 @@ public class DungeonScreen extends BaseScreen {
             //Gdx.input.setInputProcessor(new SpellInputProcessor(this, context, stage, x, y, null));
 
         } else if (keycode == Keys.I) {
-
-            isTorchOn = !isTorchOn;
+            
+            for (Party.PartyMember pm : context.getParty().getMembers()) {
+                if (pm.getPlayer().torches > 0) {
+                    pm.getPlayer().torches--;
+                    isTorchOn = !isTorchOn;
+                    break;
+                }
+            }
 
         } else if (keycode == Keys.G || keycode == Keys.R || keycode == Keys.W) {
             log("Which party member?");
@@ -1038,15 +1044,15 @@ public class DungeonScreen extends BaseScreen {
 //            }
 
         } else if (keycode == Keys.Z) {
-//            showZstats = showZstats + 1;
-//            if (showZstats >= STATS_PLAYER1 && showZstats <= STATS_PLAYER8) {
-//                if (showZstats > context.getParty().getMembers().size()) {
-//                    showZstats = STATS_WEAPONS;
-//                }
-//            }
-//            if (showZstats > STATS_SPELLS) {
-//                showZstats = STATS_NONE;
-//            }
+            showZstats = showZstats + 1;
+            if (showZstats >= STATS_PLAYER1 && showZstats <= STATS_PLAYER4) {
+                if (showZstats > context.getParty().getMembers().size()) {
+                    showZstats = STATS_SPELLS;
+                }
+            }
+            if (showZstats > STATS_SPELLS) {
+                showZstats = STATS_NONE;
+            }
             return false;
 
         } else {
@@ -1094,6 +1100,12 @@ public class DungeonScreen extends BaseScreen {
                 log("Pit!");
                 context.getParty().applyEffect(TileEffect.LAVA);
                 Sounds.play(Sound.BOOM);
+                dungeonTiles[currentLevel][x][y] = DungeonTile.NOTHING;
+                break;
+            case GREMLINS:
+                log("Gremlins!");
+                context.getParty().applyEffect(TileEffect.GREMLINS);
+                Sounds.play(Sound.GIGGLE);
                 dungeonTiles[currentLevel][x][y] = DungeonTile.NOTHING;
                 break;
             case FIELD_POISON:
