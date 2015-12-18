@@ -10,6 +10,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import exodus.Party.PartyMember;
@@ -67,6 +68,9 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                 break;
             case Keys.W:
                 screen.log("WEAR> Which party member? ");
+                break;
+            case Keys.Y:
+                screen.log("YELL> Which party member? ");
                 break;
 
         }
@@ -143,14 +147,14 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                                 Gdx.input.setInputProcessor(stage);
                                 dialog = new ConversationDialog(this.member, p, (GameScreen) screen, stage).show(stage);
                             } else if (p.getTile().getName().equals("lord_british")) {
-                                
+
                                 if (this.member.getPlayer().meetLordBritish()) {
                                     Sounds.play(Sound.MAGIC);
                                     screen.log("Lord British says:\nThou hast been advanced!");
                                 } else {
                                     screen.log("Lord British says:\nWelcome my child..\nExperience more! ");
                                 }
-                                
+
                             } else if (p.getConversation() != null) {
                                 screen.log(p.getConversation());
                             } else {
@@ -193,7 +197,7 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                 } else {
                     screen.log("Nobody selected!");
                 }
-                
+
             } else if (initialKeyCode == Keys.S) {
 
                 if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
@@ -204,6 +208,16 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                         screen.log("Nothing here!");
                     }
                     return false;
+                }
+
+            } else if (initialKeyCode == Keys.Y) {
+
+                if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
+                    screen.log("What do you say?");
+                    Gdx.input.setInputProcessor(new YellInputAdapter(screen.context.getParty().getMember(keycode - 7 - 1), gameScreen));
+                    return false;
+                } else {
+                    screen.log("Nobody selected!");
                 }
 
             } else if (initialKeyCode == Keys.R) {
@@ -357,7 +371,7 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
         return false;
     }
 
-    public class ReadyWearInputAdapter extends InputAdapter {
+    private class ReadyWearInputAdapter extends InputAdapter {
 
         boolean ready;
         PartyMember pm;
@@ -412,6 +426,63 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
             }
             Gdx.input.setInputProcessor(new InputMultiplexer(screen, stage));
             screen.finishTurn(currentX, currentY);
+            return false;
+        }
+    }
+
+    private class YellInputAdapter extends InputAdapter {
+
+        GameScreen screen;
+        StringBuilder buffer = new StringBuilder();
+        PartyMember pm;
+
+        public YellInputAdapter(PartyMember pm, GameScreen screen) {
+            this.screen = screen;
+            this.pm = pm;
+        }
+
+        @Override
+        public boolean keyUp(int keycode) {
+            if (keycode == Keys.ENTER) {
+                if (buffer.length() < 1) {
+                    return false;
+                }
+                String text = buffer.toString().toUpperCase();
+
+                switch (text) {
+                    case "EVOCARE":
+                        Tile north = bm.getTile(currentX, currentY - 1);
+                        Tile south = bm.getTile(currentX, currentY + 1);
+                        if (north.getName().startsWith("GreatEarthSerpent") || south.getName().startsWith("GreatEarthSerpent")) {
+                            if (pm.getPlayer().marks[2] > 0) {
+                                Sounds.play(Sound.ROCKS);
+                                this.screen.replaceTile("water", 41, 230);
+                                this.screen.replaceTile("water", 41, 231);
+                            } else {
+                                Sounds.play(Sound.NEGATIVE_EFFECT);
+                                screen.log("No effect.");
+                            }
+                        } else {
+                            screen.log("No effect.");
+                        }
+                        break;
+                    default:
+                        screen.log("What?");
+                        break;
+                }
+
+                Gdx.input.setInputProcessor(new InputMultiplexer(screen, stage));
+                screen.finishTurn(currentX, currentY);
+
+            } else if (keycode == Keys.BACKSPACE) {
+                if (buffer.length() > 0) {
+                    buffer.deleteCharAt(buffer.length() - 1);
+                    screen.logDeleteLastChar();
+                }
+            } else if (keycode >= 29 && keycode <= 54) {
+                buffer.append(Keys.toString(keycode).toUpperCase());
+                screen.logAppend(Keys.toString(keycode).toUpperCase());
+            }
             return false;
         }
     }

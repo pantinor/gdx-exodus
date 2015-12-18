@@ -673,7 +673,7 @@ public class Utils implements Constants {
 
         } else if (target.x == avatarX && target.y == avatarY) {
 
-            if (context.getTransportContext() == TransportContext.SHIP) {
+            if (context.getTransport() == Transport.SHIP) {
                 context.damageShip(-1, 10);
             } else {
                 //context.getParty().damageParty(10, 25);

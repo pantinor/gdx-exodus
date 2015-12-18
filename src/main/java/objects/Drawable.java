@@ -20,7 +20,7 @@ public class Drawable extends Actor {
 
     //drawable is used for ships
     private int shipHull = 50;
-
+    
     public Drawable(BaseMap map, int cx, int cy, Tile tile, TextureAtlas atlas) {
         super();
         this.cx = cx;

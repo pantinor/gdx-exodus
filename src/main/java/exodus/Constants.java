@@ -153,15 +153,13 @@ public interface Constants {
         sailable(0x000008),
         unflyable(0x000010),
         rangeattackover(0x000020),
-        canlandballoon(0x000040),
         chest(0x000080),
         dispelable(0x000100),
         door(0x000200),
         horse(0x000400),
         ship(0x000800),
-        balloon(0x001000),
         replacement(0x002000),
-        onWaterOnlyReplacement(0x004000),
+        snake(0x004000),
         livingthing(0x008000),
         lockeddoor(0x010000),
         secretdoor(0x040000);
@@ -179,10 +177,10 @@ public interface Constants {
     public enum TileRule {
 
         none(0),
-        water(TileAttrib.unwalkable.getVal() | TileAttrib.swimmable.getVal() | TileAttrib.sailable.getVal() | TileAttrib.onWaterOnlyReplacement.getVal() | TileAttrib.rangeattackover.getVal()),
-        shallows(TileAttrib.unwalkable.getVal() | TileAttrib.swimmable.getVal() | TileAttrib.onWaterOnlyReplacement.getVal() | TileAttrib.rangeattackover.getVal()),
+        water(TileAttrib.unwalkable.getVal() | TileAttrib.swimmable.getVal() | TileAttrib.sailable.getVal() | TileAttrib.rangeattackover.getVal()),
+        shallows(TileAttrib.unwalkable.getVal() | TileAttrib.swimmable.getVal() | TileAttrib.rangeattackover.getVal()),
         swamp(0, TileSpeed.SLOW, TileEffect.POISON),
-        grass(TileAttrib.canlandballoon.getVal() | TileAttrib.replacement.getVal()),
+        grass(TileAttrib.replacement.getVal()),
         brush(0, TileSpeed.VSLOW, TileEffect.NONE),
         hills(0, TileSpeed.VVSLOW, TileEffect.NONE),
         mountains(TileAttrib.unwalkable.getVal() | TileAttrib.unflyable.getVal() | TileAttrib.creatureunwalkable.getVal()),
@@ -191,7 +189,6 @@ public interface Constants {
         ship(TileAttrib.ship.getVal() | TileAttrib.creatureunwalkable.getVal()),
         horse(TileAttrib.horse.getVal() | TileAttrib.creatureunwalkable.getVal()),
         floors(TileAttrib.replacement.getVal()),
-        balloon(TileAttrib.balloon.getVal() | TileAttrib.creatureunwalkable.getVal()),
         person(TileAttrib.livingthing.getVal() | TileAttrib.unwalkable.getVal()),
         solid(TileAttrib.unwalkable.getVal() | TileAttrib.rangeattackover.getVal()),
         walls(TileAttrib.unwalkable.getVal() | TileAttrib.unflyable.getVal()),
@@ -206,6 +203,7 @@ public interface Constants {
         lava(TileAttrib.replacement.getVal(), TileSpeed.VVSLOW, TileEffect.LAVA),
         signs(TileAttrib.unwalkable.getVal() | TileAttrib.unflyable.getVal() | TileAttrib.rangeattackover.getVal()),
         spacers(TileAttrib.unwalkable.getVal() | TileAttrib.rangeattackover.getVal()),
+        snake(TileAttrib.snake.getVal() | TileAttrib.unwalkable.getVal() | TileAttrib.swimmable.getVal() | TileAttrib.sailable.getVal()),
         monster(TileAttrib.livingthing.getVal() & TileAttrib.unwalkable.getVal());
 
         private int attribs = 0;
@@ -466,24 +464,10 @@ public interface Constants {
         }
     }
 
-    public enum TransportContext {
-
-        FOOT(0x1),
-        HORSE(0x2),
-        SHIP(0x4),
-        BALLOON(0x8),
-        FOOT_OR_HORSE(0x1 | 0x2),
-        ANY(0xffff);
-
-        private int intValue;
-
-        private TransportContext(int intValue) {
-            this.intValue = intValue;
-        }
-
-        public int getIntValue() {
-            return intValue;
-        }
+    public enum Transport {
+        FOOT,
+        SHIP,
+        HORSE;
     }
 
     public enum DungeonTile {
@@ -1225,8 +1209,8 @@ public interface Constants {
 
     public class AddActorAction implements Runnable {
 
-        private Actor actor;
-        private Stage stage;
+        private final Actor actor;
+        private final Stage stage;
 
         public AddActorAction(Stage stage, Actor actor) {
             this.actor = actor;
@@ -1238,7 +1222,7 @@ public interface Constants {
             stage.addActor(actor);
         }
     }
-
+    
     public class PlaySoundAction implements Runnable {
 
         private Sound s;

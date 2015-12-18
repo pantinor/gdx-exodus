@@ -10,8 +10,6 @@ import objects.Portal;
 import objects.Tile;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import exodus.Party.PartyMember;
 import java.io.File;
 import java.util.ArrayList;
@@ -35,11 +33,10 @@ public class Context implements Constants {
     private int moonPhase = 0;
     private Direction windDirection = Direction.NORTH;
     private int windCounter;
-    private int balloonMovementCounter;
     private Aura aura = new Aura();
     private int horseSpeed;
     private int opacity;
-    private TransportContext transportContext;
+    private Transport transportContext;
     private Drawable lastShip;
     private Drawable currentShip;
 
@@ -71,14 +68,6 @@ public class Context implements Constants {
         windCounter = v;
     }
 
-    public int incrementBalloonCounter() {
-        return ++balloonMovementCounter;
-    }
-
-    public void setBalloonCounter(int v) {
-        balloonMovementCounter = v;
-    }
-
     public int getHorseSpeed() {
         return horseSpeed;
     }
@@ -87,7 +76,7 @@ public class Context implements Constants {
         return opacity;
     }
 
-    public TransportContext getTransportContext() {
+    public Transport getTransport() {
         return transportContext;
     }
 
@@ -115,7 +104,17 @@ public class Context implements Constants {
         this.opacity = opacity;
     }
 
-    public void setTransportContext(TransportContext transportContext) {
+    public void setTransport(int idx) {
+        if (idx == 1) {
+            this.transportContext = Transport.SHIP;
+        } else if (idx == 2) {
+            this.transportContext = Transport.HORSE;
+        } else {
+            this.transportContext = Transport.FOOT;
+        }
+    }
+
+    public void setTransport(Transport transportContext) {
         this.transportContext = transportContext;
     }
 
@@ -192,10 +191,11 @@ public class Context implements Constants {
             party.getSaveGame().orientation = orientation.getVal() - 1;
         }
 
+        party.getSaveGame().transport = this.transportContext.ordinal();
         party.getSaveGame().location = map.getId();
 
         party.getSaveGame().resetMonsters();
-        
+
         Drawable[] objects = new Drawable[24];
         int count = 0;
         for (Drawable d : Maps.SOSARIA.getMap().getObjects()) {
@@ -205,7 +205,7 @@ public class Context implements Constants {
             }
             count++;
         }
-        
+
         for (int i = 0; i < 24; i++) {
             if (objects[i] != null) {
                 party.getSaveGame().objects_save_tileids[i] = (byte) objects[i].getTile().getIndex();
@@ -224,7 +224,6 @@ public class Context implements Constants {
             party.getSaveGame().monster_save_x[i] = (byte) monsters.get(i).currentX;
             party.getSaveGame().monster_save_y[i] = (byte) monsters.get(i).currentY;
         }
-        
 
         try {
             party.getSaveGame().write(PARTY_SAV_BASE_FILENAME);
@@ -294,9 +293,8 @@ public class Context implements Constants {
         return slow;
     }
 
-
     public void damageShip(int minDamage, int maxDamage) {
-        if (transportContext == TransportContext.SHIP) {
+        if (transportContext == Transport.SHIP) {
             int damage = minDamage >= 0 && minDamage < maxDamage ? rand.nextInt(maxDamage + 1 - minDamage) + minDamage : maxDamage;
             party.adjustShipHull(-damage);
         }
@@ -381,17 +379,17 @@ public class Context implements Constants {
     }
 
     public Maps getCombatMap(Creature c, BaseMap bm, int creatureX, int creatureY, int avatarX, int avatarY) {
-        
+
         Maps cm = bm.getTile(creatureX, creatureY).getCombatMap();
         TileRule ptr = bm.getTile(avatarX, avatarY).getRule();
-        
+
         if (c.getSwims() && !ptr.has(TileAttrib.unwalkable)) {
             cm = Maps.SHORE_CON;
         } else if (c.getSails() && !ptr.has(TileAttrib.unwalkable)) {
             cm = Maps.SHORSHIP_CON;
         }
 
-        if (transportContext == TransportContext.SHIP) {
+        if (transportContext == Transport.SHIP) {
             if (c.getSwims()) {
                 cm = Maps.SHIPSEA_CON;
             } else if (c.getSails()) {
@@ -402,7 +400,7 @@ public class Context implements Constants {
         }
 
         return cm;
-        
+
     }
 
     public long getLastCommandTime() {

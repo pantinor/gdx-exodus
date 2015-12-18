@@ -77,7 +77,7 @@ public class CombatScreen extends BaseScreen {
     private SecondaryInputProcessor sip;
 
     private Viewport mapViewPort;
-    
+
     private boolean wounded;
 
     public CombatScreen(BaseScreen returnScreen, Context context, Maps contextMap,
@@ -102,10 +102,10 @@ public class CombatScreen extends BaseScreen {
         MapProperties prop = tmap.getProperties();
         mapPixelHeight = prop.get("height", Integer.class) * tilePixelHeight;
 
-        camera = new OrthographicCamera(11*tilePixelWidth, 11*tilePixelHeight);
-        
+        camera = new OrthographicCamera(11 * tilePixelWidth, 11 * tilePixelHeight);
+
         mapViewPort = new ScreenViewport(camera);
-        
+
         stage = new Stage();
         stage.setViewport(mapViewPort);
 
@@ -155,7 +155,7 @@ public class CombatScreen extends BaseScreen {
             if (index >= party.getMembers().size()) {
                 continue;
             }
-            
+
             String t = party.getMember(index).getPlayer().profession.getTile();
             Creature c = creatureSet.getInstance(CreatureType.get(t), a1);
             c.currentX = startX;
@@ -234,12 +234,13 @@ public class CombatScreen extends BaseScreen {
     private int getNumberOfCreatures(CreatureType ct) {
         int ncreatures = 0;
 
-        if (contextMap == Maps.SOSARIA || contextMap.getMap().getType() == MapType.dungeon) {
-
+        if (ct.getCreature().getTile() == CreatureType.guard) {
+            ncreatures = party.getMembers().size() * 2;
+        } else {
             ncreatures = rand.nextInt(8) + 1;
 
             if (ncreatures == 1) {
-                if (ct != null && ct.getCreature().getEncounterSize() > 0) {
+                if (ct.getCreature().getEncounterSize() > 0) {
                     ncreatures = rand.nextInt(ct.getCreature().getEncounterSize()) + ct.getCreature().getEncounterSize() + 1;
                 } else {
                     ncreatures = 8;
@@ -249,18 +250,11 @@ public class CombatScreen extends BaseScreen {
             while (ncreatures > 2 * party.getMembers().size()) {
                 ncreatures = rand.nextInt(16) + 1;
             }
-
-        } else {
-            if (ct != null && ct.getCreature().getTile() == CreatureType.guard) {
-                ncreatures = party.getMembers().size() * 2;
-            } else {
-                ncreatures = 1;
-            }
         }
 
         return ncreatures;
     }
-    
+
     @Override
     public Vector3 getMapPixelCoords(int x, int y) {
         Vector3 v = new Vector3(x * tilePixelWidth, mapPixelHeight - y * tilePixelHeight - tilePixelHeight, 0);
@@ -278,17 +272,17 @@ public class CombatScreen extends BaseScreen {
         time += delta;
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        
-        camera.position.set(newMapPixelCoords.x+5*tilePixelWidth,newMapPixelCoords.y,0);
+
+        camera.position.set(newMapPixelCoords.x + 5 * tilePixelWidth, newMapPixelCoords.y, 0);
 
         camera.update();
-        
-        renderer.setView(camera.combined, 
-                camera.position.x - tilePixelWidth*10, //this is voodoo
-                camera.position.y - tilePixelHeight*10, 
-                Exodus.MAP_WIDTH, 
+
+        renderer.setView(camera.combined,
+                camera.position.x - tilePixelWidth * 10, //this is voodoo
+                camera.position.y - tilePixelHeight * 10,
+                Exodus.MAP_WIDTH,
                 Exodus.MAP_HEIGHT);
-        
+
         renderer.render();
 
         renderer.getBatch().begin();
@@ -297,14 +291,14 @@ public class CombatScreen extends BaseScreen {
                 continue;
             }
             renderer.getBatch().draw(cr.getAnim().getKeyFrame(time, true), cr.currentPos.x, cr.currentPos.y);
-            renderer.getBatch().draw(cr.getHealthBar(), cr.currentPos.x, cr.currentPos.y-4);
+            renderer.getBatch().draw(cr.getHealthBar(), cr.currentPos.x, cr.currentPos.y - 4);
         }
 
         for (PartyMember p : party.getMembers()) {
             if (p.combatCr == null || p.combatCr.currentPos == null || p.fled) {
                 continue;
             }
-            
+
             if (p.getPlayer().status != StatusType.DEAD) {
                 renderer.getBatch().draw(p.combatCr.getAnim().getKeyFrame(time, true), p.combatCr.currentPos.x, p.combatCr.currentPos.y);
             } else {
@@ -334,7 +328,7 @@ public class CombatScreen extends BaseScreen {
         stage.draw();
 
     }
-    
+
     @Override
     public void resize(int width, int height) {
         mapViewPort.update(width, height, false);
@@ -427,12 +421,12 @@ public class CombatScreen extends BaseScreen {
     }
 
     private void checkTileAffects(PartyMember ap, int x, int y) throws PartyDeathException {
-        
+
         Tile tile = combatMap.getTile(x, y);
         if (tile == null || tile.getRule() == null) {
             return;
         }
-        
+
         TileEffect effect = tile.getRule().getEffect();
         context.getParty().applyEffect(ap, effect);
         if (effect == TileEffect.FIRE || effect == TileEffect.LAVA) {
@@ -479,9 +473,9 @@ public class CombatScreen extends BaseScreen {
 
         if (next.x > combatMap.getWidth() - 1 || next.x < 0 || next.y > combatMap.getHeight() - 1 || next.y < 0) {
 
-                Sounds.play(Sound.BLOCKED);
-                return false;
-            
+            Sounds.play(Sound.BLOCKED);
+            return false;
+
 //            if (combatMap.getType() == MapType.dungeon && !party.isOKtoExitDirection(dir)) {
 //                log("Cannot exit in that direction!");
 //                Sounds.play(Sound.BLOCKED);
@@ -501,7 +495,6 @@ public class CombatScreen extends BaseScreen {
 //                    cursor.setPos(nextActivePlayer.currentPos);
 //                }
 //            }
-
         } else {
 
             int mask = combatMap.getValidMovesMask(context, x, y);
@@ -752,7 +745,7 @@ public class CombatScreen extends BaseScreen {
             action = CombatAction.RANGED;
         } else if (creature.castsSleep() && rand.nextInt(100) <= 25 && context.getAura().getType() != AuraType.NEGATE) {
             action = CombatAction.CAST_SLEEP;
-        //} else if (creature.getDamageStatus() == CreatureStatus.FLEEING) {
+            //} else if (creature.getDamageStatus() == CreatureStatus.FLEEING) {
             //action = CombatAction.FLEE;
         } else {
             action = CombatAction.ATTACK;
@@ -782,7 +775,7 @@ public class CombatScreen extends BaseScreen {
                 if (Utils.attackHit(creature, target) == AttackResult.HIT) {
                     Sounds.play(Sound.PC_STRUCK);
                     wounded = true;
-                    
+
                     if (!Utils.dealDamage(creature, target)) {
                         target = null;
                     }
@@ -803,9 +796,9 @@ public class CombatScreen extends BaseScreen {
             }
 
             case TELEPORT: {//only wisp teleports
-	        boolean valid = false;
-	        int rx=0, ry=0, count=0;
-	        while (!valid && count < 5) {
+                boolean valid = false;
+                int rx = 0, ry = 0, count = 0;
+                while (!valid && count < 5) {
                     rx = rand.nextInt(combatMap.getWidth());
                     ry = rand.nextInt(combatMap.getHeight());
                     Tile t = combatMap.getTile(rx, ry);
@@ -817,11 +810,11 @@ public class CombatScreen extends BaseScreen {
                         }
                     }
                     count++;
- 	        }
+                }
                 if (valid) {
                     moveCreature(action, creature, rx, ry);
                 }
-	        break;
+                break;
             }
 
             case RANGED: {
@@ -830,7 +823,7 @@ public class CombatScreen extends BaseScreen {
                 int dirmask = Utils.getRelativeDirection(MapBorderBehavior.fixed, combatMap.getWidth(), combatMap.getHeight(), target.combatCr.currentX, target.combatCr.currentY, creature.currentX, creature.currentY);
 
                 Sounds.play(Sound.NPC_ATTACK);
-                
+
                 List<AttackVector> path = Utils.getDirectionalActionPath(combatMap, dirmask, creature.currentX, creature.currentY, 1, 11, false, false, false);
                 for (AttackVector v : path) {
                     if (rangedAttackAt(v, creature)) {

@@ -63,9 +63,9 @@
     <creature id="52" encounterSize="1" name="Balron" tile="balron"         basehp="255" exp="20" ranged="true" rangedhittile="poison_field" rangedmisstile="poison_field" flies="true" resists="fire" />
     <creature id="33" encounterSize="1" name="Reaper" tile="reaper"         basehp="255" exp="20" ranged="true" rangedhittile="random" rangedmisstile="random" movement="none" />
 
-    <creature id="60" encounterSize="6" name="Grass" tile="grass"           basehp="48" exp="4" />
+    <creature id="60" encounterSize="6" name="Grass" tile="grass"           basehp="48" exp="4" nochest="true"/>
     <creature id="61" encounterSize="6" name="Chest" tile="chest"           basehp="48" exp="4" />
-    <creature id="62" encounterSize="6" name="Floor" tile="brick_floor"     basehp="48" exp="4" />
+    <creature id="62" encounterSize="6" name="Floor" tile="brick_floor"     basehp="48" exp="4" nochest="true"/>
     <creature id="63" name="Cleric" tile="cleric"                           basehp="64" exp="10" good="true" wontattack="true" />
         
 </creatures>

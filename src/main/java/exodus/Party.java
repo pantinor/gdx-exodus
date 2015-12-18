@@ -15,7 +15,6 @@ import objects.Creature;
 import objects.SaveGame;
 
 import objects.SaveGame.CharacterRecord;
-import objects.Tile;
 
 import util.PartyDeathException;
 import util.Utils;
@@ -26,7 +25,6 @@ public class Party extends Observable implements Constants {
     private SaveGame saveGame;
     private List<PartyMember> members = new ArrayList<>();
     private int activePlayer = 0;
-    private Tile transport;
     private int torchduration;
     private final Random rand = new XORShiftRandom();
     private Context context;
@@ -72,30 +70,6 @@ public class Party extends Observable implements Constants {
 
     public int getActivePlayer() {
         return activePlayer;
-    }
-
-    public Tile getTransport() {
-        return transport;
-    }
-
-    /**
-     * 0x10-ship facing west 0x11-ship facing north 0x12-ship facing east
-     * 0x13-ship facing south 0x14-horse facing west 0x15-horse facing east
-     * 0x18-balloon 0x1f-on foot
-     *
-     * @param transport
-     */
-    public void setTransport(Tile transport) {
-        this.transport = transport;
-        saveGame.transport = transport.getIndex();
-
-        if (transport.getRule().has(TileAttrib.horse)) {
-            context.setTransportContext(TransportContext.HORSE);
-        } else if (transport.getRule().has(TileAttrib.ship)) {
-            context.setTransportContext(TransportContext.SHIP);
-        } else {
-            context.setTransportContext(TransportContext.FOOT);
-        }
     }
 
     public int adjustShipHull(int val) {
@@ -284,27 +258,7 @@ public class Party extends Observable implements Constants {
 
     public void applyEffect(TileEffect effect) throws PartyDeathException {
         for (int i = 0; i < members.size(); i++) {
-            switch (effect) {
-                case NONE:
-                    break;
-                case ELECTRICITY:
-                    members.get(i).applyEffect(effect);
-                    break;
-                case LAVA:
-                case FIRE:
-                case GREMLINS:
-                case SLEEP:
-                    if (rand.nextInt(2) == 0) {
-                        members.get(i).applyEffect(effect);
-                    }
-                    break;
-                case POISONFIELD:
-                case POISON:
-                    if (rand.nextInt(5) == 0) {
-                        members.get(i).applyEffect(effect);
-                    }
-                    break;
-            }
+            members.get(i).applyEffect(effect);
         }
     }
 
@@ -312,13 +266,11 @@ public class Party extends Observable implements Constants {
         switch (effect) {
             case NONE:
                 break;
-            case GREMLINS:
-                pm.player.food = Utils.adjustValue(pm.player.food, -2, 999900, 0);
-                break;
             case ELECTRICITY:
                 pm.applyEffect(effect);
                 break;
             case LAVA:
+            case GREMLINS:
             case FIRE:
             case SLEEP:
                 if (rand.nextInt(2) == 0) {
@@ -376,7 +328,7 @@ public class Party extends Observable implements Constants {
                 case NONE:
                     break;
                 case GREMLINS:
-                    applyDamage(16 + (rand.nextInt(32)), false);
+                    player.food = Utils.adjustValue(player.food, -2, 999900, 0);
                     break;
                 case LAVA:
                 case FIRE:

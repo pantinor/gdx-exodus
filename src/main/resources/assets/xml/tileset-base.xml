@@ -57,8 +57,8 @@
     <tile index="55" name="R" rule="signs" />
     <tile index="56" name="S" rule="signs" />
     <tile index="57" name="T" rule="signs" />
-    <tile index="58" name="GreatEarthSerpent1" rule="solid" />
-    <tile index="59" name="GreatEarthSerpent2" rule="solid" />
+    <tile index="58" name="GreatEarthSerpent1" rule="snake" />
+    <tile index="59" name="GreatEarthSerpent2" rule="snake" />
     <tile index="60" name="magic_flash" rule="none" />
     <tile index="61" name="hit_flash" rule="none" />
     <tile index="62" name="shrine" rule="none" />

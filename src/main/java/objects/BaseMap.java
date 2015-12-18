@@ -49,7 +49,6 @@ public class BaseMap implements Constants {
     private List<Moongate> moongates;
     private List<Person> people;
     private final List<Drawable> objects = new ArrayList<>();
-    ;
 
     private Tile[] tiles;
     private float[][] shadownMap;
@@ -544,11 +543,11 @@ public class BaseMap implements Constants {
                         Exodus.hud.add("As the water enters your lungs you pass into Darkness!");
                         Exodus.hud.add("You awaken on the shores of a forgotten Land.");
                         Exodus.hud.add("Your ship and crew lost to the sea!");
-                        screen.context.getParty().setTransport(Exodus.baseTileSet.getTileByName("grass"));
+                        screen.context.setTransport(Transport.FOOT);
                         screen.loadNextMap(Maps.AMBROSIA, 32, 54);
                         break;
                     } else if (cr.getTile() == CreatureType.twister) {
-                        if (screen.context.getTransportContext() == TransportContext.SHIP) {
+                        if (screen.context.getTransport() == Transport.SHIP) {
                             screen.context.damageShip(10, 30);
                         }
                         continue;
@@ -692,25 +691,35 @@ public class BaseMap implements Constants {
                         canmove = true;
                     }
                 } else {
-                    TransportContext tc = context.getTransportContext();
-                    if (tc == TransportContext.SHIP && this.type != MapType.combat) {
+                    Transport tc = context.getTransport();
+                    if (tc == Transport.SHIP && this.type != MapType.combat) {
                         if (rule.has(TileAttrib.sailable)) {
                             canmove = true;
+                            if (rule.has(TileAttrib.snake)) {
+                                canmove = false;
+                            }
                         } else {
                             canmove = false;
                         }
-                    } else if (tc == TransportContext.HORSE && this.type != MapType.combat) {
+                    } else if (tc == Transport.HORSE && this.type != MapType.combat) {
                         if (!rule.has(TileAttrib.creatureunwalkable) && !rule.has(TileAttrib.unwalkable)) {
                             canmove = true;
                         } else {
                             canmove = false;
                         }
                     } else {
-                        if (!rule.has(TileAttrib.unwalkable) || rule == TileRule.ship || rule.has(TileAttrib.chest) || rule == TileRule.horse) {
+                        if (rule.has(TileAttrib.dispelable)) {
+                            canmove = true;
+                            for (PartyMember pm : context.getParty().getMembers()) {
+                                if (pm.getPlayer().marks[3] == 0) {
+                                    canmove = false;
+                                }
+                            }
+                        } else if (!rule.has(TileAttrib.unwalkable) || rule == TileRule.ship || rule.has(TileAttrib.chest) || rule == TileRule.horse) {
                             canmove = true;
                         }
                         for (Drawable dr : this.objects) {
-                            if (dr.getTile().getRule() == TileRule.ship && dr.getCx() == x && dr.getCy() == y) {
+                            if (dr.getTile() != null && dr.getTile().getRule() == TileRule.ship && dr.getCx() == x && dr.getCy() == y) {
                                 canmove = true;
                                 break;
                             }

@@ -36,6 +36,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
@@ -43,6 +44,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import static exodus.Constants.tilePixelHeight;
+import static exodus.Constants.tilePixelWidth;
 import exodus.Party.PartyMember;
 import java.util.Iterator;
 import util.PartyDeathException;
@@ -73,6 +76,7 @@ public class GameScreen extends BaseScreen {
     public SecondaryInputProcessor sip;
 
     public GameTimer gameTimer = new GameTimer();
+    public ExplosionsTimer explosionsTimer = new ExplosionsTimer();
 
     public GameScreen(Exodus mainGame) {
 
@@ -102,6 +106,11 @@ public class GameScreen extends BaseScreen {
         seq1.addAction(Actions.delay(.25f));
         seq1.addAction(Actions.run(gameTimer));
         stage.addAction(Actions.forever(seq1));
+
+        SequenceAction seq2 = Actions.action(SequenceAction.class);
+        seq2.addAction(Actions.delay(2f));
+        seq2.addAction(Actions.run(explosionsTimer));
+        projectilesStage.addAction(Actions.forever(seq2));
 
         //add 2 whirlpools
         Creature wp = Exodus.creatures.getInstance(CreatureType.whirlpool, Exodus.standardAtlas);
@@ -167,6 +176,60 @@ public class GameScreen extends BaseScreen {
         }
     }
 
+    private static class ExplosionDrawable extends Actor {
+
+        float stateTime;
+
+        @Override
+        public void draw(Batch batch, float parentAlpha) {
+            stateTime += Gdx.graphics.getDeltaTime();
+            batch.draw(Exodus.explosion.getKeyFrame(stateTime, false), getX(), getY(), 64, 64);
+        }
+    }
+
+    public class ExplosionsTimer implements Runnable {
+
+        public boolean active = false;
+
+        @Override
+        public void run() {
+            if (active) {
+                Vector3 ac = getCurrentMapCoords();
+                int dx = Utils.getRandomBetween((int) ac.x - 9, (int) ac.x + 9);
+                int dy = Utils.getRandomBetween((int) ac.y - 9, (int) ac.y + 9);
+                if (dx < 12) {
+                    return;
+                } else if (dx > 52) {
+                    return;
+                }
+                if (dy < 12) {
+                    return;
+                } else if (dy > 52) {
+                    return;
+                }
+                Actor d = new ExplosionDrawable();
+                Vector3 v = getMapPixelCoords(dx, dy);
+                d.setX(v.x);
+                d.setY(v.y);
+
+                SequenceAction seq = Actions.action(SequenceAction.class);
+                seq.addAction(Actions.run(new AddActorAction(projectilesStage, d)));
+                if (Math.abs(ac.x - dx) < 2 && Math.abs(ac.y - dy) < 2) {
+                    seq.addAction(Actions.run(new PlaySoundAction(Sound.BOOM)));
+                    try {
+                        context.getParty().applyEffect(TileEffect.FIRE);
+                    } catch (PartyDeathException ex) {
+                        partyDeath();
+                    }
+                }
+                seq.addAction(Actions.delay(2f));
+                seq.addAction(Actions.removeActor(d));
+
+                projectilesStage.addAction(seq);
+            }
+        }
+    }
+
     @Override
     public void show() {
         Gdx.input.setInputProcessor(new InputMultiplexer(this, stage));
@@ -186,13 +249,19 @@ public class GameScreen extends BaseScreen {
             context.setParty(party);
             //context.loadJournalEntries();
 
-            party.getMember(0).getPlayer().torches = 5;
-            party.getMember(0).getPlayer().keys = 50;
-            party.getMember(0).getPlayer().gems = 50;
+//            party.getMember(0).getPlayer().torches = 5;
+//            party.getMember(0).getPlayer().keys = 50;
+//            party.getMember(0).getPlayer().gems = 50;
+//
+//            party.getMember(0).getPlayer().marks[0] = 1;
+//            party.getMember(0).getPlayer().marks[1] = 1;
+//            party.getMember(0).getPlayer().marks[2] = 1;
+//            party.getMember(0).getPlayer().marks[3] = 1;
 
             //load the surface world first
-            //loadNextMap(Maps.SOSARIA, sg.partyX, sg.partyY);
-            loadNextMap(Maps.SOSARIA, 224, 25);
+            loadNextMap(Maps.SOSARIA, sg.partyX, sg.partyY);
+            //loadNextMap(Maps.SOSARIA, 40, 213);
+            //sg.transport = Transport.SHIP.ordinal();
 
             //load the dungeon if save game starts in dungeon
             if (Maps.get(sg.location) != Maps.SOSARIA) {
@@ -202,24 +271,12 @@ public class GameScreen extends BaseScreen {
                 //loadNextMap(Maps.DELVE_SORROWS, 0, 0, 3, 19, 1, Direction.EAST, true);
             }
 
-            party.setTransport(Exodus.baseTileSet.getTileByIndex(sg.transport));
-
+            context.setTransport(Transport.values()[sg.transport]);
             mainAvatar = avatarAnim;
-
-            switch (sg.transport) {
-                case 31:
-                    mainAvatar = avatarAnim;
-                    break;
-                case 16:
-                case 17:
-                case 18:
-                case 19:
-                    mainAvatar = shipAnim;
-                    break;
-                case 20:
-                case 21:
-                    mainAvatar = horseAnim;
-                    break;
+            if (sg.transport == Transport.SHIP.ordinal()) {
+                mainAvatar = shipAnim;
+            } else if (sg.transport == Transport.HORSE.ordinal()) {
+                mainAvatar = horseAnim;
             }
 
             //load objects to surface stage
@@ -242,11 +299,18 @@ public class GameScreen extends BaseScreen {
             }
         }
 
+        Maps contextMap = Maps.get(context.getCurrentMap().getId());
+        if (contextMap == Maps.EXODUS) {
+            explosionsTimer.active = true;
+        } else {
+            explosionsTimer.active = false;
+        }
     }
 
     @Override
     public void hide() {
         gameTimer.active = false;
+        explosionsTimer.active = false;
     }
 
     public void loadNextMap(Maps m, int x, int y) {
@@ -295,6 +359,13 @@ public class GameScreen extends BaseScreen {
 
             renderer.getFOV().calculateFOV(baseMap.getShadownMap(), x, y, 17f);
             newMapPixelCoords = getMapPixelCoords(x, y);
+
+            Maps contextMap = Maps.get(context.getCurrentMap().getId());
+            if (contextMap == Maps.EXODUS) {
+                explosionsTimer.active = true;
+            } else {
+                explosionsTimer.active = false;
+            }
         }
 
         if (Exodus.playMusic) {
@@ -469,7 +540,7 @@ public class GameScreen extends BaseScreen {
         Tile ct = context.getCurrentMap().getTile(v);
 
         if (keycode == Keys.UP) {
-            if (context.getTransportContext() == TransportContext.SHIP && avatarDirection + 1 != Direction.NORTH.getVal()) {
+            if (context.getTransport() == Transport.SHIP && avatarDirection + 1 != Direction.NORTH.getVal()) {
                 avatarDirection = Direction.NORTH.getVal() - 1;
                 finishTurn((int) v.x, (int) v.y);
                 return false;
@@ -486,7 +557,7 @@ public class GameScreen extends BaseScreen {
             }
             avatarDirection = Direction.NORTH.getVal() - 1;
         } else if (keycode == Keys.RIGHT) {
-            if (context.getTransportContext() == TransportContext.SHIP && avatarDirection + 1 != Direction.EAST.getVal()) {
+            if (context.getTransport() == Transport.SHIP && avatarDirection + 1 != Direction.EAST.getVal()) {
                 avatarDirection = Direction.EAST.getVal() - 1;
                 finishTurn((int) v.x, (int) v.y);
                 return false;
@@ -503,7 +574,7 @@ public class GameScreen extends BaseScreen {
             }
             avatarDirection = Direction.EAST.getVal() - 1;
         } else if (keycode == Keys.LEFT) {
-            if (context.getTransportContext() == TransportContext.SHIP && avatarDirection + 1 != Direction.WEST.getVal()) {
+            if (context.getTransport() == Transport.SHIP && avatarDirection + 1 != Direction.WEST.getVal()) {
                 avatarDirection = Direction.WEST.getVal() - 1;
                 finishTurn((int) v.x, (int) v.y);
                 return false;
@@ -520,7 +591,7 @@ public class GameScreen extends BaseScreen {
             }
             avatarDirection = Direction.WEST.getVal() - 1;
         } else if (keycode == Keys.DOWN) {
-            if (context.getTransportContext() == TransportContext.SHIP && avatarDirection + 1 != Direction.SOUTH.getVal()) {
+            if (context.getTransport() == Transport.SHIP && avatarDirection + 1 != Direction.SOUTH.getVal()) {
                 avatarDirection = Direction.SOUTH.getVal() - 1;
                 finishTurn((int) v.x, (int) v.y);
                 return false;
@@ -537,7 +608,7 @@ public class GameScreen extends BaseScreen {
             }
             avatarDirection = Direction.SOUTH.getVal() - 1;
 
-        } else if (keycode == Keys.F && context.getTransportContext() == TransportContext.SHIP) {
+        } else if (keycode == Keys.F && context.getTransport() == Transport.SHIP) {
 
             log("Fire Cannon > ");
             ShipInputAdapter sia = new ShipInputAdapter(v);
@@ -586,18 +657,18 @@ public class GameScreen extends BaseScreen {
 
         } else if (keycode == Keys.X) {
 
-            if (context.getTransportContext() == TransportContext.SHIP) {
+            if (context.getTransport() == Transport.SHIP) {
                 Tile st = Exodus.baseTileSet.getTileByName("ship");
                 Drawable ship = context.getCurrentMap().addObject(st, (int) v.x, (int) v.y);
                 context.setLastShip(ship);
-            } else if (context.getTransportContext() == TransportContext.HORSE) {
+            } else if (context.getTransport() == Transport.HORSE) {
                 Creature cr = Exodus.creatures.getInstance(CreatureType.horse, Exodus.standardAtlas);
                 cr.currentX = (int) v.x;
                 cr.currentY = (int) v.y;
                 context.getCurrentMap().addCreature(cr);
             }
 
-            context.getParty().setTransport(Exodus.baseTileSet.getTileByIndex(0x1f));
+            context.setTransport(Transport.FOOT);
             mainAvatar = avatarAnim;
 
         } else if (keycode == Keys.M) {
@@ -606,13 +677,13 @@ public class GameScreen extends BaseScreen {
             peerGem();
         } else if (keycode == Keys.U) {
 
-            log("Use Item:");
+            log("Use what:");
             log("");
             ItemInputAdapter iia = new ItemInputAdapter(this);
             Gdx.input.setInputProcessor(iia);
             return false;
 
-        } else if (keycode == Keys.T || keycode == Keys.O || keycode == Keys.J || keycode == Keys.S
+        } else if (keycode == Keys.T || keycode == Keys.O || keycode == Keys.J || keycode == Keys.S || keycode == Keys.Y
                 || keycode == Keys.A || keycode == Keys.G || keycode == Keys.R || keycode == Keys.W) {
             Gdx.input.setInputProcessor(sip);
             sip.setinitialKeyCode(keycode, context.getCurrentMap(), (int) v.x, (int) v.y);
@@ -661,12 +732,12 @@ public class GameScreen extends BaseScreen {
                 return false;
             }
         }
-        
+
         if (context.getCurrentMap().getId() == Maps.AMBROSIA.getId()) {
             Portal p = Maps.AMBROSIA.getMap().getPortal(nx, ny, 0);
             if (p != null && p.getName().equals("WHIRLPOOL")) {
-                int dx = Utils.getRandomBetween(192,212);
-                int dy = Utils.getRandomBetween(0,32);
+                int dx = Utils.getRandomBetween(192, 212);
+                int dy = Utils.getRandomBetween(0, 32);
                 Sounds.play(Sound.WAVE);
                 loadNextMap(Maps.SOSARIA, dx, dy);
                 return false;
@@ -959,7 +1030,7 @@ public class GameScreen extends BaseScreen {
 
     public void board(int x, int y) {
 
-        if (context.getTransportContext() != TransportContext.FOOT) {
+        if (context.getTransport() != Transport.FOOT) {
             log("Board: Can't!");
             return;
         }
@@ -975,7 +1046,7 @@ public class GameScreen extends BaseScreen {
                 }
                 context.setCurrentShip(d);
                 mainAvatar = shipAnim;
-                context.getParty().setTransport(d.getTile());
+                context.setTransport(Transport.SHIP);
                 return;
             }
         }
@@ -985,8 +1056,7 @@ public class GameScreen extends BaseScreen {
             log("Mount Horse!");
             context.getCurrentMap().removeCreature(horse);
             mainAvatar = horseAnim;
-            Tile tile = Exodus.baseTileSet.getTileByName("horse");
-            context.getParty().setTransport(tile);
+            context.setTransport(Transport.HORSE);
             return;
         }
 
@@ -1154,7 +1224,7 @@ public class GameScreen extends BaseScreen {
         }
     }
 
-    public class PeerTelescopeInputAdapter extends InputAdapter {
+    private class PeerTelescopeInputAdapter extends InputAdapter {
 
         Image img;
 
@@ -1186,7 +1256,7 @@ public class GameScreen extends BaseScreen {
         }
     }
 
-    class ItemInputAdapter extends InputAdapter {
+    private class ItemInputAdapter extends InputAdapter {
 
         GameScreen screen;
         StringBuilder buffer = new StringBuilder();
@@ -1251,10 +1321,10 @@ public class GameScreen extends BaseScreen {
     private void checkHullIntegrity(BaseMap bm, int x, int y) {
 
         boolean killAll = false;
-        if (context.getTransportContext() == TransportContext.SHIP && context.getParty().getSaveGame().shiphull <= 0) {
+        if (context.getTransport() == Transport.SHIP && context.getParty().getSaveGame().shiphull <= 0) {
             log("Thy ship sinks!");
             killAll = true;
-        } else if (context.getTransportContext() == TransportContext.FOOT
+        } else if (context.getTransport() == Transport.FOOT
                 && bm.getTile(x, y).getRule() != null
                 && bm.getTile(x, y).getRule().has(TileAttrib.sailable)) {
             //log("Trapped at sea without thy ship, thou dost drown!");
