@@ -249,7 +249,7 @@ public class GameScreen extends BaseScreen {
             context.setParty(party);
             //context.loadJournalEntries();
 
-//            party.getMember(0).getPlayer().torches = 5;
+            party.getMember(0).getPlayer().torches = 5;
 //            party.getMember(0).getPlayer().keys = 50;
 //            party.getMember(0).getPlayer().gems = 50;
 //
@@ -257,6 +257,12 @@ public class GameScreen extends BaseScreen {
 //            party.getMember(0).getPlayer().marks[1] = 1;
 //            party.getMember(0).getPlayer().marks[2] = 1;
 //            party.getMember(0).getPlayer().marks[3] = 1;
+//            
+//            party.getMember(0).getPlayer().cards[0] = 1;
+//            party.getMember(0).getPlayer().cards[1] = 1;
+//            party.getMember(0).getPlayer().cards[2] = 1;
+//            party.getMember(0).getPlayer().cards[3] = 1;
+
 
             //load the surface world first
             loadNextMap(Maps.SOSARIA, sg.partyX, sg.partyY);
@@ -769,8 +775,6 @@ public class GameScreen extends BaseScreen {
                 }
             }
 
-            //checkSpecialCreatures(dir, newx, newy);
-            //checkBridgeTrolls(newx, newy);
         }
 
         renderer.getFOV().calculateFOV(context.getCurrentMap().getShadownMap(), newx, newy, 17f);
@@ -785,7 +789,7 @@ public class GameScreen extends BaseScreen {
 
             checkHullIntegrity(context.getCurrentMap(), currentX, currentY);
 
-            context.getParty().endTurn(context.getCurrentMap().getType());
+            context.getParty().endTurn(Maps.get(context.getCurrentMap().getId()), context.getCurrentMap().getType());
 
             context.getAura().passTurn();
 

@@ -538,7 +538,7 @@ public class CombatScreen extends BaseScreen {
     public void finishTurn(int currentX, int currentY) {
 
         try {
-            party.endTurn(combatMap.getType());
+            party.endTurn(Maps.get(combatMap.getId()), combatMap.getType());
 
             context.getAura().passTurn();
 

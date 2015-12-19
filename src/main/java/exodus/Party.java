@@ -567,7 +567,7 @@ public class Party extends Observable implements Constants {
 
     }
 
-    public void endTurn(MapType mapType) throws PartyDeathException {
+    public void endTurn(Maps map, MapType mapType) throws PartyDeathException {
 
         saveGame.moves++;
 
@@ -576,12 +576,14 @@ public class Party extends Observable implements Constants {
             PartyMember member = members.get(i);
 
             if (mapType != MapType.combat) {
+                
+                int decr_interval = (map == Maps.SOSARIA || map == Maps.EXODUS ? 40 : 10);
 
                 if (member.player.status != StatusType.DEAD) {
-                    member.player.submorsels -= 10;
+                    member.player.submorsels -= decr_interval;
                     if (member.player.submorsels < 0) {
 
-                        member.player.submorsels = 100;
+                        member.player.submorsels = 400;
                         member.player.food = Utils.adjustValue(member.player.food, -1, 999900, 0);
 
                         if (member.player.status == StatusType.POISONED) {
@@ -645,30 +647,47 @@ public class Party extends Observable implements Constants {
 
             sb1.append("| ");
 
-            for (int i = 1; i < p.armors.length; i++) {
+            for (int i = 1; i < p.armors.length -1; i++) {
                 sb1.append("|" + ArmorType.values()[i].getArmor().getName() + ": ").append(p.armors[i]);
                 i++;
-                if (i < p.armors.length) {
+                if (i < p.armors.length-1) {
                     sb1.append(" " + ArmorType.values()[i].getArmor().getName() + ": ").append(p.armors[i]);
                 }
             }
-
-            sb1.append("| ");
-
-            for (int i = 1; i < p.weapons.length; i++) {
-                sb1.append("|" + WeaponType.values()[i].getWeapon().getName() + ": ").append(p.weapons[i]);
-                i++;
-                if (i < p.weapons.length) {
-                    sb1.append(" " + WeaponType.values()[i].getWeapon().getName() + ": ").append(p.weapons[i]);
-                }
+            
+            if (p.armors[ArmorType.EXOTIC.ordinal()] > 0) {
+                sb1.append("|" + ArmorType.values()[ArmorType.EXOTIC.ordinal()].getArmor().getName() + ": ").append(p.armors[ArmorType.EXOTIC.ordinal()]);
             }
 
             sb1.append("| ");
 
-            sb1.append("|MARK KINGS: ").append(p.marks[0]).append(" MARK SNAKE: ").append(p.marks[2]);
-            sb1.append("|MARK FIRE: ").append(p.marks[1]).append(" MARK FORCE: ").append(p.marks[3]);
-            sb1.append("|CARD DEATH: ").append(p.cards[0]).append(" CARD SOL: ").append(p.cards[1]);
-            sb1.append("|CARD LOVE: ").append(p.cards[3]).append(" CARD MOONS: ").append(p.cards[2]);
+            for (int i = 1; i < p.weapons.length-1; i++) {
+                sb1.append("|" + WeaponType.values()[i].getWeapon().getName() + ": ").append(p.weapons[i]);
+                i++;
+                if (i < p.weapons.length-1) {
+                    sb1.append(" " + WeaponType.values()[i].getWeapon().getName() + ": ").append(p.weapons[i]);
+                }
+            }
+            
+            if (p.weapons[WeaponType.EXOTIC.ordinal()] > 0) {
+                sb1.append("|" + WeaponType.values()[WeaponType.EXOTIC.ordinal()].getWeapon().getName() + ": ").append(p.weapons[WeaponType.EXOTIC.ordinal()]);
+            }
+
+            sb1.append("| ");
+            
+            String mk = (p.marks[0] > 0 ? "|MARK KINGS: " + p.marks[0] + " ": "|");
+            String mf = (p.marks[1] > 0 ? "MARK FIRE: " + p.marks[1]: "");
+            String ms = (p.marks[2] > 0 ? "|MARK SNAKE: " + p.marks[2] + " ": "|");
+            String mfo = (p.marks[3] > 0 ? "MARK FORCE: " + p.marks[3]: "");
+            String cd = (p.cards[0] > 0 ? "|CARD DEATH: " + p.cards[0] + " ": "|");
+            String cs = (p.cards[1] > 0 ? "CARD SOL: " + p.cards[1]: "");
+            String cm = (p.cards[2] > 0 ? "|CARD MOONS: " + p.cards[2] + " ": "|");
+            String cl = (p.cards[3] > 0 ? "CARD LOVE: " + p.cards[3]: "");
+
+            sb1.append(mk).append(mf);
+            sb1.append(ms).append(mfo);
+            sb1.append(cd).append(cs);
+            sb1.append(cm).append(cl);
 
             sb1.append("~");
         }

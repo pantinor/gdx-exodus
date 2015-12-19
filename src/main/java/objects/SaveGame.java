@@ -189,7 +189,7 @@ public class SaveGame implements Constants {
         public int health;
         public int exp;
         public int food;
-        public int submorsels = 100;
+        public int submorsels = 400;
         public int gold;
         public int gems;
         public int keys;
