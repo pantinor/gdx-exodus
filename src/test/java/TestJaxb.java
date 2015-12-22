@@ -5,9 +5,7 @@ import exodus.Constants.Maps;
 import static exodus.Constants.PARTY_SAV_BASE_FILENAME;
 import exodus.Context;
 import exodus.Party;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
 import java.util.Random;
 import javax.swing.JOptionPane;
 import javax.xml.bind.JAXBContext;
@@ -19,7 +17,6 @@ import objects.SaveGame.CharacterRecord;
 import objects.Tile;
 import objects.TileSet;
 import org.testng.Assert;
-import org.testng.annotations.Test;
 import vendor.OracleService;
 import vendor.VendorClassSet;
 
@@ -56,9 +53,9 @@ public class TestJaxb {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         int x = 0;
-        
+
 //        sg.pc1 = 0xff;
 //        sg.pc2 = 0xff;
 //        sg.pc3 = 0xff;
@@ -74,59 +71,58 @@ public class TestJaxb {
 //            avatar.qtyWeapons[WeaponType.EXOTIC.ordinal()] = 0xFE;
 //            sg.players[x] = avatar;
 //        }
-
         //sg.write(Constants.PARTY_SAV_BASE_FILENAME);
         //sg.write("test.sav");
     }
-    
+
     //@Test
     public void testAdvanceLevel() throws Exception {
 
         CharacterRecord rec = new CharacterRecord();
         rec.name = "Adventurer";
         rec.exp = 0;
-        
+
         rec.meetLordBritish();
         Assert.assertEquals(rec.getLevel(), 1);
-        
+
         rec.exp = 110;
         Assert.assertEquals(rec.getLevel(), 1);
-        
+
         rec.meetLordBritish();
         Assert.assertEquals(rec.getLevel(), 2);
-        
+
         rec.exp = 175;
         Assert.assertEquals(rec.getLevel(), 2);
-        
+
         rec.meetLordBritish();
         Assert.assertEquals(rec.getLevel(), 2);
-        
+
         rec.exp = 230;
         Assert.assertEquals(rec.getLevel(), 2);
-        
+
         rec.meetLordBritish();
         Assert.assertEquals(rec.getLevel(), 3);
-        
+
         rec.exp = 415;
         Assert.assertEquals(rec.getLevel(), 3);
-        
+
         rec.meetLordBritish();
         Assert.assertEquals(rec.getLevel(), 5);
-        
+
         rec.exp = 515;
         rec.meetLordBritish();
-        Assert.assertEquals(rec.getLevel(), 5); 
-        
+        Assert.assertEquals(rec.getLevel(), 5);
+
         rec.exp = 615;
         rec.meetLordBritish();
         Assert.assertEquals(rec.getLevel(), 5);
-        
+
         rec.marks[0] = 1;
         rec.meetLordBritish();
-        Assert.assertEquals(rec.getLevel(), 7);    
-    
+        Assert.assertEquals(rec.getLevel(), 7);
+
     }
-    
+
     //@Test
     public void testFoodVendor() throws Exception {
 
@@ -136,14 +132,13 @@ public class TestJaxb {
         VendorClassSet vcs = (VendorClassSet) jaxbUnmarshaller.unmarshal(file);
         vcs.init();
 
-
         CharacterRecord rec = new CharacterRecord();
         rec.name = "avatar";
         rec.health = 200;
-        
+
         SaveGame sg = new SaveGame();
         sg.players[0] = rec;
-        
+
         Party party = new Party(sg);
         Context context = new Context();
         context.setParty(party);
@@ -154,7 +149,7 @@ public class TestJaxb {
         OracleService v = new OracleService(vcs.getVendor(InventoryType.ORACLEINFO, Maps.DAWN), context, party.getMember(0));
 
         while (true) {
-            
+
             if (!v.nextDialog()) {
                 break;
             }
@@ -173,7 +168,6 @@ public class TestJaxb {
 
     }
 
-    
     //@Test
     public void testRandDung() throws Exception {
         Random rand = new Random();
@@ -200,6 +194,6 @@ public class TestJaxb {
             System.out.printf("spawned on level %s : %s\n", currentLevel, monster.toString());
         }
     }
-    
-    
+
+
 }

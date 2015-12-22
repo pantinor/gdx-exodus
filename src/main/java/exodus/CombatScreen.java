@@ -53,6 +53,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import exodus.Party.PartyMember;
+import java.util.Map;
 import util.PartyDeathException;
 
 public class CombatScreen extends BaseScreen {
@@ -373,9 +374,15 @@ public class CombatScreen extends BaseScreen {
                 sip.setinitialKeyCode(keycode, combatMap, active.currentX, active.currentY);
                 return false;
             } else if (keycode == Keys.C) {
-                log("Cast Spell (A-Z): ");
-                //Gdx.input.setInputProcessor(new SpellInputProcessor(this, context, stage, active.currentX, active.currentY, ap));
-                return false;
+
+                Map<String, Spell> spellSelection = Spell.getCastables(ap.getPlayer().profession, MapType.combat);
+                if (spellSelection.size() < 1) {
+                    log("No spells to cast!");
+                } else {
+                    Gdx.input.setInputProcessor(new SpellInputProcessor(this, context, stage, spellSelection, ap));
+                    return false;
+                }
+
             } else if (keycode == Keys.U) {
                 Tile tile = combatMap.getTile(active.currentX, active.currentY);
 //                if (tile.getIndex() == 74 //altar

@@ -716,7 +716,7 @@ public class DungeonScreen extends BaseScreen {
         }
     }
 
-    private void moveMiniMapIcon() {
+    public void moveMiniMapIcon() {
         miniMapIcon.setX(xalignMM + OFST + (Math.round(currentPos.x) - 1) * DIM);
         miniMapIcon.setY(yalignMM + MM_BKGRND_DIM - OFST - (Math.round(currentPos.z)) * DIM);
     }
@@ -988,11 +988,6 @@ public class DungeonScreen extends BaseScreen {
             log("Saved Game.");
             return false;
 
-        } else if (keycode == Keys.C) {
-            log("Cast Spell: ");
-            log("Who casts (1-8): ");
-            //Gdx.input.setInputProcessor(new SpellInputProcessor(this, context, stage, x, y, null));
-
         } else if (keycode == Keys.I) {
             
             for (Party.PartyMember pm : context.getParty().getMembers()) {
@@ -1003,20 +998,15 @@ public class DungeonScreen extends BaseScreen {
                 }
             }
 
-        } else if (keycode == Keys.G || keycode == Keys.R || keycode == Keys.W) {
-            log("Which party member?");
+        } else if (keycode == Keys.G || keycode == Keys.R || keycode == Keys.W || keycode == Keys.C) {
+
             Gdx.input.setInputProcessor(sip);
             sip.setinitialKeyCode(keycode, tile, x, y);
 
-        } else if (keycode == Keys.H) {
-            //CombatScreen.holeUp(this.dngMap, x, y, this, context, Exodus.creatures, Exodus.standardAtlas, false);
-            return false;
-
         } else if (keycode == Keys.V) {
+            
             showMiniMap = !showMiniMap;
-        } else if (keycode == Keys.M) {
 
-            //mainGame.setScreen(new MixtureScreen(mainGame, this, Exodus.skin, context.getParty()));
         } else if (keycode == Keys.S) {
             if (tile == DungeonTile.ALTAR) {
 

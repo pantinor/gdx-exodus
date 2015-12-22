@@ -78,9 +78,9 @@ public class LogDisplay {
 
             String d = r.name.toUpperCase() + "  " + r.sex.toString() + " " + r.race.toString() + " " + r.profession.toString();
             Exodus.smallFont.draw(batch, d, LOG_X + 64, y + 65);
-            d = "HEALTH: " + pm.getPlayer().health + " " + pm.getPlayer().status.getId() + "  LEVEL: " + pm.getPlayer().getLevel() + "  EXP: " + pm.getPlayer().exp;
+            d = "HLTH: " + pm.getPlayer().health + " " + pm.getPlayer().status.getId() + "  LVL: " + pm.getPlayer().getLevel() + "  EXP: " + pm.getPlayer().exp;
             Exodus.smallFont.draw(batch, d, LOG_X + 64, y + 45);
-            d = "GOLD: " + pm.getPlayer().gold + " FOOD: " + pm.getPlayer().food;
+            d = String.format("GOLD: %d FOOD: %d MANA: %d / %d", pm.getPlayer().gold, pm.getPlayer().food, pm.getPlayer().mana, pm.getPlayer().getMaxMana());
             Exodus.smallFont.draw(batch, d, LOG_X + 64, y + 25);
             
             y -= 77;

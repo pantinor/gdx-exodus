@@ -1,6 +1,8 @@
 package exodus;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import objects.Armor;
@@ -11,9 +13,11 @@ import objects.Weapon;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
 import util.XORShiftRandom;
 
 public interface Constants {
@@ -25,6 +29,19 @@ public interface Constants {
 
     public static int tilePixelWidth = 32;
     public static int tilePixelHeight = 32;
+    public static final String PARTY_SAV_BASE_FILENAME = "party.sav";
+    public static final int STATS_NONE = 0;
+    public static final int STATS_PLAYER1 = 1;
+    public static final int STATS_PLAYER2 = 2;
+    public static final int STATS_PLAYER3 = 3;
+    public static final int STATS_PLAYER4 = 4;
+    public static final int STATS_SPELLS = 5;
+    public static int MOON_PHASES = 24;
+    public static int MOON_SECONDS_PER_PHASE = 4;
+    public static int MOON_CHAR = 20;
+    public static final int MAX_CREATURES_ON_MAP = 10;
+    public static final int MAX_WANDERING_CREATURES_IN_DUNGEON = 2;
+    public static final int MAX_CREATURE_DISTANCE = 24;
 
     public enum Maps {
 
@@ -71,9 +88,8 @@ public interface Constants {
         SHRINE_OF_WISDOM(55, "Shrine of Wisdom"),
         SHRINE_OF_DEXTERITY(56, "Shrine of Dexterity"),
         SHRINE_OF_INTELLIGENCE(57, "Shrine of Intelligence"),
-        SHRINE_OF_STRENGTH(58, "Shrine of Sterngth"),
-        ;
-        
+        SHRINE_OF_STRENGTH(58, "Shrine of Sterngth"),;
+
         private int id;
         private String label;
         private BaseMap baseMap;
@@ -240,10 +256,10 @@ public interface Constants {
 
     public enum MapType {
 
-        world(0x1),
-        combat(0x2),
-        city(0x4),
-        dungeon(0x8),
+        world(0x01),
+        combat(0x02),
+        city(0x04),
+        dungeon(0x08),
         shrine(0x10);
 
         private int val;
@@ -252,7 +268,7 @@ public interface Constants {
             this.val = val;
         }
 
-        public int getVal() {
+        public int val() {
             return val;
         }
 
@@ -264,60 +280,6 @@ public interface Constants {
         exit,
         fixed;
     }
-
-    public enum HeadingDirection {
-
-        NORTH(0),
-        NORTH_EAST(2),
-        EAST(3),
-        SOUTH_EAST(4),
-        SOUTH(5),
-        SOUTH_WEST(6),
-        WEST(7),
-        NORTH_WEST(8);
-        private int heading;
-
-        private HeadingDirection(int heading) {
-            this.heading = heading;
-        }
-
-        public int getHeading() {
-            return heading;
-        }
-
-        public static HeadingDirection getByValue(int val) {
-            HeadingDirection ret = HeadingDirection.NORTH;
-            for (HeadingDirection d : HeadingDirection.values()) {
-                if (val == d.getHeading()) {
-                    ret = d;
-                    break;
-                }
-            }
-            return ret;
-        }
-
-        /**
-         * Use Y Down coordinate system with atan2, so negated the values to the
-         * function.
-         *
-         * @param dx delta of the x coords
-         * @param dy delta of the y coords
-         */
-        public static HeadingDirection getDirection(float dx, float dy) {
-            double theta = MathUtils.atan2(-dy, -dx);
-            double ang = theta * MathUtils.radDeg;
-            if (ang < 0) {
-                ang = 360 + ang;
-            }
-            ang = (ang + 90 + 45 + 22.5f) % 360;
-            ang /= 45f;
-            return HeadingDirection.getByValue((int) ang);
-        }
-    }
-
-    public static int MOON_PHASES = 24;
-    public static int MOON_SECONDS_PER_PHASE = 4;
-    public static int MOON_CHAR = 20;
 
     enum Direction {
 
@@ -443,28 +405,8 @@ public interface Constants {
 
     };
 
-    public enum PortalTriggerAction {
-
-        NONE(0x0),
-        ENTER(0x1),
-        KLIMB(0x2),
-        DESCEND(0x4),
-        EXIT_NORTH(0x8),
-        EXIT_EAST(0x10),
-        EXIT_SOUTH(0x20),
-        EXIT_WEST(0x40);
-        private int intValue;
-
-        private PortalTriggerAction(int i) {
-            this.intValue = i;
-        }
-
-        public int getIntValue() {
-            return intValue;
-        }
-    }
-
     public enum Transport {
+
         FOOT,
         SHIP,
         HORSE;
@@ -579,8 +521,6 @@ public interface Constants {
 
     }
 
-    public static final String PARTY_SAV_BASE_FILENAME = "party.sav";
-
     public enum WeaponType {
 
         NONE,
@@ -651,38 +591,35 @@ public interface Constants {
             this.armor = armor;
         }
     }
-    
+
     public enum Profession {
 
-        BARBARIAN("fighter"),
-        DRUID("shepherd"),
-        ALCHEMIST("tinker"),
-        RANGER("ranger"),
-        FIGHTER("fighter"),
-        WIZARD("mage"),
-        THIEF("rogue"),
-        LARK("jester"),
-        ILLUSIONIST("mage"),
-        CLERIC("cleric"),
-        PALADIN("paladin");
+        BARBARIAN("fighter", 0x001),
+        DRUID("shepherd", 0x002),
+        ALCHEMIST("tinker", 0x004),
+        RANGER("ranger", 0x008),
+        FIGHTER("fighter", 0x010),
+        WIZARD("mage", 0x020),
+        THIEF("rogue", 0x0040),
+        LARK("jester", 0x080),
+        ILLUSIONIST("mage", 0x100),
+        CLERIC("cleric", 0x200),
+        PALADIN("paladin", 0x400);
 
         private final String tile;
+        private final int val;
 
-        private Profession(String tile) {
+        private Profession(String tile, int val) {
             this.tile = tile;
-        }
-
-        public static Profession get(int v) {
-            for (Profession x : values()) {
-                if (x.ordinal() == (v & 0xff)) {
-                    return x;
-                }
-            }
-            return null;
+            this.val = val;
         }
 
         public String getTile() {
             return tile;
+        }
+
+        public int val() {
+            return this.val;
         }
 
     }
@@ -704,15 +641,6 @@ public interface Constants {
             this.maxDex = mxDx;
             this.maxInt = mxIn;
             this.maxWis = mxWi;
-        }
-
-        public static ClassType get(int v) {
-            for (ClassType x : values()) {
-                if (x.ordinal() == (v & 0xff)) {
-                    return x;
-                }
-            }
-            return null;
         }
 
         public String getId() {
@@ -737,22 +665,11 @@ public interface Constants {
 
     }
 
-    public static final int STATS_NONE = 0;
-    public static final int STATS_PLAYER1 = 1;
-    public static final int STATS_PLAYER2 = 2;
-    public static final int STATS_PLAYER3 = 3;
-    public static final int STATS_PLAYER4 = 4;
-    public static final int STATS_SPELLS = 5;
-
-    //for touching orbs
-    public static final int STATSBONUS_INT = 0x1;
-    public static final int STATSBONUS_DEX = 0x2;
-    public static final int STATSBONUS_STR = 0x4;
-
     public enum SexType {
 
         MALE(0xB, "Male"),
         FEMALE(0xC, "Female");
+
         private int b;
         private String desc;
 
@@ -763,15 +680,6 @@ public interface Constants {
 
         public int getValue() {
             return b;
-        }
-
-        public static SexType get(int v) {
-            for (SexType x : values()) {
-                if (x.ordinal() == (v & 0xff)) {
-                    return x;
-                }
-            }
-            return null;
         }
 
         public String getDesc() {
@@ -796,68 +704,104 @@ public interface Constants {
             return id;
         }
 
-        public static StatusType get(int v) {
-            for (StatusType x : values()) {
-                if (x.ordinal() == (v & 0xff)) {
-                    return x;
-                }
-            }
-            return null;
-        }
     }
 
     public enum Spell {
 
-        AWAKEN("Awaken", 0, 5, Sound.HEALING);
+        REPOND("A", 0, "Destroy orcs/goblins/trolls", Profession.ALCHEMIST.val() | Profession.DRUID.val() | Profession.LARK.val() | Profession.RANGER.val() | Profession.WIZARD.val(), MapType.combat.val()),
+        MITTAR("B", 5, "Magic missile", Profession.ALCHEMIST.val() | Profession.DRUID.val() | Profession.LARK.val() | Profession.RANGER.val() | Profession.WIZARD.val(), MapType.combat.val()),
+        LORUM("C", 10, "Minor light spell", Profession.ALCHEMIST.val() | Profession.DRUID.val() | Profession.LARK.val() | Profession.RANGER.val() | Profession.WIZARD.val(), MapType.dungeon.val()),
+        DOR_ACRON("D", 15, "Down one dungeon level", Profession.ALCHEMIST.val() | Profession.DRUID.val() | Profession.LARK.val() | Profession.RANGER.val() | Profession.WIZARD.val(), MapType.dungeon.val()),
+        SUR_ACRON("E", 20, "Up one dungeon level", Profession.ALCHEMIST.val() | Profession.DRUID.val() | Profession.LARK.val() | Profession.RANGER.val() | Profession.WIZARD.val(), MapType.dungeon.val()),
+        FULGAR("F", 25, "Fireball", Profession.ALCHEMIST.val() | Profession.DRUID.val() | Profession.LARK.val() | Profession.RANGER.val() | Profession.WIZARD.val(), MapType.combat.val()),
+        DAG_ACRON("G", 30, "Random teleport on surface", Profession.ALCHEMIST.val() | Profession.DRUID.val() | Profession.LARK.val() | Profession.RANGER.val() | Profession.WIZARD.val(), MapType.world.val()),
+        MENTAR("H", 35, "Magic missile", Profession.ALCHEMIST.val() | Profession.DRUID.val() | Profession.LARK.val() | Profession.RANGER.val() | Profession.WIZARD.val(), MapType.combat.val()),
+        DAG_LORUM("I", 40, "Major light spell", Profession.ALCHEMIST.val() | Profession.DRUID.val() | Profession.LARK.val() | Profession.WIZARD.val(), MapType.dungeon.val()),
+        FAL_DIVI("J", 45, "Cast a cleric spell", Profession.ALCHEMIST.val() | Profession.DRUID.val() | Profession.LARK.val() | Profession.WIZARD.val(), 0xff),
+        NOXUM("K", 50, "Multi-fireball", Profession.WIZARD.val(), MapType.combat.val()),
+        DECORP("L", 55, "Death bolt", Profession.WIZARD.val(), MapType.combat.val()),
+        ALTAIR("M", 60, "Negate time", Profession.WIZARD.val(), 0xff),
+        DAG_MENTAR("N", 65, "Major multi-fireball", Profession.WIZARD.val(), MapType.combat.val()),
+        NECORP("O", 70, "Weakens enemies", Profession.WIZARD.val(), MapType.combat.val()),
+        NOTHING("P", 75, "Multi-death bolt", Profession.WIZARD.val(), MapType.combat.val()),
+        
+        PONTORI("A", 0, "Destroy skeletons/ghouls/zombies", Profession.CLERIC.val() | Profession.ILLUSIONIST.val() | Profession.PALADIN.val() | Profession.RANGER.val() | Profession.DRUID.val(), MapType.combat.val()),
+        APPAR_UNEM("B", 5, "Disarm chest safely", Profession.CLERIC.val() | Profession.ILLUSIONIST.val() | Profession.PALADIN.val() | Profession.RANGER.val() | Profession.DRUID.val(), 0xff),
+        SANCTU("C", 10, "Minor healing", Profession.CLERIC.val() | Profession.ILLUSIONIST.val() | Profession.PALADIN.val() | Profession.RANGER.val() | Profession.DRUID.val(), 0xff),
+        LUMINAE("D", 15, "Minor light spell", Profession.CLERIC.val() | Profession.ILLUSIONIST.val() | Profession.PALADIN.val() | Profession.RANGER.val() | Profession.DRUID.val(), MapType.dungeon.val()),
+        REC_SU("E", 20, "Up one dungeon level", Profession.CLERIC.val() | Profession.ILLUSIONIST.val() | Profession.PALADIN.val() | Profession.RANGER.val() | Profession.DRUID.val(), MapType.dungeon.val()),
+        REC_DU("F", 25, "Down one dungeon level", Profession.CLERIC.val() | Profession.ILLUSIONIST.val() | Profession.PALADIN.val() | Profession.RANGER.val() | Profession.DRUID.val(), MapType.dungeon.val()),
+        LIB_REC("G", 30, "Random teleport in dungeon", Profession.CLERIC.val() | Profession.ILLUSIONIST.val() | Profession.PALADIN.val() | Profession.RANGER.val() | Profession.DRUID.val(), MapType.dungeon.val()),
+        ALCORT("H", 35, "Cure poison", Profession.CLERIC.val() | Profession.ILLUSIONIST.val() | Profession.PALADIN.val() | Profession.RANGER.val() | Profession.DRUID.val(), 0xff),
+        SEQUITU("I", 40, "Exit from dungeon", Profession.CLERIC.val() | Profession.ILLUSIONIST.val() | Profession.PALADIN.val() | Profession.RANGER.val() | Profession.DRUID.val(), MapType.dungeon.val()),
+        SOMINAE("J", 45, "Major light spell", Profession.CLERIC.val() | Profession.ILLUSIONIST.val() | Profession.PALADIN.val() | Profession.DRUID.val(), MapType.dungeon.val()),
+        SANCTU_MANI("K", 50, "Major healing", Profession.CLERIC.val() | Profession.ILLUSIONIST.val() | Profession.PALADIN.val() | Profession.DRUID.val(), 0xff),
+        VIEDA("L", 55, "Overhead view of surroundings", Profession.CLERIC.val(), MapType.world.val() | MapType.city.val()),
+        EXCUUN("M", 60, "Death bolt", Profession.CLERIC.val(), MapType.combat.val()),
+        SURMANDUM("N", 65, "Resurrection", Profession.CLERIC.val(), 0xff),
+        ZXKUQYB("O", 70, "Multi-death bolt", Profession.CLERIC.val(), MapType.combat.val()),
+        ANJU_SERMANI("P", 75, "Recall from ashes", Profession.CLERIC.val(), 0xff);
 
-        public static Spell get(int i) {
-            for (Spell x : values()) {
-                if (x.ordinal() == i) {
-                    return x;
+        private final String id;
+        private final int cost;
+        private final String desc;
+        private final Sound sound;
+        private final int castableMask;
+        private final int locationMask;
+
+        private Spell(String id, int cost, String desc, int castableMask, int locationMask) {
+            this.id = id;
+            this.cost = cost;
+            this.desc = desc;
+            this.castableMask = castableMask;
+            this.locationMask = locationMask;
+            this.sound = Sound.MAGIC;
+        }
+
+        private Spell(String id, int cost, String desc, int castableMask, int locationMask, Sound sound) {
+            this.id = id;
+            this.cost = cost;
+            this.desc = desc;
+            this.castableMask = castableMask;
+            this.locationMask = locationMask;
+            this.sound = sound;
+        }
+
+        public static Map<String, Spell> getCastables(Profession prof, MapType mt) {
+            Map<String, Spell> ret = new HashMap<>();
+            int count = Keys.A;
+            for (Spell s : Spell.values()) {
+                if (s.canCast(prof) && s.canCastLocation(mt)) {
+                    ret.put(Keys.toString(count), s);
+                    count++;
                 }
             }
-            return null;
+            return ret;
         }
 
-        String desc;
-        int mask;
-        int mp;
-        Sound sound = Sound.MAGIC;
-
-        private Spell(String desc, int mask, int mp) {
-            this.desc = desc;
-            this.mask = mask;
-            this.mp = mp;
+        public String getId() {
+            return id;
         }
 
-        private Spell(String desc, int mask, int mp, Sound snd) {
-            this.desc = desc;
-            this.mask = mask;
-            this.mp = mp;
-            this.sound = snd;
+        public int getCost() {
+            return cost;
         }
 
         public String getDesc() {
             return desc;
         }
 
-        public int getMask() {
-            return mask;
-        }
-
-        public int getMp() {
-            return mp;
-        }
-
         public Sound getSound() {
             return sound;
         }
 
-        @Override
-        public String toString() {
-            return this.desc;
+        public boolean canCast(Profession prof) {
+            return (prof.val() & this.castableMask) > 0;
         }
-
+        
+        public boolean canCastLocation(MapType mt) {
+            return (mt.val() & this.locationMask) > 0;
+        }
 
     }
 
@@ -918,13 +862,8 @@ public interface Constants {
 
     }
 
-    public static final int SC_NONE = 0x00;
-    public static final int SC_NEWMOONS = 0x01;
-    public static final int SC_FULLAVATAR = 0x02;
-    public static final int SC_REAGENTDELAY = 0x04;
-
     public enum ItemMapLabels {
-        
+
         EXOTIC_ARMOR("Exotic Armour", 0),
         EXOTIC_WEAPON("Exotic Weapon", 0),
         CARD_OF_DEATH("Card of Death", 0),
@@ -955,36 +894,6 @@ public interface Constants {
         key,
         powder,
         torch;
-    }
-
-    public enum Stone {
-
-        BLUE(0x01),
-        YELLOW(0x02),
-        RED(0x04),
-        GREEN(0x08),
-        ORANGE(0x10),
-        PURPLE(0x20),
-        WHITE(0x40),
-        BLACK(0x80);
-        private int loc;
-
-        private Stone(int loc) {
-            this.loc = loc;
-        }
-
-        public static Stone get(int v) {
-            for (Stone x : values()) {
-                if (x.ordinal() == (v & 0xff)) {
-                    return x;
-                }
-            }
-            return null;
-        }
-
-        public int getLoc() {
-            return loc;
-        }
     }
 
     public enum HealType {
@@ -1167,21 +1076,6 @@ public interface Constants {
         }
     }
 
-    public static final int MAX_CREATURES_ON_MAP = 10;
-    public static final int MAX_WANDERING_CREATURES_IN_DUNGEON = 2;
-    public static final int MAX_CREATURE_DISTANCE = 24;
-
-    public static String[] deathMsgs = {
-        "All is Dark...",
-        "But wait...",
-        "Where am I?...",
-        "Am I dead?...",
-        "Afterlife?...",
-        "You hear:  %s",
-        "I feel motion...",
-        "Lord British says: I have pulled thy spirit and some possessions from the void.  Be more careful in the future!"
-    };
-
     public enum AttackResult {
 
         NONE,
@@ -1222,7 +1116,7 @@ public interface Constants {
             stage.addActor(actor);
         }
     }
-    
+
     public class PlaySoundAction implements Runnable {
 
         private Sound s;

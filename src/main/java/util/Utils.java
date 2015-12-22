@@ -840,74 +840,105 @@ public class Utils implements Constants {
         return target;
     }
 
-//    public static void animateMagicAttack(Stage stage, final CombatScreen scr, PartyMember attacker, Direction dir, int x, int y, Spell spell, int minDamage, int maxDamage) {
-//
-//        final AttackVector av = Utils.castSpellAttack(scr.combatMap, attacker, dir, x, y, minDamage, maxDamage, spell);
-//
-//        Color color = Color.WHITE;
-//        switch (spell) {
-//            case FIREBALL:
-//                color = Color.RED;
-//                break;
-//            case ICEBALL:
-//                color = Color.CYAN;
-//                break;
-//            case KILL:
-//                color = Color.VIOLET;
-//                break;
-//            case MAGICMISSILE:
-//                color = Color.BLUE;
-//                break;
-//            case SLEEP:
-//                color = Color.PURPLE;
-//                break;
-//        }
-//
-//        final ProjectileActor p = new ProjectileActor(scr, color, x, y, av.result);
-//
-//        Vector3 v = scr.getMapPixelCoords(av.x, av.y);
-//
-//        p.addAction(sequence(moveTo(v.x, v.y, av.distance * .1f), new Action() {
-//            public boolean act(float delta) {
-//
-//                switch (p.res) {
-//                    case HIT:
-//                        p.resultTexture = Exodus.magicHitTile;
-//                        break;
-//                    case MISS:
-//                        p.resultTexture = Exodus.missTile;
-//                        break;
-//                }
-//
-//                scr.replaceTile(av.leaveTileName, av.x, av.y);
-//
-//                scr.finishPlayerTurn();
-//
-//                return true;
-//            }
-//        }, fadeOut(.2f), removeActor(p)));
-//
-//        stage.addActor(p);
-//    }
-//    private static AttackVector castSpellAttack(BaseMap combatMap, PartyMember attacker, Direction dir, int x, int y, int minDamage, int maxDamage, Spell spell) {
-//
-//        List<AttackVector> path = Utils.getDirectionalActionPath(combatMap, dir.getMask(), x, y, 1, 11, true, true, false);
-//
-//        AttackVector target = null;
-//        int distance = 1;
-//        for (AttackVector v : path) {
-//            AttackResult res = castAt(combatMap, v, attacker, minDamage, maxDamage, spell);
-//            target = v;
-//            target.result = res;
-//            target.distance = distance;
-//            if (res != AttackResult.NONE) {
-//                break;
-//            }
-//            distance++;
-//        }
-//
-//        return target;
-//    }
+    public static void animateMagicAttack(Stage stage, final CombatScreen scr, PartyMember attacker, Direction dir, int x, int y, Spell spell, int minDamage, int maxDamage) {
+
+        final AttackVector av = Utils.castSpellAttack(scr.combatMap, attacker, dir, x, y, minDamage, maxDamage, spell);
+
+        Color color = Color.WHITE;
+        switch (spell) {
+            case FULGAR:
+                color = Color.RED;
+                break;
+            case DECORP:
+                color = Color.VIOLET;
+                break;
+            case MITTAR:
+            case MENTAR:
+                color = Color.BLUE;
+                break;
+        }
+
+        final ProjectileActor p = new ProjectileActor(scr, color, x, y, av.result);
+
+        Vector3 v = scr.getMapPixelCoords(av.x, av.y);
+
+        p.addAction(sequence(moveTo(v.x, v.y, av.distance * .1f), new Action() {
+            public boolean act(float delta) {
+
+                switch (p.res) {
+                    case HIT:
+                        p.resultTexture = Exodus.magicHitTile;
+                        break;
+                    case MISS:
+                        p.resultTexture = Exodus.missTile;
+                        break;
+                }
+
+                scr.replaceTile(av.leaveTileName, av.x, av.y);
+
+                scr.finishPlayerTurn();
+
+                return true;
+            }
+        }, fadeOut(.2f), removeActor(p)));
+
+        stage.addActor(p);
+    }
+    
+    private static AttackVector castSpellAttack(BaseMap combatMap, PartyMember attacker, Direction dir, int x, int y, int minDamage, int maxDamage, Spell spell) {
+
+        List<AttackVector> path = Utils.getDirectionalActionPath(combatMap, dir.getMask(), x, y, 1, 11, true, true, false);
+
+        AttackVector target = null;
+        int distance = 1;
+        for (AttackVector v : path) {
+            AttackResult res = castAt(combatMap, v, attacker, minDamage, maxDamage, spell);
+            target = v;
+            target.result = res;
+            target.distance = distance;
+            if (res != AttackResult.NONE) {
+                break;
+            }
+            distance++;
+        }
+
+        return target;
+    }
+    
+    private static AttackResult castAt(BaseMap combatMap, AttackVector target, PartyMember attacker, int minDamage, int maxDamage, Spell spell) {
+
+        AttackResult res = AttackResult.NONE;
+        Creature creature = null;
+        for (Creature c : combatMap.getCreatures()) {
+            if (c.currentX == target.x && c.currentY == target.y) {
+                creature = c;
+                break;
+            }
+        }
+
+        if (creature == null) {
+            return res;
+        }
+                
+        if (spell == Spell.FULGAR) {
+            if ("fire".equals(creature.getResists())) {
+                Sounds.play(Sound.EVADE);
+                Exodus.hud.add("Resisted!\n");
+                return AttackResult.MISS;
+            }
+        } 
+
+        Sounds.play(Sound.NPC_STRUCK);
+        
+        int attackDamage = ((minDamage >= 0) && (minDamage < maxDamage))
+                ? rand.nextInt((maxDamage + 1) - minDamage) + minDamage
+                : maxDamage;
+        
+        dealDamage(attacker, creature, attackDamage);
+
+        return AttackResult.HIT;
+    }
+    
     private static AttackResult attackAt(BaseMap combatMap, AttackVector target, PartyMember attacker, Direction dir, int range, int distance) {
         AttackResult res = AttackResult.NONE;
         Creature creature = null;

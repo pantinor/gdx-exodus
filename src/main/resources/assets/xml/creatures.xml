@@ -36,7 +36,6 @@
     <!-- Main creatures -->
     <creature id="25" encounterSize="12" name="Rat" tile="rat"              basehp="48" exp="3" movement="wanders" good="true" leader="38" />
     <creature id="26" encounterSize="12" name="Bat" tile="bat"              basehp="48" exp="3" flies="true" movement="wanders" good="true" leader="47" nochest="true" />
-    <creature id="27" encounterSize="6" name="Giant Spider" tile="spider"   basehp="64" exp="4" ranged="true" rangedhittile="poison_field" rangedmisstile="poison_field" spawntile="swamp" movement="wanders" good="true" poisons="true" leader="25" />
     <creature id="29" encounterSize="15" name="Slime" tile="slime"          basehp="48" exp="4" divides="true" nochest="true" />
     <creature id="31" encounterSize="15" name="Gremlin" tile="gremlin"      basehp="48" exp="4" steals="food" />
     <creature id="34" encounterSize="15" name="Insect Swarm" tile="insect_swarm" basehp="48" exp="3" good="true" movement="wanders" leader="25" nochest="true" />
@@ -44,6 +43,7 @@
     <creature id="40" encounterSize="12" name="Python" tile="python"        basehp="48" exp="3" ranged="true" rangedhittile="poison_field" rangedmisstile="poison_field" poisons="true" good="true" movement="wanders" leader="25" />
     <creature id="42" encounterSize="8" name="Headless" tile="headless"     basehp="64" exp="5" leader="35" />
     <creature id="44" encounterSize="12" name="Wisp" tile="wisp"            basehp="64" exp="5" teleports="true" leader="36" nochest="true" />
+    <creature id="27" encounterSize="6" name="Giant Spider" tile="spider"   basehp="64" exp="4" ranged="true" rangedhittile="poison_field" rangedmisstile="poison_field" spawntile="swamp" movement="wanders" good="true" poisons="true" leader="25" />
     <creature id="39" encounterSize="10" name="Rogue" tile="rogue"          basehp="80" exp="6" steals="gold" />
     <creature id="37" encounterSize="10" name="Orc" tile="orc"              basehp="80" exp="4" leader="30" />
     <creature id="28" encounterSize="4" name="Ghost" tile="ghost"           basehp="80" exp="6" undead="true" resists="sleep" incorporeal="true" leader="46" />

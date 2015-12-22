@@ -10,10 +10,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import exodus.Party.PartyMember;
+import java.util.Map;
 
 public class SecondaryInputProcessor extends InputAdapter implements Constants {
 
@@ -71,6 +71,9 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                 break;
             case Keys.Y:
                 screen.log("YELL> Which party member? ");
+                break;
+            case Keys.C:
+                screen.log("CAST> Which party member? ");
                 break;
 
         }
@@ -220,6 +223,20 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                     screen.log("Nobody selected!");
                 }
 
+            } else if (initialKeyCode == Keys.C) {
+
+                if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
+                    PartyMember pm = screen.context.getParty().getMember(keycode - 7 - 1);
+                    Map<String, Spell> spellSelection = Spell.getCastables(pm.getPlayer().profession, bm.getType());
+                    if (spellSelection.size() < 1) {
+                        screen.log("No spells to cast!");
+                    } else {
+                        Gdx.input.setInputProcessor(new SpellInputProcessor(gameScreen, screen.context, stage, spellSelection, pm));
+                        return false;                    }
+                } else {
+                    screen.log("Nobody selected!");
+                }
+
             } else if (initialKeyCode == Keys.R) {
 
                 if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
@@ -259,8 +276,6 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
             } else {
                 return false;
             }
-
-        } else if (screen.scType == ScreenType.SHRINE) {
 
         } else if (screen.scType == ScreenType.COMBAT) {
 
@@ -360,6 +375,20 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                 if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
                     Gdx.input.setInputProcessor(new ReadyWearInputAdapter(screen.context.getParty().getMember(keycode - 7 - 1), false));
                     return false;
+                }
+            
+            } else if (initialKeyCode == Keys.C) {
+
+                if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
+                    PartyMember pm = screen.context.getParty().getMember(keycode - 7 - 1);
+                    Map<String, Spell> spellSelection = Spell.getCastables(pm.getPlayer().profession, bm.getType());
+                    if (spellSelection.size() < 1) {
+                        screen.log("No spells to cast!");
+                    } else {
+                        Gdx.input.setInputProcessor(new SpellInputProcessor(screen, screen.context, stage, spellSelection, pm));
+                        return false;                    }
+                } else {
+                    screen.log("Nobody selected!");
                 }
             }
 

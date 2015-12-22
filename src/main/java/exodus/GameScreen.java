@@ -690,16 +690,9 @@ public class GameScreen extends BaseScreen {
             return false;
 
         } else if (keycode == Keys.T || keycode == Keys.O || keycode == Keys.J || keycode == Keys.S || keycode == Keys.Y
-                || keycode == Keys.A || keycode == Keys.G || keycode == Keys.R || keycode == Keys.W) {
+                || keycode == Keys.A || keycode == Keys.G || keycode == Keys.R || keycode == Keys.W || keycode == Keys.C) {
             Gdx.input.setInputProcessor(sip);
             sip.setinitialKeyCode(keycode, context.getCurrentMap(), (int) v.x, (int) v.y);
-            return false;
-
-        } else if (keycode == Keys.C) {
-
-            log("Cast Spell: ");
-            log("Who casts (1-8): ");
-            //Gdx.input.setInputProcessor(new SpellInputProcessor(this, context, stage, (int) v.x, (int) v.y, null));
             return false;
 
         } else if (keycode == Keys.SPACE) {
