@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import static exodus.Constants.STATS_PLAYER1;
 import static exodus.Constants.STATS_PLAYER4;
-import static exodus.Constants.STATS_SPELLS;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -84,6 +83,18 @@ public class Party extends Observable implements Constants {
                 members.get(i).applyDamage(damage, true);
             }
         }
+    }
+    
+    public void poolGold(int index) {
+        if (index >= members.size()) {
+            return;
+        }
+        int total = 0;
+        for (PartyMember pm : members) {
+            total+=pm.getPlayer().gold;
+            pm.getPlayer().gold = 0;
+        }
+        members.get(index).getPlayer().gold = total;
     }
 
     public int getTorchduration() {
@@ -272,7 +283,6 @@ public class Party extends Observable implements Constants {
             case LAVA:
             case GREMLINS:
             case FIRE:
-            case SLEEP:
                 if (rand.nextInt(2) == 0) {
                     pm.applyEffect(effect);
                 }
@@ -594,10 +604,13 @@ public class Party extends Observable implements Constants {
 
                         if (!member.isDisabled() && member.player.mana < member.player.getMaxMana()) {
                             member.player.mana++;
+                            if (member.player.profession == Profession.DRUID) {
+                                member.player.mana++;
+                            }
                         }
 
                         if (member.player.food == 0) {
-                            member.applyDamage(1, false);
+                            member.applyDamage(rand.nextInt(3), false);
                         }
                     }
                 }
@@ -734,17 +747,6 @@ public class Party extends Observable implements Constants {
                     ry = ry - 18;
                 }
             }
-        } else if (showZstats == STATS_SPELLS) {
-//            String[] lines = pages[5].split("\\|");
-//            font.draw(batch, "Spell Mixtures", rx, ry);
-//            ry = ry - 18;
-//            for (int j = 0; j < lines.length; j++) {
-//                if (lines[j] == null || lines[j].length() < 1) {
-//                    continue;
-//                }
-//                font.draw(batch, lines[j], rx, ry);
-//                ry = ry - 18;
-//            }
         }
 
     }

@@ -11,14 +11,7 @@ import objects.Tile;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import exodus.Party.PartyMember;
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import objects.JournalEntries;
-import objects.JournalEntry;
 import util.PartyDeathException;
 import util.XORShiftRandom;
 
@@ -28,7 +21,6 @@ public class Context implements Constants {
     private BaseMap currentMap;
     private TiledMap currentTiledMap;
     private int locationMask;
-    private JournalEntries journalEntries;
     private int line, col;
     private int moonPhase = 0;
     private Direction windDirection = Direction.NORTH;
@@ -143,39 +135,6 @@ public class Context implements Constants {
         party.setContext(this);
     }
 
-    public void loadJournalEntries() {
-
-        try {
-            File file = new File("journal.save");
-            JAXBContext jaxbContext = JAXBContext.newInstance(JournalEntries.class);
-            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            this.journalEntries = (JournalEntries) jaxbUnmarshaller.unmarshal(file);
-        } catch (Exception e) {
-            this.journalEntries = new JournalEntries();
-        }
-
-    }
-
-    public void addEntry(String name, Maps map, String text) {
-
-        String[] words = text.split("\\s+");
-        StringBuilder sb = new StringBuilder();
-        List<StringBuilder> texts = new ArrayList<>();
-        for (String w : words) {
-            sb.append(w).append(" ");
-            if (sb.length() > 90) {
-                texts.add(sb);
-                sb = new StringBuilder();
-            }
-        }
-        texts.add(sb);
-
-        for (StringBuilder b : texts) {
-            JournalEntry je = new JournalEntry(name, map.getLabel(), b.toString().trim());
-            this.journalEntries.add(je);
-        }
-    }
-
     public void saveGame(float x, float y, float z, Direction orientation, Maps map) {
 
         if (map == Maps.SOSARIA) {
@@ -186,7 +145,7 @@ public class Context implements Constants {
         } else {
             Portal p = Maps.SOSARIA.getMap().getPortal(map.getId());
             party.getSaveGame().partyX = (int) x;
-            party.getSaveGame().partyX = (int) y;
+            party.getSaveGame().partyY = (int) y;
             party.getSaveGame().dnglevel = (int) z;
             party.getSaveGame().orientation = orientation.getVal() - 1;
         }
@@ -231,19 +190,6 @@ public class Context implements Constants {
             e.printStackTrace();
         }
 
-        try {
-            File file = new File("journal.save");
-            JAXBContext jaxbContext = JAXBContext.newInstance(JournalEntries.class);
-            Marshaller marshaller = jaxbContext.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-            marshaller.marshal(this.journalEntries, file);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public JournalEntries getJournal() {
-        return this.journalEntries;
     }
 
     public int getLocationMask() {
@@ -300,66 +246,43 @@ public class Context implements Constants {
         }
     }
 
-    public boolean getChestTrapHandler(PartyMember pm) throws PartyDeathException {
+    public void getChestTrapHandler(PartyMember pm) throws PartyDeathException {
 
         TileEffect trapType;
-        int randNum = rand.nextInt(4);
-        boolean passTest = (rand.nextInt(2) == 0);
+        boolean hasTrap = (rand.nextInt(2) == 0);
+        int whichTrap = rand.nextInt(4);
 
-        /* Chest is trapped! 50/50 chance */
-        if (passTest) {
-            /* Figure out which trap the chest has */
-            switch (randNum) {
-                case 0:
-                    trapType = TileEffect.FIRE;
-                    break; /* acid trap (56% chance - 9/16) */
-
-                case 1:
-                    trapType = TileEffect.SLEEP;
-                    break; /* sleep trap (19% chance - 3/16) */
-
-                case 2:
-                    trapType = TileEffect.POISON;
-                    break; /* poison trap (19% chance - 3/16) */
-
-                case 3:
-                    trapType = TileEffect.LAVA;
-                    break; /* bomb trap (6% chance - 1/16) */
-
-                default:
-                    trapType = TileEffect.FIRE;
-                    break;
-            }
-
-            if (trapType == TileEffect.FIRE) {
-                Exodus.hud.add("Acid Trap!");
-                Sounds.play(Sound.ACID);
-            } else if (trapType == TileEffect.POISON) {
-                Exodus.hud.add("Poison Trap!");
-                Sounds.play(Sound.POISON_EFFECT);
-            } else if (trapType == TileEffect.SLEEP) {
-                Exodus.hud.add("Sleep Trap!");
-                Sounds.play(Sound.SLEEP);
-            } else if (trapType == TileEffect.LAVA) {
-                Exodus.hud.add("Bomb Trap!");
-                Sounds.play(Sound.BOOM);
-            }
-
+        if (hasTrap) {
             if (pm.getPlayer().dex + 25 < rand.nextInt(100)) {
-                if (trapType == TileEffect.LAVA) {/* bomb trap */
 
+                switch (whichTrap) {
+                    case 2:
+                        trapType = TileEffect.POISON;
+                        Exodus.hud.add("Poison Trap!");
+                        Sounds.play(Sound.POISON_EFFECT);
+                        break;
+                    case 3:
+                        trapType = TileEffect.LAVA;
+                        Exodus.hud.add("Gas Trap!");
+                        break;
+                    default:
+                        trapType = TileEffect.FIRE;
+                        Exodus.hud.add("Acid Trap!");
+                        Sounds.play(Sound.ACID);
+                        break;
+                }
+
+                if (trapType == TileEffect.LAVA) {
                     party.applyEffect(trapType);
                 } else {
                     pm.applyEffect(trapType);
                 }
+                
             } else {
+                Sounds.play(Sound.EVADE);
                 Exodus.hud.add("Evaded!");
             }
-
-            return true;
         }
-
-        return false;
     }
 
     public Drawable getCurrentShip() {

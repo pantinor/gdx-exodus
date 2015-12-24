@@ -27,23 +27,23 @@
     <creature id="19" encounterSize="12" name="Nixie" tile="nixie" basehp="64" exp="5" ranged="true" swims="true" leader="22" />
     <creature id="20" encounterSize="4" name="Giant Squid" tile="giant_squid" basehp="96" exp="7" ranged="true" rangedhittile="energy_field" rangedmisstile="energy_field" poisons="true" swims="true" leader="21" />
     <creature id="21" encounterSize="4" name="Sea Serpent" tile="sea_serpent" basehp="128" exp="9" ranged="true" rangedhittile="hit_flash" rangedmisstile="hit_flash" swims="true" leader="20" />
-    <creature id="22" encounterSize="8" name="Seahorse" tile="sea_horse" basehp="128" exp="9" movement="wanders" ranged="true" rangedhittile="magic_flash" rangedmisstile="magic_flash" swims="true" good="true" leader="19" />
+    <creature id="22" encounterSize="8" name="Seahorse" tile="sea_horse" basehp="128" exp="9" ranged="true" rangedhittile="magic_flash" rangedmisstile="magic_flash" swims="true" good="true" leader="19" />
 
     <!-- Forces of nature -->
-    <creature id="23" encounterSize="1" name="Twister" forceOfNature="true" tile="twister" basehp="255" exp="16" flies="true" movement="wanders" cantattack="true" canMoveOntoCreatures="true" canMoveOntoAvatar="true" wontattack="true" />
-    <creature id="24" encounterSize="1" name="Whirlpool" forceOfNature="true" tile="whirlpool" basehp="255" exp="16" swims="true" movement="wanders" cantattack="true" canMoveOntoCreatures="true" canMoveOntoAvatar="true" wontattack="true" />
+    <creature id="23" encounterSize="1" name="Twister" forceOfNature="true" tile="twister" basehp="255" exp="16" flies="true" cantattack="true" canMoveOntoCreatures="true" canMoveOntoAvatar="true" wontattack="true" />
+    <creature id="24" encounterSize="1" name="Whirlpool" forceOfNature="true" tile="whirlpool" basehp="255" exp="16" swims="true" cantattack="true" canMoveOntoCreatures="true" canMoveOntoAvatar="true" wontattack="true" />
 
     <!-- Main creatures -->
-    <creature id="25" encounterSize="12" name="Rat" tile="rat"              basehp="48" exp="3" movement="wanders" good="true" leader="38" />
-    <creature id="26" encounterSize="12" name="Bat" tile="bat"              basehp="48" exp="3" flies="true" movement="wanders" good="true" leader="47" nochest="true" />
+    <creature id="25" encounterSize="12" name="Rat" tile="rat"              basehp="48" exp="3" good="true" leader="38" />
+    <creature id="26" encounterSize="12" name="Bat" tile="bat"              basehp="48" exp="3" flies="true" good="true" leader="47" nochest="true" />
     <creature id="29" encounterSize="15" name="Slime" tile="slime"          basehp="48" exp="4" divides="true" nochest="true" />
     <creature id="31" encounterSize="15" name="Gremlin" tile="gremlin"      basehp="48" exp="4" steals="food" />
-    <creature id="34" encounterSize="15" name="Insect Swarm" tile="insect_swarm" basehp="48" exp="3" good="true" movement="wanders" leader="25" nochest="true" />
+    <creature id="34" encounterSize="15" name="Insect Swarm" tile="insect_swarm" basehp="48" exp="3" good="true" leader="25" nochest="true" />
     <creature id="38" encounterSize="12" name="Skeleton" tile="skeleton"    basehp="48" exp="4" undead="true" resists="sleep" leader="45" />
-    <creature id="40" encounterSize="12" name="Python" tile="python"        basehp="48" exp="3" ranged="true" rangedhittile="poison_field" rangedmisstile="poison_field" poisons="true" good="true" movement="wanders" leader="25" />
+    <creature id="40" encounterSize="12" name="Python" tile="python"        basehp="48" exp="3" ranged="true" rangedhittile="poison_field" rangedmisstile="poison_field" poisons="true" good="true" leader="25" />
     <creature id="42" encounterSize="8" name="Headless" tile="headless"     basehp="64" exp="5" leader="35" />
     <creature id="44" encounterSize="12" name="Wisp" tile="wisp"            basehp="64" exp="5" teleports="true" leader="36" nochest="true" />
-    <creature id="27" encounterSize="6" name="Giant Spider" tile="spider"   basehp="64" exp="4" ranged="true" rangedhittile="poison_field" rangedmisstile="poison_field" spawntile="swamp" movement="wanders" good="true" poisons="true" leader="25" />
+    <creature id="27" encounterSize="6" name="Giant Spider" tile="spider"   basehp="64" exp="4" ranged="true" rangedhittile="poison_field" rangedmisstile="poison_field" spawntile="swamp" good="true" poisons="true" leader="25" />
     <creature id="39" encounterSize="10" name="Rogue" tile="rogue"          basehp="80" exp="6" steals="gold" />
     <creature id="37" encounterSize="10" name="Orc" tile="orc"              basehp="80" exp="4" leader="30" />
     <creature id="28" encounterSize="4" name="Ghost" tile="ghost"           basehp="80" exp="6" undead="true" resists="sleep" incorporeal="true" leader="46" />
@@ -54,14 +54,13 @@
     <creature id="36" encounterSize="8" name="Phantom" tile="phantom"       basehp="128" exp="9" undead="true" resists="sleep" leader="28" />
     <creature id="43" encounterSize="6" name="Cyclops" tile="cyclops"       basehp="128" exp="9" ranged="true" rangedhittile="rocks" rangedmisstile="rocks" leader="48" />
     <creature id="45" encounterSize="6" name="Mage" tile="evil_mage"        basehp="176" exp="12" ranged="true" rangedhittile="magic_flash" rangedmisstile="magic_flash" leader="49" />
-    <creature id="32" encounterSize="1" name="Mimic" tile="mimic"           basehp="192" exp="14" ranged="true" rangedhittile="poison_field" rangedmisstile="poison_field" movement="none" camouflage="true" camouflageTile="chest" />
+    <creature id="32" encounterSize="1" name="Mimic" tile="mimic"           basehp="192" exp="14" ranged="true" rangedhittile="poison_field" rangedmisstile="poison_field" camouflage="true" camouflageTile="chest" />
     <creature id="46" encounterSize="4" name="Liche" tile="liche"           basehp="192" exp="14" ranged="true" rangedhittile="magic_flash" rangedmisstile="magic_flash" undead="true" resists="sleep" leader="49" />
     <creature id="50" encounterSize="4" name="Hydra" tile="hydra"           basehp="208" exp="14" ranged="true" rangedhittile="hit_flash" rangedmisstile="hit_flash" resists="fire" leader="51" />
     <creature id="51" encounterSize="4" name="Dragon" tile="dragon"         basehp="224" exp="16" ranged="true" rangedhittile="hit_flash" rangedmisstile="hit_flash" flies="true" resists="fire" leader="52" />
     <creature id="35" encounterSize="4" name="Gazer" tile="gazer"           basehp="240" exp="20" ranged="true" rangedhittile="poison_field" rangedmisstile="poison_field" leader="36" spawnsOnDeath="34" />
     <creature id="48" encounterSize="4" name="Zorn" tile="zorn"             basehp="240" exp="20" casts="negate" incorporeal="true" leader="35" />
-    <creature id="52" encounterSize="1" name="Balron" tile="balron"         basehp="255" exp="20" ranged="true" rangedhittile="poison_field" rangedmisstile="poison_field" flies="true" resists="fire" />
-    <creature id="33" encounterSize="1" name="Reaper" tile="reaper"         basehp="255" exp="20" ranged="true" rangedhittile="random" rangedmisstile="random" movement="none" />
+    <creature id="52" encounterSize="1" name="Balron" tile="balron"         basehp="255" exp="20" ranged="true" rangedhittile="random" rangedmisstile="random" flies="true" resists="fire" />
 
     <creature id="60" encounterSize="6" name="Grass" tile="grass"           basehp="48" exp="4" nochest="true"/>
     <creature id="61" encounterSize="6" name="Chest" tile="chest"           basehp="48" exp="4" />

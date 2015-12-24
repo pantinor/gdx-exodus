@@ -1,7 +1,9 @@
 package exodus;
 
-import java.util.Observable;
-import java.util.Observer;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import java.util.Random;
 
 import objects.BaseMap;
@@ -29,32 +31,32 @@ public abstract class BaseScreen implements Screen, InputProcessor, Constants {
     protected BaseScreen returnScreen;
     public Context context;
     protected Stage stage;
-    
+
     protected float time = 0;
     protected Random rand = new XORShiftRandom();
 
     protected int mapPixelHeight;
     public Vector3 newMapPixelCoords;
-    
+
     protected Viewport viewport = new ScreenViewport();
 
     protected Camera camera;
-    
+
     protected int showZstats = 0;
 
     protected Vector2 currentMousePos;
 
     protected Creature currentEncounter;
-    
+
     /**
      * translate map tile coords to world pixel coords
      */
-    public abstract Vector3 getMapPixelCoords(int x, int y) ;
+    public abstract Vector3 getMapPixelCoords(int x, int y);
 
     /**
      * get the map coords at the camera center
      */
-    public abstract Vector3 getCurrentMapCoords() ;
+    public abstract Vector3 getCurrentMapCoords();
 
     @Override
     public void dispose() {
@@ -80,18 +82,8 @@ public abstract class BaseScreen implements Screen, InputProcessor, Constants {
 
     public void endCombat(boolean isWon, BaseMap combatMap, boolean wounded) {
     }
-    
+
     public final void addButtons() {
-        TextButton jourButt = new TextButton("Journal", Exodus.skin, "wood");
-        jourButt.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                //mainGame.setScreen(new JournalScreen(mainGame, BaseScreen.this, Exodus.skin, context.getJournal()));
-            }
-        });
-        jourButt.setX(530);
-        jourButt.setY(15);
-        stage.addActor(jourButt);
 
         TextButton bookButt = new TextButton("Book", Exodus.skin, "wood");
         bookButt.addListener(new ChangeListener() {
@@ -102,13 +94,13 @@ public abstract class BaseScreen implements Screen, InputProcessor, Constants {
         });
         bookButt.setX(625);
         bookButt.setY(15);
-        
+
         stage.addActor(bookButt);
-        
+
     }
-    
-    public abstract InputProcessor getPeerGemInputProcessor() ;
-    
+
+    public abstract InputProcessor getPeerGemInputProcessor();
+
     public abstract void partyDeath();
 
     @Override
@@ -175,6 +167,43 @@ public abstract class BaseScreen implements Screen, InputProcessor, Constants {
 
     @Override
     public void resume() {
+    }
+
+    public class NewOrderInputAdapter extends InputAdapter {
+
+        int p1 = -1;
+        int p2 = -1;
+        BaseScreen screen;
+
+        public NewOrderInputAdapter(BaseScreen screen) {
+            this.screen = screen;
+        }
+
+        @Override
+        public boolean keyUp(int keycode) {
+            if (keycode >= Input.Keys.NUM_1 && keycode <= Input.Keys.NUM_4) {
+                if (p1 == -1) {
+                    p1 = keycode - 7 - 1;
+                    logAppend(" " + (p1 + 1));
+                    log("with #:");
+                    return false;
+                } else if (p2 == -1) {
+                    p2 = keycode - 7 - 1;
+                    logAppend(" " + (p2 + 1));
+                    context.getParty().swapPlayers(p1, p2);
+                }
+            } else {
+                log("What?");
+            }
+
+            if (this.screen instanceof GameScreen) {
+                Vector3 v = getCurrentMapCoords();
+                finishTurn((int) v.x, (int) v.y);
+            }
+
+            Gdx.input.setInputProcessor(new InputMultiplexer(this.screen, stage));
+            return false;
+        }
     }
 
 }

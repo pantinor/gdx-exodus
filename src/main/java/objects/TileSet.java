@@ -13,8 +13,8 @@ import exodus.Constants.Maps;
 public class TileSet {
 
     private List<Tile> tiles = null;
-    private Map<String, Tile> nameMap = new HashMap<String, Tile>();
-    private Map<Integer, Tile> indexMap = new HashMap<Integer, Tile>();
+    private final Map<String, Tile> nameMap = new HashMap<>();
+    private final Map<Integer, Tile> indexMap = new HashMap<>();
 
     @XmlElement(name = "tile")
     public List<Tile> getTiles() {

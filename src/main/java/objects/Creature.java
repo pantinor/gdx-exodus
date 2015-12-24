@@ -23,8 +23,6 @@ public class Creature implements Constants {
     private boolean camouflage;
     private String camouflageTile;
     private boolean canMoveOntoAvatar;
-    private boolean canMoveOntoCreatures;
-    private boolean cantattack;
     private String casts;
     private boolean divides;
     private int encounterSize;
@@ -43,7 +41,6 @@ public class Creature implements Constants {
     private boolean incorporeal;
     private int leader;
     private boolean leavestile;
-    private String movement;
     private boolean nochest;
     private boolean poisons;
     private boolean ranged;
@@ -52,7 +49,6 @@ public class Creature implements Constants {
     private String resists;
     private boolean sails;
     private boolean spawnsOnDeath;
-    private String spawntile;
     private String steals;
     private boolean swims;
     private boolean teleports;
@@ -62,7 +58,7 @@ public class Creature implements Constants {
     private CreatureType tile;
     private Animation anim;
     private Decal decal;
-    private TextureRegion healthBar = new TextureRegion(Utils.fillRectangle(32, 3, Color.GREEN, .5f));
+    private final TextureRegion healthBar = new TextureRegion(Utils.fillRectangle(32, 3, Color.GREEN, .5f));
 
     public int currentX;
     public int currentY;
@@ -81,8 +77,6 @@ public class Creature implements Constants {
 
         this.camouflageTile = clone.camouflageTile;
         this.canMoveOntoAvatar = clone.canMoveOntoAvatar;
-        this.canMoveOntoCreatures = clone.canMoveOntoCreatures;
-        this.cantattack = clone.cantattack;
         this.casts = clone.casts;
         this.divides = clone.divides;
         this.encounterSize = clone.encounterSize;
@@ -98,7 +92,6 @@ public class Creature implements Constants {
         this.incorporeal = clone.incorporeal;
         this.leader = clone.leader;
         this.leavestile = clone.leavestile;
-        this.movement = clone.movement;
         this.name = clone.name;
         this.nochest = clone.nochest;
         this.poisons = clone.poisons;
@@ -108,7 +101,6 @@ public class Creature implements Constants {
         this.resists = clone.resists;
         this.sails = clone.sails;
         this.spawnsOnDeath = clone.spawnsOnDeath;
-        this.spawntile = clone.spawntile;
         this.steals = clone.steals;
         this.swims = clone.swims;
         this.teleports = clone.teleports;
@@ -137,16 +129,6 @@ public class Creature implements Constants {
     @XmlAttribute
     public boolean getCanMoveOntoAvatar() {
         return canMoveOntoAvatar;
-    }
-
-    @XmlAttribute
-    public boolean getCanMoveOntoCreatures() {
-        return canMoveOntoCreatures;
-    }
-
-    @XmlAttribute
-    public boolean getCantattack() {
-        return cantattack;
     }
 
     @XmlAttribute
@@ -205,11 +187,6 @@ public class Creature implements Constants {
     }
 
     @XmlAttribute
-    public String getMovement() {
-        return movement;
-    }
-
-    @XmlAttribute
     public String getName() {
         return name;
     }
@@ -252,11 +229,6 @@ public class Creature implements Constants {
     @XmlAttribute
     public boolean getSpawnsOnDeath() {
         return spawnsOnDeath;
-    }
-
-    @XmlAttribute
-    public String getSpawntile() {
-        return spawntile;
     }
 
     @XmlAttribute
@@ -306,14 +278,6 @@ public class Creature implements Constants {
         this.canMoveOntoAvatar = canMoveOntoAvatar;
     }
 
-    public void setCanMoveOntoCreatures(boolean canMoveOntoCreatures) {
-        this.canMoveOntoCreatures = canMoveOntoCreatures;
-    }
-
-    public void setCantattack(boolean cantattack) {
-        this.cantattack = cantattack;
-    }
-
     public void setCasts(String casts) {
         this.casts = casts;
     }
@@ -358,10 +322,6 @@ public class Creature implements Constants {
         this.leavestile = leavestile;
     }
 
-    public void setMovement(String movement) {
-        this.movement = movement;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -396,10 +356,6 @@ public class Creature implements Constants {
 
     public void setSpawnsOnDeath(boolean spawnsOnDeath) {
         this.spawnsOnDeath = spawnsOnDeath;
-    }
-
-    public void setSpawntile(String spawntile) {
-        this.spawntile = spawntile;
     }
 
     public void setSteals(String steals) {

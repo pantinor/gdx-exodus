@@ -1,7 +1,35 @@
-      Ultima III
-        Exodus
-   The Third Age 
-     of Darkness
+EXODUS ULTIMA III COMMANDS 
+
+A) Attack: Attempts to damage foe with "ready weapons." Must be followed by indicating the direction for the attack.
+B) Board: Mount a horse or board a frigate.
+C) Cast: Cast a magic spell. Must be followed by the player number (except during combat), spell type (W/C) when needed, and the spell letter.
+D) Descend: Climb down a ladder to the next lower dungeon level.
+E) Enter: Enter a town, castle, dungeon or other landmark.
+F) Fire: Discharge a ship's cannons (after boarding) in direction indicated.
+G) Get Chest: Open chest. Must be followed by the number of the player who will search for traps, open the chest and acquire its contents.
+H) Hand Equipment: Trades equipment between two players. Followed by prompts to determine what is to be exchanged.
+1) Ignite a Torch: Lights a given player's torch.
+J) Join gold: Gives all gold in party to player indicated.
+K) Klimb: Climb up a ladder in a dungeon.
+L) Open a door.
+M) Modify Order: Exchanges the positions of any two players within the party.
+N) Negate Time: Stops time for all outside of the party. Requires a special item.
+O) Other Command: Enter any command desired during game play.
+P) Peer at a Gem: Shows players a bird's eye view of a town, castle, dungeon level, or the outside world. One viewing per gem.
+Q) Quit (and save to disk): Use command to stop playing (from the outside world only) and save your progress to disk. You can resume the game from this point.
+R) Ready Weapon: Equip yourself with a specific weapon for use in combat.
+S) Search: search and look in the area for anything.
+T) Transact: Use to talk to townspeople or trade with merchants.
+U) Unlock: Open doors if you have the key. Must be followed by direction to door and the player whose key is to be used. One use per key.
+V) Volume: Toggles sound effects on and off.
+W) Wear Armor: Outfits player with specified an-nor if owned.
+X) X-it: Leave behind or dismount your current transport and travel on foot.
+Y) Yell: Allows player to yell any word desired.
+Z) Ztats: Displays your vital statistics, possessions, and spells.
+Spacebar) Pass one game turn without taking any action. Food is consumed.
+
+Ultima III Exodus
+The Third Age of Darkness
 
 THE ADVENTURE
 
@@ -169,7 +197,11 @@ Recently a rumor has surfaced of an apparition that haunts a deep level of a hid
 A thief is an excellent choice to have in a party. 
 If the party puts the Thief in front of the Party, he will have an excellent chance of spotting traps, before the party trips them. 
 Many strange and wonderful places are hidden within different dungeons, such as fountains. Some fountains are beneficial, while others are poisonous. 
-Always drink carefully at a fountain. TRANSPORTATION: Most of thy Party's progress will be on foot. If thou art fortunate, thou couldst capture some of the wild horses that roam the plains. 
+Always drink carefully at a fountain. 
+
+TRANSPORTATION
+
+Most of thy Party's progress will be on foot. If thou art fortunate, thou couldst capture some of the wild horses that roam the plains. 
 Travel on horseback is much faster than on foot. Ships are very scarce. 
 The Pirate fleet has sunk most of the regular ships. When thou hast a ship, thou needst to maneuver it. To sail a ship, one must learn the ways of the winds. 
 Thy ship may not sail against a wind, but must tack around it. Watch out for sudden shifts in the wind for the wind is a fickle elemental force. 
@@ -290,81 +322,69 @@ May thou live and grow wise in interesting times!
 The Druid Selzhanik, 
 Arch Mage, keeper of the Ninth Circle
 *break
-A. RESPOND
-There was a time, long ago, when the lands were free of the wretched creatures known as Orcs, Goblins, and Trolls. These creatures did not evolve naturally, but rather are the magical mutations performed by demented magicians. Now these creatures have prospered through many generations and their horrors are well known.
-
-Have with thy person a staff of Yew, preferably cut from a hard and fine grained sapling. If Orcs, Goblins, or Trolls threaten thy party, raise thy staff before them and speak the name of this Rune of dispelling. By casting this Rune, thou shalt be attempting to dispel the magic which is part of their inner being.
+A. REPOND
+There was a time, long ago, when the lands were free of the wretched creatures known as Orcs, Goblins, and Trolls. 
+These creatures did not evolve naturally, but rather are the magical mutations performed by demented magicians. 
+Now these creatures have prospered through many generations and their horrors are well known.
+Have with thy person a staff of Yew, preferably cut from a hard and fine grained sapling. 
+If Orcs, Goblins, or Trolls threaten thy party, raise thy staff before them and speak the name of this Rune of dispelling. 
+By casting this Rune, thou shalt be attempting to dispel the magic which is part of their inner being.
 
 B. MITTAR
 Place upon thy palm and close in a strong fist any small projectile of wood or stone. Strike it once upon thy breast, while chanting the incantation of Mittar: 
-
-MANJI MULA NESPON LEVI 
-MITTAR NOPSEN ALUM CAVI
-
-Hurl this talisman toward thine enemy. Magic in the form of a shimmering sphere of iridescent light will spring from thy hand to strike thy foe. The magic contained therein will enter his body and disrupt his life force.Depending on the skill and concentration invested in its conjuring, this spell can deliver the blow of an insolent child or a stalwart knight.
+MANJI MULA NESPON LEVI  MITTAR NOPSEN ALUM CAVI
+Hurl this talisman toward thine enemy. Magic in the form of a shimmering sphere of iridescent light will spring from thy hand to strike thy foe. 
+The magic contained therein will enter his body and disrupt his life force.
+Depending on the skill and concentration invested in its conjuring, this spell can deliver the blow of an insolent child or a stalwart knight.
 
 C. LORUM
-Before entering any dungeon, cave, or even houses with unsteady lanterns, be sure that thou hast propertied a goodly supply of Lorum dust. This is easily done by collecting the fine dust from a spider's bath which has been warmed by strong sun for many hours. Gather the dust into a chamois bag and seal the sun's energy within it by singing these words:
-
+Before entering any dungeon, cave, or even houses with unsteady lanterns, be sure that thou hast propertied a goodly supply of Lorum dust. 
+This is easily done by collecting the fine dust from a spider's bath which has been warmed by strong sun for many hours. 
+Gather the dust into a chamois bag and seal the sun's energy within it by singing these words:
 OBREY URICUM OBLA SUM
-
 To release the energy, chant these same words in reverse order and cast a small portion of dust into the air. A warm, soft, magical light of short duration will be produced.
 
 D. DOR ACRON
-Very useful when one desires to bypass a particularly bothersome portion of a dungeon. Dor Acron is cast with the air of the left forepaw of a badger. Store the paw with care, for if it is damaged in any way, which should hinder the badger's movement, thy way will be similarly impeded.Having made these preparations, when thou desires to enact the augury, gather thy party into a ring. While holding the paw, chant this ancient rhyme:
-
-LIEDLAN SPULGER IDSKRIN
-GRUEN BEAST TRENTLE BAN
-
+Very useful when one desires to bypass a particularly bothersome portion of a dungeon. Dor Acron is cast with the air of the left forepaw of a badger. 
+Store the paw with care, for if it is damaged in any way, which should hinder the badger's movement, thy way will be similarly impeded.
+Having made these preparations, when thou desires to enact the augury, gather thy party into a ring. While holding the paw, chant this ancient rhyme:
+LIEDLAN SPULGER IDSKRIN GRUEN BEAST TRENTLE BAN
 When this spell is cast, the mage and his companions will be transported to the next lower level of inhabitation.
 
 E. SUR ACRON
-This rune is closely related to Dor Acron, direction being the only difference in effect. In this case the dried wing of a bird is needed. The bird must be shot through the breast with an arrow, whilst in flight. Thread the wing on a leather thong and tie it to the tip of thy staff.
+This rune is closely related to Dor Acron, direction being the only difference in effect. In this case the dried wing of a bird is needed. 
+The bird must be shot through the breast with an arrow, whilst in flight. Thread the wing on a leather thong and tie it to the tip of thy staff.
 Once again, gather thy party into a ring and while holding the wing intone this verse of magical movement:
-
-LIEDLAN SPULGER IDSTRIN
-FAUN BEAST FENTRI CHEM
-
+LIEDLAN SPULGER IDSTRIN FAUN BEAST FENTRI CHEM
 As the words are chanted thy party will be lifted through the floor above thee to the dungeon's next higher level.
 
 F. FULGAR
-This incantation is a powerful weapon in battle. It requires a golden rod wrapped with iron and a vial of magical water collected from a meadow pond at the very moment lightning touches its surface. Keep the vial sealed until battle is nigh. Then touch the rod to the vial and level it at thy foe whilst shouting these words:
-
+This incantation is a powerful weapon in battle. It requires a golden rod wrapped with iron and a vial of magical water collected from a meadow pond at the very moment lightning touches its surface. 
+Keep the vial sealed until battle is nigh. Then touch the rod to the vial and level it at thy foe whilst shouting these words:
 FLAMIN FLEETIS PONDI
-
-All of the energy will be conducted through the golden rod, and a fiery ball will spin a searing path toward thine enemy. It will unfailingly strike him with a force strong enough to kill most common men and cause great damage to beasts of greater strength.
+All of the energy will be conducted through the golden rod, and a fiery ball will spin a searing path toward thine enemy. 
+It will unfailingly strike him with a force strong enough to kill most common men and cause great damage to beasts of greater strength.
 
 G. DAG ACRON
 This incantation requires that a pattern of rays extending from a common origin be drawn on the ground whilst the following chant is recited:
-
-DAG FULNUS ACRON
-FRIEDA ACRON BOONT
-
-As each ray is drawn a member of thy party will disappear and then with the final stroke thee too shall vanish. In the next moment at some random location on the terrestrial plan, each of the members of thy party and finally thyself will appear. This one can only be used on the Sosarian surface. It will always take thee some place, but thy destination is a matter of speculation.
+DAG FULNUS ACRON FRIEDA ACRON BOONT
+As each ray is drawn a member of thy party will disappear and then with the final stroke thee too shall vanish. In the next moment at some random location on the terrestrial plan, each of the members of thy party and finally thyself will appear. 
+This one can only be used on the Sosarian surface. It will always take thee some place, but thy destination is a matter of speculation.
 
 H. MENTAR
 In order to cast this most terrifying spell, an oak gall must be collected of the sort most often found on ancient trees in dark and gloomy forest folds. Dip the oak gall in molten wax while chanting this verse from the tome of Mantar:
-
-ZANBAR LEECHEN 
-CERDI MENTAR
-
+ZANBAR LEECHEN CERDI MENTAR
 Then, when battle is upon thee, crush the oak gall within thy hand. As the gall collapses, a blue ball of screaming horror will fly toward thine enemy. It will invade his mind, and irreparably corrupt his mental process, in direct proportion to thine own intelligence.
 
-I. Dag Lorum
+I. DAG LORUM
 This spell is similar in effect, but more enduring that Lorum. Place a golden dagger in strong sunlight until it is got enough to burn skin. Then scrape it heavily against a stone until a golden dust is produced. As the dust collects on the stone, change these words and gather the dust into a silken bag:
-
-OBRUM URICA OBLA SUM
-URICA MANI SUM LEVI
-
+OBRUM URICA OBLA SUM URICA MANI SUM LEVI
 When the need for extended illumination arises, hold the silken bag and shake it. A small portion of the bust will release it's energy in the form of an enduring, golden, shimmering light.
 
 J. FAL DIVI
 The ability to cast a clerical spell is a great power indeed. Fal Divi will open before thee a tremendous range of power otherwise inaccessible to the sixth circle. 
 The performance of this invocation is not a simple task, and often does not succeed. Sprinkle thy body with holy water and slowly chant the prayer of Fal Divi:
-
-FAL DIVI DOM MI NEA
-FAL DIVI REQUI SEM
-
+FAL DIVI DOM MI NEA FAL DIVI REQUI SEM
 Refer to the Cleric's Book and do as the spell therein requires. If this prayer is properly chanted, unto thee will come the power to use any of the supplications of the Cleric's Book.
 
 Beyond this page lie the advanced spells of the Sixth Circle. Do not venture too soon into the dark range of these spells. Until thou hast not only conquered the Stygian Abyss, but also can use it's power at thy will, the force of these runes will be beyond thy skill.
@@ -373,43 +393,34 @@ Before these spells thy foes will cower, but take heed to use them wisely, for t
 *break
 K. NOXUM
 This spell is the first of the multi-pronged attacks, and can be of great aid when thou art attacked by a large band of formidable foes.
-When the two moons of Sosaria are new, travel to the entrance of the dungeon of fire. Gather some of the volcanic ash which is abundant there. On the same night, mix this with herbs of cinnamon and ginseng in equal proportion.The use of this magical mixture requires that thou speak the Rune of Noxum before hurling the ashen mix toward thine enemies:
-
-NOXUM MENTON
-LANU FLAMA
-
+When the two moons of Sosaria are new, travel to the entrance of the dungeon of fire. Gather some of the volcanic ash which is abundant there. On the same night, mix this with herbs of cinnamon and ginseng in equal proportion.
+The use of this magical mixture requires that thou speak the Rune of Noxum before hurling the ashen mix toward thine enemies:
+NOXUM MENTON LANU FLAMA
 As thou dost, it will catch flame and rush at thy foes, thwarting each with a devastating blow.
 
 L. DECORP
-The sun hath made it's consecutive cycles and thou hast gained great experience in magic. Thy skill and power have now reached the sphere of direct magical determination.With the intonation of this spell, though dost draw on the magical force of all life and focus it upon thy foe.Sing the song of Decorp and the air will shake with the war of magic rushing to thy command. Upon whomever thou shalt indicate, the Magic shall descent, and their life shall be extinguished - always and completely:
-
-NON CRONO DI VANI
-PAS NUMEN TI SONI
+The sun hath made it's consecutive cycles and thou hast gained great experience in magic. Thy skill and power have now reached the sphere of direct magical determination.With the intonation of this spell, though dost draw on the magical force of all life and focus it upon thy foe.
+Sing the song of Decorp and the air will shake with the war of magic rushing to thy command. Upon whomever thou shalt indicate, the Magic shall descent, and their life shall be extinguished - always and completely:
+NON CRONO DI VANI PAS NUMEN TI SONI
 
 M. ALTAIR
 Until this time thou hast enacted thy Runic power to bring magic into this world. Now, as an advanced Adept of the Assembly of the Sixth Circle, thou may use the magic of this world to move beyond it.
 First, gather a fistful of sand, and while repeating the enchantment of Altair let it flow from thy hand onto the ground:
-
-ALT MAN FUL MINAR
-LAE FIN CRIM BONTAIR
-
+ALT MAN FUL MINAR LAE FIN CRIM BONTAIR
 As it falls, time itself will slow and finally stop, allowing thy party to move freely in this suspended state. The world will be temporarily frozen and at the mercy of thy will.
 
 N. DAG MENTAR
-Dag Mentar is a powerful multi-pronged conjuration that will wreck havoc among thy foes in a manner worthy of it's advanced rating. On the darkest night of the summer, trap an owl, old and wise. Sacrifice the owl upon a stone altar, keeping only its eyes. Enchant them with the following verse:
-
-FENDI MENTAR DIVI
-CREMBI MENTAR BONI
-
+Dag Mentar is a powerful multi-pronged conjuration that will wreck havoc among thy foes in a manner worthy of it's advanced rating. On the darkest night of the summer, trap an owl, old and wise. 
+Sacrifice the owl upon a stone altar, keeping only its eyes. Enchant them with the following verse:
+FENDI MENTAR DIVI CREMBI MENTAR BONI
 When battle is nigh, repeat the stanzas until the heaviness of magic in the air becomes oppressive to the labor of thy lungs. Smash the eyes between thy hands. Thy foes will be struck a savage blow with damage directly related to thine intelligence.
 
 O. NECORP
-On the night of a full moon, acquire the liver of one who is dying of the black rot. Hang the organ deep within the forest to dry, and allow six fortnights and a day to pass. Grind it into a fine powder while chanting these words:
-
-DON CORPUS MIEDA FUTZ
-RIEDA DON NEMI
-
-Store the powder in several small vials. When the need arises, throw a vial above the heads of thine enemy's party. It will magically shatter, releasing the loathsome rot upon their company. They will be quickly transformed into putrid vestiges of their former beings, with little strength left for battle.
+On the night of a full moon, acquire the liver of one who is dying of the black rot. Hang the organ deep within the forest to dry, and allow six fortnights and a day to pass. 
+Grind it into a fine powder while chanting these words:
+DON CORPUS MIEDA FUTZ RIEDA DON NEMI
+Store the powder in several small vials. When the need arises, throw a vial above the heads of thine enemy's party. It will magically shatter, releasing the loathsome rot upon their company. 
+They will be quickly transformed into putrid vestiges of their former beings, with little strength left for battle.
 *break
 P.
 This exorcism has no name, for the words should never be written or spoken - save the occasion when life is to be banished unto the Realm of Night. 
@@ -421,21 +432,15 @@ All foes who hear this utterance shall be dashed violently into certain destruct
 The Ancient Liturgy of Truth  
 
 Know ye that the Ancient Liturgy of Truth hath been in the care of our sect of 3000 years. Never, through the passing of each generation, hath out sacred custodianship been betrayed. 
-
 We now enjoin thee, guard well the secrets held within these pages. For thee, they shall be an immeasurable blessing, but if they are revealed to one of the unenlightened, great harm could befall him. 
-
 The proper use of the supplications contained within this manuscript will be thine aid in combating the evils of this world. The supplications herein are listed in ascending order of power. 
-
 Most of the will be unusable until thou hast trod many paths and gained great wisdom. If thou devotes thy whole being to these Truths, the power to perform actual miracles will be granted thee. 
-
 As thou art exalted enough to be close to the One, The power even over life and death may be thine. Take heed that thou dost not use these precious gifts in a frivolous manner, but for the betterment of the order. 
-*break
 Receive now my blessing through the dark veil of time. Know always that within thyself Truth was discovered, and that this Truth forms the basis of unyielding power.
 
 The Prophet
 Alizarkanon
-
-
+*break
 A. PONTORI
 Evil takes many forms throughout Sosaria, and some of the most evil are the Undead. Skeletons, ghouls, and zombies roam free in dungeons, forests and open terrain. Although they are formidable opponents in battle, there is a basic weakness in their essence. 
 These servants of evil are vestiges of former living beings now inhabited by an evil force.If thou shall encounter undead creatures, raise thy ankh of truth before them. 
@@ -510,113 +515,3 @@ P. ANJU SERMANI
 Once a body hath turned to ash, the soul which once inhabited it is sent on to it's next life. It therefore takes a miracle of enormous magnitude to reclaim it.
 Realize first that the spirit must leave another body and another life in order to return to thee. If thou perceives that the need for the return of thy companion is so great as to be willing to give five marks of thy wisdom in sacrifice, then beseech the One who is Truth and Wisdom. 
 Allow a tear from each of thine eyes to fall upon the ashes. As thy tears mix with the ashes, so shall they reconstitute before thee, and life shall be restored.
-*break
-EXODUS ULTIMA III
-PLAYER REFERENCE CARD
-by Lord British
-
-COMMANDS
-
-A) Attack: Attempts to damage foe with "ready weapons." Must be followed by indicating the direction for the attack.
-
-B) Board: Mount a horse or board a frigate.
-
-C) Cast: Cast a magic spell. Must be followed by the player number (except during combat), spell type (W/C) when needed, and the spell letter.
-
-D) Descend: Climb down a ladder to the next lower dungeon level.
-
-E) Enter: Enter a town, castle, dungeon or other landmark.
-
-F) Fire: Discharge a ship's cannons (after boarding) in direction indicated.
-
-G) Get Chest: Open chest. Must be followed by the number of the player who will search for traps, open the chest and acquire its contents.
-
-H) Hand Equipment: Trades equipment between two players. Followed by prompts to determine what is to be exchanged.
-
-1) Ignite a Torch: Lights a given player's torch.
-
-J) Join gold: Gives all gold in party to player indicated.
-
-K) Klimb: Climb up a ladder in a dungeon.
-
-L) Look: Identifies an object in a specified direction.
-
-M) Modify Order: Exchanges the positions of any two players within the party.
-
-N) Negate Time: Stops time for all outside of the party. Requires a special item.
-
-O) Other Command: Enter any command desired during game play.
-
-P) Peer at a Gem: Shows players a bird's eye view of a town, castle, dungeon level, or the outside world. One viewing per gem.
-
-Q) Quit (and save to disk): Use command to stop playing (from the outside world only) and save your progress to disk. You can resume the game from this point.
-
-R) Ready Weapon: Equip yourself with a specific weapon for use in combat.
-
-S) Steal: Used to steal chests from behind store counters. Success depends on skill.
-
-T) Transact: Use to talk to townspeople or trade with merchants.
-
-U) Unlock: Open doors if you have the key. Must be followed by direction to door and the player whose key is to be used. One use per key.
-
-V) Volume: Toggles sound effects on and off.
-
-W) Wear Armor: Outfits player with specified an-nor if owned.
-
-X) X-it: Leave behind or dismount your current transport and travel on foot.
-
-Y) Yell: Allows player to yell any word desired.
-
-Z) Ztats: Displays your vital statistics, possessions, and spells.
-
-Spacebar) Pass one game turn without taking any action. Food is consumed.
-
-In the upper left hand corner of the Z)tats box is the character's name, followed by sex, Race, Profession, and attribute point totals.  Displayed just below that is their status (Good, Dead, Poisoned, or Ashes).
-Their possessions - gold, food, keys, gems, torches, powders - are shown adjacent to the status box.  The character's experience, level, Magic Points, Hit Points, and 
-Maximum Hit Points total are shown directly below the status box.  Any Cards, or Marks which the character may have found during their adventure are listed in the lower left hand corner of the Z)tats box.  
-The remaining boxes are reserved for listing the different types of Armour, and Weapons which the character owns.  In addition to listing the different type of Armour you want to wear, and which Weapon you wish to Ready for that character.  
-To do so, simply move the pointer to the desired weapon/armour, and click on it.  The selected item will then be highlighted (provided it is legal for that character to use.)
-
-CREATING A CHARACTER
-
-First. select Organize a Party from the main menu.  Next you must select Create a Character from the Party Organization Menu.  This will bring up the player creation screen.  
-The figure below shows the player creation screen.  To select the character race, sex, and profession, simply move the pointer to the appropriate box with the mouse, and click on it.
-The character JACOBEAN below has been selected as a Male, Fuzzy, Wizard.  
-To distribute the 30 remaining attribute points use the mouse to click on either the decrease arrow (<--) or the increase arrow (-->) surrounding each of the four attribute point totals.  
-The number of points left to distribute is displayed after the word "Points".
-Clicking on the Cancel box will clear all of the entries that were made for that character and return you to the Party Organization menu.
-When you are satisfied with your choices, click on the Save box.  This will save your character's attributes to disk and replace the Empty space on the Register with your character's name.
-
-FORMING A PARTY
-
-Up to four characters may be placed into the current party.  This is done by first selecting Form a Party from the Party Organization Menu.  This will display the character register of that character.  
-A diamond next to the character indicates that the character is not in a party.  Clicking on a character's name will select/deselect that character.  
-When you are satisfied with your party selection, click on the Exit box to return to the Party Organization Menu.
-
-DISPERSING THE PARTY:
-Selecting Disperse a Party from the Party Organization Menu will clear all characters from the formed party and clear the map of Sosaria to its original state by removing all the monsters, ships, chests, etc.  
-Disperse a Party will not, however, reset the movement counter that keeps track of the number of moves that have been made in your game.
-
-TERMINATING A CHARACTER:
-If you wish to delete a character from your register select Terminate a Character from the Party Organization Menu.  This will display the current register of characters.
-Clicking on the character's name will bring up a dialog box asking you to confirm your decision to terminate that character.
-Click on the Okay box to confirm, then on the Exit box to return to the Party Organization Menu.
-
-PLAYING THE GAME
-As you move about the world of Sosaria, note that your party is represented by a single icon.  Once you enter combat you will see all of your characters (which will flash when it is each character's turn to take an action.)
-There are two ways to control the party's movement:
-
-1. Use the four movement keys indicated in the section DIRECTION OF MOVEMENT KEYS.
-2. Click directly on the play window to move the party in the direction indicated by the cursor arrow.
-
-Depending on your party's current location, there is a default command which is activated by clicking directly on your party icon in the play window.  The default commands are:
-
-In Towne:     Transact;
-On Surface:   Attack;
-In Combat:    Attack;
-On a Frigate: Fire Cannon;
-On a Chest:   Get Chest;
-On a Horse or Boat: Board;
-On Towne, Castle, or Dungeon Entrances: Enter;
-
-Whenever you are asked "Which Character?" by the game, you may indicate either by typing the number (1-4) of the character, or by pointing and clicking on the appropriate character window at the right of the play screen.

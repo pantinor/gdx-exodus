@@ -16,10 +16,12 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
@@ -204,6 +206,39 @@ public class Exodus extends Game {
         startScreen = new StartScreen(this);
 
         setScreen(startScreen);
+    }
+    
+    public static class CloudDrawable extends Actor {
+
+        float stateTime;
+
+        @Override
+        public void draw(Batch batch, float parentAlpha) {
+            stateTime += Gdx.graphics.getDeltaTime();
+            batch.draw(Exodus.cloud.getKeyFrame(stateTime, false), getX(), getY(), 64, 64);
+        }
+    }
+
+    public static class ExplosionDrawable extends Actor {
+
+        float stateTime;
+
+        @Override
+        public void draw(Batch batch, float parentAlpha) {
+            stateTime += Gdx.graphics.getDeltaTime();
+            batch.draw(Exodus.explosion.getKeyFrame(stateTime, false), getX(), getY(), 64, 64);
+        }
+    }
+
+    public static class ExplosionLargeDrawable extends Actor {
+
+        float stateTime;
+
+        @Override
+        public void draw(Batch batch, float parentAlpha) {
+            stateTime += Gdx.graphics.getDeltaTime();
+            batch.draw(Exodus.explosionLarge.getKeyFrame(stateTime, false), getX(), getY(), 192, 192);
+        }
     }
 
 }

@@ -54,6 +54,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.UBJsonReader;
+import exodus.Party.PartyMember;
 import util.PartyDeathException;
 import util.UltimaTiledMapLoader;
 
@@ -186,11 +187,10 @@ public class DungeonScreen extends BaseScreen {
         camera.far = 1000f;
 
         decalBatch = new DecalBatch(new CameraGroupStrategy(camera));
-        
+
 //        inputController = new CameraInputController(camera);
 //        inputController.rotateLeftKey = inputController.rotateRightKey = inputController.forwardKey = inputController.backwardKey = 0;
 //        inputController.translateUnits = 30f;
-
         ModelBuilder builder = new ModelBuilder();
         lightModel = builder.createSphere(.1f, .1f, .1f, 10, 10, new Material(ColorAttribute.createDiffuse(1, 1, 1, 1)), Usage.Position);
         lightModel.nodes.get(0).parts.get(0).setRenderable(pLight = new Renderable());
@@ -219,14 +219,14 @@ public class DungeonScreen extends BaseScreen {
                         byte index = bytes[pos];
                         pos++;
                         DungeonTile tile = DungeonTile.getTileByValue(index);
-                        
+
                         for (objects.Label l : this.dngMap.getMap().getLabels()) {
                             if (l.getX() == x && l.getY() == y && l.getZ() == i) {
                                 tile = DungeonTile.valueOf(l.getName());
                                 break;
                             }
                         }
-                        
+
                         dungeonTiles[i][x][y] = tile;
                         addBlock(i, tile, x + .5f, .5f, y + .5f);
                     }
@@ -562,9 +562,6 @@ public class DungeonScreen extends BaseScreen {
             if (tile == DungeonTile.FIELD_FIRE) {
                 c = Color.RED;
             }
-            if (tile == DungeonTile.FIELD_SLEEP) {
-                c = Color.PURPLE;
-            }
             Model model = builder.createBox(1, 1, 1, new Material(ColorAttribute.createDiffuse(c), ColorAttribute.createSpecular(c), new BlendingAttribute(0.7f)), Usage.Position | Usage.Normal);
             ModelInstance instance = new ModelInstance(model, tx, .5f, tz);
             DungeonTileModelInstance in = new DungeonTileModelInstance(instance, tile, level);
@@ -620,9 +617,6 @@ public class DungeonScreen extends BaseScreen {
                     }
                     if (tile == DungeonTile.FIELD_FIRE) {
                         c = Color.RED;
-                    }
-                    if (tile == DungeonTile.FIELD_SLEEP) {
-                        c = Color.PURPLE;
                     }
                     pixmap.setColor(c);
                     pixmap.fillRectangle(OFST + (x * DIM), OFST + (y * DIM), DIM, DIM);
@@ -989,7 +983,7 @@ public class DungeonScreen extends BaseScreen {
             return false;
 
         } else if (keycode == Keys.I) {
-            
+
             for (Party.PartyMember pm : context.getParty().getMembers()) {
                 if (pm.getPlayer().torches > 0) {
                     pm.getPlayer().torches--;
@@ -998,49 +992,40 @@ public class DungeonScreen extends BaseScreen {
                 }
             }
 
-        } else if (keycode == Keys.G || keycode == Keys.R || keycode == Keys.W || keycode == Keys.C) {
+        } else if (keycode == Keys.G || keycode == Keys.R || keycode == Keys.W || keycode == Keys.C || keycode == Keys.S) {
 
             Gdx.input.setInputProcessor(sip);
             sip.setinitialKeyCode(keycode, tile, x, y);
 
-        } else if (keycode == Keys.V) {
-            
+        } else if (keycode == Keys.P) {
+
             showMiniMap = !showMiniMap;
 
-        } else if (keycode == Keys.S) {
-            if (tile == DungeonTile.ALTAR) {
+        } else if (keycode == Keys.V) {
 
+            Exodus.playMusic = !Exodus.playMusic;
+            if (Exodus.playMusic) {
+                Exodus.music.play();
             } else {
-
-                if (tile.getValue() >= 144 && tile.getValue() <= 148) {
-                    log("You find a Fountain. Who drinks?");
-                } else if (tile == DungeonTile.ORB) {
-                    log("You find a Magical Orb...Who touches?");
-                } else {
-                    log("Who searches?");
-                }
-
-                Gdx.input.setInputProcessor(sip);
-                sip.setinitialKeyCode(keycode, tile, x, y);
+                Exodus.music.stop();
             }
 
-        } else if (keycode == Keys.U) {
-//            if (dngMap == Maps.ABYSS && tile == DungeonTile.ALTAR) {
-//                log("Use which item?");
-//                log("");
-//                AbyssInputAdapter aia = new AbyssInputAdapter(x, y);
-//                Gdx.input.setInputProcessor(aia);
-//                return false;
-//            }
+        } else if (keycode == Keys.M) {
+            
+            log("Modify Order:");
+            log("exhange #:");
+            NewOrderInputAdapter noia = new NewOrderInputAdapter(this);
+            Gdx.input.setInputProcessor(noia);
+            return false;
 
         } else if (keycode == Keys.Z) {
             showZstats = showZstats + 1;
             if (showZstats >= STATS_PLAYER1 && showZstats <= STATS_PLAYER4) {
                 if (showZstats > context.getParty().getMembers().size()) {
-                    showZstats = STATS_SPELLS;
+                    showZstats = STATS_PLAYER4;
                 }
             }
-            if (showZstats > STATS_SPELLS) {
+            if (showZstats > STATS_PLAYER4) {
                 showZstats = STATS_NONE;
             }
             return false;
@@ -1102,28 +1087,24 @@ public class DungeonScreen extends BaseScreen {
                 context.getParty().applyEffect(TileEffect.POISONFIELD);
                 Sounds.play(Sound.POISON_DAMAGE);
                 break;
-            case FIELD_SLEEP:
-                context.getParty().applyEffect(TileEffect.SLEEP);
-                Sounds.play(Sound.SLEEP);
-                break;
             case FIELD_FIRE:
                 context.getParty().applyEffect(TileEffect.LAVA);
                 Sounds.play(Sound.FIREFIELD);
                 break;
             case MISTY_WRITINGS:
                 Label label = new Label(texts[currentLevel], Exodus.skin, "ultima", Color.WHITE);
-                label.setPosition(32*6, 32*12);
+                label.setPosition(32 * 6, 32 * 12);
                 stage.addActor(label);
-                label.addAction(sequence(Actions.moveTo(32*6, 32*8, 2f), Actions.fadeOut(2f), Actions.removeActor(label)));
+                label.addAction(sequence(Actions.moveTo(32 * 6, 32 * 8, 2f), Actions.fadeOut(2f), Actions.removeActor(label)));
                 break;
             case TIME_LORD:
-                Label greet = new Label("Greetings!\nI am the Time Lord.\nTo seal EXODUS,\nremember this..\nThere is only one way.\nLove, Sol.... Moon, Death.", 
+                Label greet = new Label("Greetings!\nI am the Time Lord.\nTo seal EXODUS,\nremember this..\nThere is only one way.\nLove, Sol.... Moon, Death.",
                         Exodus.skin, "small-ultima", Color.BLUE);
-                greet.setPosition(32*6, 32*10);
+                greet.setPosition(32 * 6, 32 * 10);
                 stage.addActor(greet);
-                greet.addAction(sequence(Actions.moveTo(32*6, 32*6, 4f), Actions.fadeOut(1f), Actions.removeActor(greet)));
+                greet.addAction(sequence(Actions.moveTo(32 * 6, 32 * 6, 4f), Actions.fadeOut(1f), Actions.removeActor(greet)));
                 break;
-                
+
         }
     }
 
@@ -1147,10 +1128,10 @@ public class DungeonScreen extends BaseScreen {
         Party.PartyMember pm = context.getParty().getMember(index);
         int x = (Math.round(currentPos.x) - 1);
         int y = (Math.round(currentPos.z) - 1);
-        
+
         log("You touch the " + type.getType() + "!");
-        
-        switch(type) {
+
+        switch (type) {
             case MARK_KINGS:
                 pm.getPlayer().marks[0] = 1;
                 break;
@@ -1185,7 +1166,6 @@ public class DungeonScreen extends BaseScreen {
 //        }
 //        modelInstances.remove(mark);
 //        dungeonTiles[currentLevel][x][y] = DungeonTile.NOTHING;
-
     }
 
     public void dungeonDrinkFountain(DungeonTile type, int index) {
@@ -1239,7 +1219,7 @@ public class DungeonScreen extends BaseScreen {
         return dungeonTiles[z][x][y] == DungeonTile.NOTHING;
     }
 
-    public void getChest(int index, int x, int y) {
+    public void getChest(PartyMember pm, int x, int y, boolean disarmed) {
         try {
             DungeonTileModelInstance chest = null;
             for (DungeonTileModelInstance dmi : modelInstances) {
@@ -1252,21 +1232,15 @@ public class DungeonScreen extends BaseScreen {
             }
 
             if (chest != null) {
-
-                Party.PartyMember pm = context.getParty().getMember(index);
                 if (pm == null) {
-                    System.err.println("member is null " + index);
+                    System.err.println("member is null ");
                 }
-                if (pm.getPlayer() == null) {
-                    System.err.println("player is null " + index);
+                if (!disarmed) {
+                    context.getChestTrapHandler(pm);
                 }
-                context.getChestTrapHandler(pm);
                 log(String.format("The Chest Holds: %d Gold", context.getParty().getChestGold(pm)));
-
-                //remove chest model instance
                 modelInstances.remove(chest);
                 dungeonTiles[currentLevel][x][y] = DungeonTile.NOTHING;
-
             } else {
                 log("Not Here!");
             }

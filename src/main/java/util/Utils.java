@@ -794,7 +794,7 @@ public class Utils implements Constants {
                         break;
                 }
 
-                scr.replaceTile(av.leaveTileName, av.x, av.y);
+                //scr.replaceTile(av.leaveTileName, av.x, av.y);
 
                 scr.finishPlayerTurn();
 
@@ -833,9 +833,9 @@ public class Utils implements Constants {
             }
         }
 
-        if (wt.getWeapon().getLeavetile() != null && combatMap.getTile(target.x, target.y).walkable()) {
-            target.leaveTileName = wt.getWeapon().getLeavetile();
-        }
+//        if (wt.getWeapon().getLeavetile() != null && combatMap.getTile(target.x, target.y).walkable()) {
+//            target.leaveTileName = wt.getWeapon().getLeavetile();
+//        }
 
         return target;
     }

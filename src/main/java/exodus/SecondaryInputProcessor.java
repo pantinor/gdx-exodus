@@ -46,36 +46,38 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
 
         switch (k) {
             case Keys.T:
-                screen.log("TALK> Which party member?");
+                screen.log("TALK> Which party member? (1-4)");
                 break;
             case Keys.O:
                 screen.log("OPEN> ");
                 break;
-            case Keys.J:
-                screen.log("JIMMY> Which party member?");
+            case Keys.U:
+                screen.log("UNLOCK> Which party member? (1-4)");
                 break;
             case Keys.S:
-                screen.log("SEARCH> Which party member?");
+                screen.log("SEARCH> Which party member? (1-4)");
                 break;
             case Keys.A:
                 screen.log("ATTACK> ");
                 break;
             case Keys.G:
-                screen.log("GET> Which party member? ");
+                screen.log("GET> Which party member? (1-4)");
                 break;
             case Keys.R:
-                screen.log("READY> Which party member? ");
+                screen.log("READY> Which party member? (1-4)");
                 break;
             case Keys.W:
-                screen.log("WEAR> Which party member? ");
+                screen.log("WEAR> Which party member? (1-4)");
                 break;
             case Keys.Y:
-                screen.log("YELL> Which party member? ");
+                screen.log("YELL> Which party member? (1-4)");
                 break;
             case Keys.C:
-                screen.log("CAST> Which party member? ");
+                screen.log("CAST> Which party member? (1-4)");
                 break;
-
+            case Keys.J:
+                screen.log("JOIN GOLD> To party member? (1-4)");
+                break;        
         }
     }
 
@@ -85,6 +87,30 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
         this.currentX = x;
         this.currentY = y;
         buffer = new StringBuilder();
+        
+        switch (k) {
+            case Keys.G:
+                screen.log("GET> Which party member? (1-4)");
+                break;
+            case Keys.R:
+                screen.log("READY> Which party member? (1-4)");
+                break;
+            case Keys.W:
+                screen.log("WEAR> Which party member? (1-4)");
+                break;
+            case Keys.C:
+                screen.log("CAST> Which party member? (1-4)");
+                break;
+            case Keys.S:
+                if (dngTile.getValue() >= 144 && dngTile.getValue() <= 148) {
+                    screen.log("You find a Fountain. Who drinks? (1-4)");
+                } else if (dngTile == DungeonTile.ORB) {
+                    screen.log("You find a Magical Orb...Who touches? (1-4)");
+                } else {
+                    screen.log("Who searches? (1-4)");
+                }
+                break;
+        }
     }
 
     @Override
@@ -173,7 +199,7 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                     screen.log("Nobody selected!");
                 }
 
-            } else if (initialKeyCode == Keys.O) {
+            } else if (initialKeyCode == Keys.L) {
 
                 screen.logAppend(dir.toString());
                 if (bm.openDoor(x, y)) {
@@ -182,7 +208,7 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                     screen.log("Can't!");
                 }
 
-            } else if (initialKeyCode == Keys.J) {
+            } else if (initialKeyCode == Keys.U) {
 
                 if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
                     member = gameScreen.context.getParty().getMember(keycode - 7 - 1);
@@ -216,9 +242,16 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
             } else if (initialKeyCode == Keys.Y) {
 
                 if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
-                    screen.log("What do you say?");
+                    screen.log("Yell what?");
                     Gdx.input.setInputProcessor(new YellInputAdapter(screen.context.getParty().getMember(keycode - 7 - 1), gameScreen));
                     return false;
+                } else {
+                    screen.log("Nobody selected!");
+                }
+            } else if (initialKeyCode == Keys.J) {
+
+                if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
+                    gameScreen.context.getParty().poolGold(keycode - 7 - 1);
                 } else {
                     screen.log("Nobody selected!");
                 }
@@ -254,7 +287,7 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
             } else if (initialKeyCode == Keys.G) {
 
                 if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
-                    gameScreen.getChest(keycode - 7 - 1, x, y);
+                    gameScreen.getChest(screen.context.getParty().getMember(keycode - 7 - 1), x, y, false);
                 }
 
             } else if (initialKeyCode == Keys.A) {
@@ -360,7 +393,7 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
             } else if (initialKeyCode == Keys.G) {
 
                 if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
-                    dngScreen.getChest(keycode - 7 - 1, currentX, currentY);
+                    dngScreen.getChest(screen.context.getParty().getMember(keycode - 7 - 1), currentX, currentY, false);
                 }
 
             } else if (initialKeyCode == Keys.R) {
@@ -381,7 +414,7 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
 
                 if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
                     PartyMember pm = screen.context.getParty().getMember(keycode - 7 - 1);
-                    Map<String, Spell> spellSelection = Spell.getCastables(pm.getPlayer().profession, bm.getType());
+                    Map<String, Spell> spellSelection = Spell.getCastables(pm.getPlayer().profession, MapType.dungeon);
                     if (spellSelection.size() < 1) {
                         screen.log("No spells to cast!");
                     } else {

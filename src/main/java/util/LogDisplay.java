@@ -61,7 +61,7 @@ public class LogDisplay {
         for (int i = 0; i < party.getMembers().size(); i++) {
             PartyMember pm = party.getMember(i);
 
-            Exodus.smallFont.setColor(Color.WHITE);
+            Exodus.smallFont.setColor(i == party.getActivePlayer() ? Color.YELLOW : Color.WHITE);
             if (pm.getPlayer().status == StatusType.POISONED) {
                 Exodus.smallFont.setColor(Color.GREEN);
             }
@@ -71,6 +71,9 @@ public class LogDisplay {
             if (pm.getPlayer().status == StatusType.DEAD) {
                 Exodus.smallFont.setColor(Color.DARK_GRAY);
             }
+            if (pm.getPlayer().health > 0 && pm.getPlayer().health < 3) {
+                Exodus.smallFont.setColor(Color.RED);
+            }
             
             batch.draw(Exodus.faceTiles[pm.getPlayer().portaitIndex], LOG_X + 3, y + 5);
             
@@ -78,9 +81,11 @@ public class LogDisplay {
 
             String d = r.name.toUpperCase() + "  " + r.sex.toString() + " " + r.race.toString() + " " + r.profession.toString();
             Exodus.smallFont.draw(batch, d, LOG_X + 64, y + 65);
-            d = "HLTH: " + pm.getPlayer().health + " " + pm.getPlayer().status.getId() + "  LVL: " + pm.getPlayer().getLevel() + "  EXP: " + pm.getPlayer().exp;
+            
+            d = String.format("HLTH: %d %s LVL: %d EXP: %d", pm.getPlayer().health, pm.getPlayer().status.getId(),pm.getPlayer().getLevel(), pm.getPlayer().exp);
             Exodus.smallFont.draw(batch, d, LOG_X + 64, y + 45);
-            d = String.format("GOLD: %d FOOD: %d MANA: %d / %d", pm.getPlayer().gold, pm.getPlayer().food, pm.getPlayer().mana, pm.getPlayer().getMaxMana());
+            
+            d = String.format("GOLD: %d FOOD: %d MANA: %d/%d", pm.getPlayer().gold, pm.getPlayer().food, pm.getPlayer().mana, pm.getPlayer().getMaxMana());
             Exodus.smallFont.draw(batch, d, LOG_X + 64, y + 25);
             
             y -= 77;

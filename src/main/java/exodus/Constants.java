@@ -35,7 +35,6 @@ public interface Constants {
     public static final int STATS_PLAYER2 = 2;
     public static final int STATS_PLAYER3 = 3;
     public static final int STATS_PLAYER4 = 4;
-    public static final int STATS_SPELLS = 5;
     public static int MOON_PHASES = 24;
     public static int MOON_SECONDS_PER_PHASE = 4;
     public static int MOON_CHAR = 20;
@@ -153,7 +152,6 @@ public interface Constants {
 
         NONE,
         FIRE,
-        SLEEP,
         POISON,
         POISONFIELD,
         ELECTRICITY,
@@ -215,7 +213,6 @@ public interface Constants {
         poison_field(TileAttrib.dispelable.getVal(), TileSpeed.VVSLOW, TileEffect.POISON),
         energy_field(TileAttrib.dispelable.getVal() | TileAttrib.unflyable.getVal() | TileAttrib.unwalkable.getVal() | TileAttrib.creatureunwalkable.getVal(), TileSpeed.VVSLOW, TileEffect.ELECTRICITY),
         fire_field(TileAttrib.dispelable.getVal(), TileSpeed.VVSLOW, TileEffect.FIRE),
-        sleep_field(TileAttrib.dispelable.getVal(), TileSpeed.VVSLOW, TileEffect.SLEEP),
         lava(TileAttrib.replacement.getVal(), TileSpeed.VVSLOW, TileEffect.LAVA),
         signs(TileAttrib.unwalkable.getVal() | TileAttrib.unflyable.getVal() | TileAttrib.rangeattackover.getVal()),
         spacers(TileAttrib.unwalkable.getVal() | TileAttrib.rangeattackover.getVal()),
@@ -444,7 +441,6 @@ public interface Constants {
         FIELD_POISON((byte) 0x00, "Poison Field", "poison_field", false),
         FIELD_ENERGY((byte) 0x00, "Energy Field", "energy_field", false),
         FIELD_FIRE((byte) 0x00, "Fire Field", "fire_field", false),
-        FIELD_SLEEP((byte) 0x00, "Sleep Field", "sleep_field", false),
         DOOR((byte) 0xC0, "Door", "door", true, Maps.DNG5_CON),
         LOCKED_DOOR((byte) 0, "Locked Door", "locked_door", false, Maps.DNG5_CON),
         SECRET_DOOR((byte) 0xA0, "Secret Door", "secret_door", false, Maps.DNG6_CON),
@@ -708,7 +704,7 @@ public interface Constants {
 
     public enum Spell {
 
-        REPOND("A", 0, "Destroy orcs/goblins/trolls", Profession.ALCHEMIST.val() | Profession.DRUID.val() | Profession.LARK.val() | Profession.RANGER.val() | Profession.WIZARD.val(), MapType.combat.val()),
+        REPOND("A", 0, "Destroy orcs, gremlins, trolls", Profession.ALCHEMIST.val() | Profession.DRUID.val() | Profession.LARK.val() | Profession.RANGER.val() | Profession.WIZARD.val(), MapType.combat.val()),
         MITTAR("B", 5, "Magic missile", Profession.ALCHEMIST.val() | Profession.DRUID.val() | Profession.LARK.val() | Profession.RANGER.val() | Profession.WIZARD.val(), MapType.combat.val()),
         LORUM("C", 10, "Minor light spell", Profession.ALCHEMIST.val() | Profession.DRUID.val() | Profession.LARK.val() | Profession.RANGER.val() | Profession.WIZARD.val(), MapType.dungeon.val()),
         DOR_ACRON("D", 15, "Down one dungeon level", Profession.ALCHEMIST.val() | Profession.DRUID.val() | Profession.LARK.val() | Profession.RANGER.val() | Profession.WIZARD.val(), MapType.dungeon.val()),
@@ -725,8 +721,8 @@ public interface Constants {
         NECORP("O", 70, "Weakens enemies", Profession.WIZARD.val(), MapType.combat.val()),
         NOTHING("P", 75, "Multi-death bolt", Profession.WIZARD.val(), MapType.combat.val()),
         
-        PONTORI("A", 0, "Destroy skeletons/ghouls/zombies", Profession.CLERIC.val() | Profession.ILLUSIONIST.val() | Profession.PALADIN.val() | Profession.RANGER.val() | Profession.DRUID.val(), MapType.combat.val()),
-        APPAR_UNEM("B", 5, "Disarm chest safely", Profession.CLERIC.val() | Profession.ILLUSIONIST.val() | Profession.PALADIN.val() | Profession.RANGER.val() | Profession.DRUID.val(), 0xff),
+        PONTORI("A", 0, "Turn the undead", Profession.CLERIC.val() | Profession.ILLUSIONIST.val() | Profession.PALADIN.val() | Profession.RANGER.val() | Profession.DRUID.val(), MapType.combat.val()),
+        APPAR_UNEM("B", 5, "Disarm chest safely", Profession.CLERIC.val() | Profession.ILLUSIONIST.val() | Profession.PALADIN.val() | Profession.RANGER.val() | Profession.DRUID.val(), MapType.city.val() | MapType.world.val() | MapType.dungeon.val()),
         SANCTU("C", 10, "Minor healing", Profession.CLERIC.val() | Profession.ILLUSIONIST.val() | Profession.PALADIN.val() | Profession.RANGER.val() | Profession.DRUID.val(), 0xff),
         LUMINAE("D", 15, "Minor light spell", Profession.CLERIC.val() | Profession.ILLUSIONIST.val() | Profession.PALADIN.val() | Profession.RANGER.val() | Profession.DRUID.val(), MapType.dungeon.val()),
         REC_SU("E", 20, "Up one dungeon level", Profession.CLERIC.val() | Profession.ILLUSIONIST.val() | Profession.PALADIN.val() | Profession.RANGER.val() | Profession.DRUID.val(), MapType.dungeon.val()),
@@ -921,7 +917,6 @@ public interface Constants {
     public enum CombatAction {
 
         ATTACK,
-        CAST_SLEEP,
         ADVANCE,
         RANGED,
         FLEE,
@@ -990,13 +985,12 @@ public interface Constants {
         whirlpool(24),
         rat(25, 5, 0),
         bat(26, 5, 0),
-        spider(27, 5, 0),
+        spider(27, 5, 1),
         ghost(28, 5, 1),
         slime(29, 5, 0),
         troll(30, 5, 2),
         gremlin(31, 5, 3),
         mimic(32, 5, 5),
-        reaper(33, 5, 7),
         insect_swarm(34),
         gazer(35, 3, 5),
         phantom(36, 3, 4),

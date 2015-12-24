@@ -46,6 +46,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import static exodus.Constants.tilePixelHeight;
 import static exodus.Constants.tilePixelWidth;
+import exodus.Exodus.ExplosionDrawable;
 import exodus.Party.PartyMember;
 import java.util.Iterator;
 import util.PartyDeathException;
@@ -112,7 +113,7 @@ public class GameScreen extends BaseScreen {
         seq2.addAction(Actions.run(explosionsTimer));
         projectilesStage.addAction(Actions.forever(seq2));
 
-        //add 2 whirlpools
+        //add 2 whirlpools manually, they do not spawn automatically
         Creature wp = Exodus.creatures.getInstance(CreatureType.whirlpool, Exodus.standardAtlas);
         wp.currentX = 200;
         wp.currentY = 53;
@@ -176,17 +177,6 @@ public class GameScreen extends BaseScreen {
         }
     }
 
-    private static class ExplosionDrawable extends Actor {
-
-        float stateTime;
-
-        @Override
-        public void draw(Batch batch, float parentAlpha) {
-            stateTime += Gdx.graphics.getDeltaTime();
-            batch.draw(Exodus.explosion.getKeyFrame(stateTime, false), getX(), getY(), 64, 64);
-        }
-    }
-
     public class ExplosionsTimer implements Runnable {
 
         public boolean active = false;
@@ -247,7 +237,6 @@ public class GameScreen extends BaseScreen {
 
             Party party = new Party(sg);
             context.setParty(party);
-            //context.loadJournalEntries();
 
             party.getMember(0).getPlayer().torches = 5;
 //            party.getMember(0).getPlayer().keys = 50;
@@ -272,7 +261,7 @@ public class GameScreen extends BaseScreen {
             //load the dungeon if save game starts in dungeon
             if (Maps.get(sg.location) != Maps.SOSARIA) {
                 loadNextMap(Maps.get(sg.location), sg.partyX, sg.partyY, sg.partyX, sg.partyY, sg.dnglevel, Direction.getByValue(sg.orientation), true);
-                //loadNextMap(Maps.TIME, 0, 0, 3, 1, 7, Direction.WEST, true);
+                //loadNextMap(Maps.DOOM, 0, 0, 3, 1, 1, Direction.WEST, true);
                 //loadNextMap(Maps.DESTARD, 0, 0, 3, 5, 3, Direction.SOUTH, true);
                 //loadNextMap(Maps.DELVE_SORROWS, 0, 0, 3, 19, 1, Direction.EAST, true);
             }
@@ -501,10 +490,6 @@ public class GameScreen extends BaseScreen {
 
         batch.draw(mainAvatar.getKeyFrames()[avatarDirection], tilePixelWidth * 11, tilePixelHeight * 12);
 
-        //Vector3 v = getCurrentMapCoords();
-        //font.draw(batch, String.format("newMapPixelCoords: %d, %d", (int)newMapPixelCoords.x, (int)newMapPixelCoords.y), 10, 500);
-        //font.draw(batch, String.format("current map coords: %d, %d", (int)v.x, (int)v.y), 10, 480);
-        //font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond(), 10, 460);
         Exodus.hud.render(batch, context.getParty());
 
         Exodus.font.setColor(Color.WHITE);
@@ -651,10 +636,10 @@ public class GameScreen extends BaseScreen {
             showZstats = showZstats + 1;
             if (showZstats >= STATS_PLAYER1 && showZstats <= STATS_PLAYER4) {
                 if (showZstats > context.getParty().getMembers().size()) {
-                    showZstats = STATS_SPELLS;
+                    showZstats = STATS_PLAYER4;
                 }
             }
-            if (showZstats > STATS_SPELLS) {
+            if (showZstats > STATS_PLAYER4) {
                 showZstats = STATS_NONE;
             }
         } else if (keycode == Keys.B) {
@@ -678,22 +663,36 @@ public class GameScreen extends BaseScreen {
             mainAvatar = avatarAnim;
 
         } else if (keycode == Keys.M) {
-
+            log("Modify Order:");
+            log("exhange #:");
+            NewOrderInputAdapter noia = new NewOrderInputAdapter(this);
+            Gdx.input.setInputProcessor(noia);
+            return false;
         } else if (keycode == Keys.P) {
             peerGem();
-        } else if (keycode == Keys.U) {
+        } else if (keycode == Keys.O) {
 
-            log("Use what:");
+            log("What other command?");
             log("");
-            ItemInputAdapter iia = new ItemInputAdapter(this);
+            OtherCommandInputAdapter iia = new OtherCommandInputAdapter(this);
             Gdx.input.setInputProcessor(iia);
             return false;
 
-        } else if (keycode == Keys.T || keycode == Keys.O || keycode == Keys.J || keycode == Keys.S || keycode == Keys.Y
-                || keycode == Keys.A || keycode == Keys.G || keycode == Keys.R || keycode == Keys.W || keycode == Keys.C) {
+        } else if (keycode == Keys.T || keycode == Keys.J || keycode == Keys.S || keycode == Keys.Y || keycode == Keys.U
+                || keycode == Keys.A || keycode == Keys.G || keycode == Keys.R || keycode == Keys.W || keycode == Keys.C || keycode == Keys.L) {
+            
             Gdx.input.setInputProcessor(sip);
             sip.setinitialKeyCode(keycode, context.getCurrentMap(), (int) v.x, (int) v.y);
             return false;
+            
+        } else if (keycode == Keys.V) {
+            
+            Exodus.playMusic = !Exodus.playMusic;
+            if (Exodus.playMusic) {
+                Exodus.music.play();
+            } else {
+                Exodus.music.stop();
+            }
 
         } else if (keycode == Keys.SPACE) {
             log("Pass");
@@ -764,6 +763,8 @@ public class GameScreen extends BaseScreen {
                     Vector3 d = getDestinationForMoongate(g);
                     if (d != null) {
                         newMapPixelCoords = getMapPixelCoords((int) d.x, (int) d.y);
+                        renderer.getFOV().calculateFOV(context.getCurrentMap().getShadownMap(), (int) d.x, (int) d.y, 17f);
+                        return;
                     }
                 }
             }
@@ -771,7 +772,6 @@ public class GameScreen extends BaseScreen {
         }
 
         renderer.getFOV().calculateFOV(context.getCurrentMap().getShadownMap(), newx, newy, 17f);
-
         log(dir.toString());
     }
 
@@ -806,7 +806,7 @@ public class GameScreen extends BaseScreen {
 
     }
 
-    public void replaceTile(String name, int x, int y) {
+    public synchronized void replaceTile(String name, int x, int y) {
         if (name == null) {
             return;
         }
@@ -818,8 +818,12 @@ public class GameScreen extends BaseScreen {
         if (cell == null) {
             System.err.printf("null cell in %s %d %d %s\n", context.getCurrentMap().getId(), x, y, name);
         }
-        cell.setTile(tmt);
-        context.getCurrentMap().setTile(Exodus.baseTileSet.getTileByName(name), x, y);
+        try {
+            cell.setTile(tmt);
+            context.getCurrentMap().setTile(Exodus.baseTileSet.getTileByName(name), x, y);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean checkRandomCreatures() {
@@ -1116,7 +1120,7 @@ public class GameScreen extends BaseScreen {
         }
     }
 
-    public void getChest(int index, int x, int y) {
+    public void getChest(PartyMember pm, int x, int y, boolean disarmed) {
 
         boolean found = false;
 
@@ -1133,7 +1137,7 @@ public class GameScreen extends BaseScreen {
         }
 
         if (chest == null) {
-            //check tile too, ie in cities
+            //check tile if chest in a city
             Tile tile = context.getCurrentMap().getTile(x, y);
             if (tile.getRule() == TileRule.chest) {
                 replaceTile("brick_floor", x, y);
@@ -1143,14 +1147,9 @@ public class GameScreen extends BaseScreen {
 
         try {
             if (found) {
-                PartyMember pm = context.getParty().getMember(index);
-                if (pm == null) {
-                    System.err.println("member is null " + index);
+                if (!disarmed) {
+                    context.getChestTrapHandler(pm);
                 }
-                if (pm.getPlayer() == null) {
-                    System.err.println("player is null " + index);
-                }
-                context.getChestTrapHandler(pm);
                 log(String.format("The Chest Holds: %d Gold", context.getParty().getChestGold(pm)));
             } else {
                 log("Not Here!");
@@ -1253,12 +1252,12 @@ public class GameScreen extends BaseScreen {
         }
     }
 
-    private class ItemInputAdapter extends InputAdapter {
+    private class OtherCommandInputAdapter extends InputAdapter {
 
         GameScreen screen;
         StringBuilder buffer = new StringBuilder();
 
-        public ItemInputAdapter(GameScreen screen) {
+        public OtherCommandInputAdapter(GameScreen screen) {
             this.screen = screen;
         }
 
@@ -1270,23 +1269,15 @@ public class GameScreen extends BaseScreen {
                 }
                 String text = buffer.toString().toUpperCase();
                 try {
-                    Item item = Item.valueOf(Item.class, text);
-
-                    switch (item) {
-                        case BOOK:
-                        case BELL:
-                        case CANDLE:
-                            //screen.useBBC(item);
+                    switch (text) {
+                        case "STEAL":
                             break;
-                        case WHEEL:
-                            //screen.useWheel();
+                        case "PRAY":
                             break;
-                        case SKULL:
-                            //screen.useSkull();
+                        case "BRIBE":
                             break;
-                        case HORN:
-                            //screen.useHorn();
-                            break;
+                        case "INSERT":
+                            break;                        
                         default:
                             screen.log("What?");
                             break;

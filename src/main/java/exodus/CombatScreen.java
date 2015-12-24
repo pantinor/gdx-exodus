@@ -16,8 +16,6 @@ import objects.CreatureSet;
 import objects.ProjectileActor;
 import objects.Tile;
 
-import org.apache.commons.lang3.StringUtils;
-
 import util.Utils;
 
 import com.badlogic.gdx.Gdx;
@@ -314,11 +312,6 @@ public class CombatScreen extends BaseScreen {
 
         Exodus.hud.render(batch, party);
 
-        Exodus.font.setColor(Color.WHITE);
-        if (showZstats > 0) {
-            //party.getSaveGame().renderZstats(showZstats, Exodus.font, batch, Exodus.SCREEN_HEIGHT);
-        }
-
         if (context.getAura().getType() != AuraType.NONE) {
             Exodus.font.draw(batch, context.getAura().getType().toString(), 430, Exodus.SCREEN_HEIGHT - 7);
         }
@@ -399,26 +392,13 @@ public class CombatScreen extends BaseScreen {
             } else if (keycode == Keys.R) {
                 Gdx.input.setInputProcessor(new ReadyWearInputAdapter(ap, true));
                 return false;
-
             } else if (keycode == Keys.W) {
                 Gdx.input.setInputProcessor(new ReadyWearInputAdapter(ap, false));
-                return false;
-
-            } else if (keycode == Keys.Z) {
-//                showZstats = showZstats + 1;
-//                if (showZstats >= STATS_PLAYER1 && showZstats <= STATS_PLAYER8) {
-//                    if (showZstats > party.getMembers().size()) {
-//                        showZstats = STATS_WEAPONS;
-//                    }
-//                }
-//                if (showZstats > STATS_SPELLS) {
-//                    showZstats = STATS_NONE;
-//                }
-
                 return false;
             }
 
             finishPlayerTurn();
+            
         } catch (PartyDeathException e) {
             this.returnScreen.partyDeath();
         }
@@ -440,8 +420,6 @@ public class CombatScreen extends BaseScreen {
             Sounds.play(Sound.FIREFIELD);
         } else if (effect == TileEffect.POISON || effect == TileEffect.POISONFIELD) {
             Sounds.play(Sound.POISON_EFFECT);
-        } else if (effect == TileEffect.SLEEP) {
-            Sounds.play(Sound.SLEEP);
         }
 
     }
@@ -662,9 +640,6 @@ public class CombatScreen extends BaseScreen {
         } else if (attacker.rangedAttackIs("fire_field")) {
             effect = TileEffect.FIRE;
             col = Color.RED;
-        } else if (attacker.rangedAttackIs("sleep_field")) {
-            effect = TileEffect.SLEEP;
-            col = Color.PURPLE;
         } else if (attacker.rangedAttackIs("energy_field")) {
             effect = TileEffect.ELECTRICITY;
             col = Color.BLUE;
@@ -737,7 +712,6 @@ public class CombatScreen extends BaseScreen {
      */
     private boolean creatureAction(Creature creature) throws PartyDeathException {
 
-        //accept no input starting now, re-enabled when creature actions are done
         Gdx.input.setInputProcessor(null);
 
         if (creature.negates()) {
@@ -745,22 +719,14 @@ public class CombatScreen extends BaseScreen {
         }
 
         CombatAction action = null;
-
         if (creature.getTeleports() && rand.nextInt(100) <= 25) {
             action = CombatAction.TELEPORT;
         } else if (creature.getRanged() && rand.nextInt(100) <= 25) {
             action = CombatAction.RANGED;
-        } else if (creature.castsSleep() && rand.nextInt(100) <= 25 && context.getAura().getType() != AuraType.NEGATE) {
-            action = CombatAction.CAST_SLEEP;
-            //} else if (creature.getDamageStatus() == CreatureStatus.FLEEING) {
-            //action = CombatAction.FLEE;
         } else {
             action = CombatAction.ATTACK;
         }
 
-        /* 
-         * now find out who to do it to
-         */
         DistanceWrapper dist = new DistanceWrapper(0);
         PartyMember target = nearestPartyMember(creature.currentX, creature.currentY, dist, action == CombatAction.RANGED);
         if (target == null) {
@@ -843,10 +809,6 @@ public class CombatScreen extends BaseScreen {
 
             case FLEE:
             case ADVANCE: {
-
-                if (StringUtils.equals("none", creature.getMovement())) {
-                    return true; //reapers do not move
-                }
 
                 moveCreature(action, creature, target.combatCr.currentX, target.combatCr.currentY);
 

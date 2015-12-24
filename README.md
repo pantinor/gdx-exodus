@@ -1,7 +1,8 @@
 gdx-exodus
 =========
 
-A fun personal project to port Ultima 3 Exodus using LIBGDX.
+A fun personal project to remake Ultima 3 Exodus using LIBGDX, with a few differences.
+Sosaria is now 256x256 instead of 64x64.
 
 ![screenshot of the example](https://raw.github.com/pantinor/gdx-exodus/master/shot1.png)
 

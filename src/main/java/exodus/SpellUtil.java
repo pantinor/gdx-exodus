@@ -8,11 +8,12 @@ import util.Utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import exodus.Exodus.CloudDrawable;
+import exodus.Exodus.ExplosionLargeDrawable;
 import exodus.Party.PartyMember;
 
 public class SpellUtil implements Constants {
@@ -92,7 +93,7 @@ public class SpellUtil implements Constants {
                         spellMagicAttack((CombatScreen) screen, caster, Spell.FULGAR, dir, 24, 128);
                         break;
                     case DAG_ACRON:
-                        spellBlink(screen, Direction.EAST);
+                        spellBlink(screen, Direction.getRandomValidDirection(0xff));
                         break;
                     case MENTAR:
                         spellMagicAttack((CombatScreen) screen, caster, Spell.MENTAR, dir, 64, 20);
@@ -121,6 +122,14 @@ public class SpellUtil implements Constants {
                         spellUndead(screen, caster);
                         break;
                     case APPAR_UNEM:
+                        if (screen instanceof GameScreen) {
+                            Vector3 v = ((GameScreen) screen).getCurrentMapCoords();
+                            ((GameScreen) screen).getChest(caster, (int) v.x, (int) v.y, true);
+                        } else if (screen instanceof DungeonScreen) {
+                            int x = (Math.round(((DungeonScreen) screen).currentPos.x) - 1);
+                            int y = (Math.round(((DungeonScreen) screen).currentPos.z) - 1);
+                            ((DungeonScreen) screen).getChest(caster, x, y, true);
+                        }
                         break;
                     case SANCTU:
                         subject.heal(HealType.HEAL);
@@ -319,8 +328,6 @@ public class SpellUtil implements Constants {
                         seq.addAction(Actions.run(new PlaySoundAction(Sound.NPC_STRUCK)));
 
                     }
-                } else {
-                    seq.addAction(Actions.run(new PlaySoundAction(Sound.EVADE)));
                 }
             }
 
@@ -348,21 +355,22 @@ public class SpellUtil implements Constants {
         final CombatScreen combatScreen = (CombatScreen) screen;
 
         int level = caster.getPlayer().getLevel();
-        boolean turn = Utils.rand.nextInt(100) >= 50;
-
-        if (level > 5) {
-            turn = Utils.rand.nextInt(100) >= 35;
-        }
-        if (level > 10) {
-            turn = Utils.rand.nextInt(100) >= 20;
-        }
-        if (level > 15) {
-            turn = true;
-        }
 
         for (Creature cr : combatScreen.combatMap.getCreatures()) {
-            if (cr.getUndead() && turn) {
 
+            boolean turn = Utils.rand.nextInt(100) >= 50;
+
+            if (level > 5) {
+                turn = Utils.rand.nextInt(100) >= 35;
+            }
+            if (level > 10) {
+                turn = Utils.rand.nextInt(100) >= 20;
+            }
+            if (level > 15) {
+                turn = true;
+            }
+            
+            if (cr.getUndead() && turn) {
                 Tile tile = Exodus.baseTileSet.getTileByName("hit_flash");
                 Drawable d = new Drawable(combatScreen.combatMap, cr.currentX, cr.currentY, tile, Exodus.standardAtlas);
                 d.setX(cr.currentPos.x);
@@ -373,9 +381,7 @@ public class SpellUtil implements Constants {
                 seq.addAction(Actions.run(new AddActorAction(combatScreen.getStage(), d)));
                 seq.addAction(Actions.run(new PlaySoundAction(Sound.NPC_STRUCK)));
 
-                Utils.dealDamage(caster, cr, 23);
-            } else {
-                seq.addAction(Actions.run(new PlaySoundAction(Sound.EVADE)));
+                Utils.dealDamage(caster, cr, cr.getBasehp());
             }
 
             if (cr.getDamageStatus() == CreatureStatus.DEAD) {
@@ -401,19 +407,21 @@ public class SpellUtil implements Constants {
         final CombatScreen combatScreen = (CombatScreen) screen;
 
         int level = caster.getPlayer().getLevel();
-        boolean turn = Utils.rand.nextInt(100) >= 50;
-
-        if (level > 5) {
-            turn = Utils.rand.nextInt(100) >= 35;
-        }
-        if (level > 10) {
-            turn = Utils.rand.nextInt(100) >= 20;
-        }
-        if (level > 15) {
-            turn = true;
-        }
 
         for (Creature cr : combatScreen.combatMap.getCreatures()) {
+
+            boolean turn = Utils.rand.nextInt(100) >= 50;
+
+            if (level > 5) {
+                turn = Utils.rand.nextInt(100) >= 35;
+            }
+            if (level > 10) {
+                turn = Utils.rand.nextInt(100) >= 20;
+            }
+            if (level > 15) {
+                turn = true;
+            }
+
             if (turn && (cr.getTile() == CreatureType.troll || cr.getTile() == CreatureType.orc || cr.getTile() == CreatureType.gremlin)) {
 
                 Tile tile = Exodus.baseTileSet.getTileByName("hit_flash");
@@ -426,9 +434,7 @@ public class SpellUtil implements Constants {
                 seq.addAction(Actions.run(new AddActorAction(combatScreen.getStage(), d)));
                 seq.addAction(Actions.run(new PlaySoundAction(Sound.NPC_STRUCK)));
 
-                Utils.dealDamage(caster, cr, 23);
-            } else {
-                seq.addAction(Actions.run(new PlaySoundAction(Sound.EVADE)));
+                Utils.dealDamage(caster, cr, cr.getBasehp());
             }
 
             if (cr.getDamageStatus() == CreatureStatus.DEAD) {
@@ -679,39 +685,6 @@ public class SpellUtil implements Constants {
             Sounds.play(Sound.ERROR);
         }
 
-    }
-
-    private static class CloudDrawable extends Actor {
-
-        float stateTime;
-
-        @Override
-        public void draw(Batch batch, float parentAlpha) {
-            stateTime += Gdx.graphics.getDeltaTime();
-            batch.draw(Exodus.cloud.getKeyFrame(stateTime, false), getX(), getY(), 64, 64);
-        }
-    }
-
-    private static class ExplosionDrawable extends Actor {
-
-        float stateTime;
-
-        @Override
-        public void draw(Batch batch, float parentAlpha) {
-            stateTime += Gdx.graphics.getDeltaTime();
-            batch.draw(Exodus.explosion.getKeyFrame(stateTime, false), getX(), getY(), 64, 64);
-        }
-    }
-
-    private static class ExplosionLargeDrawable extends Actor {
-
-        float stateTime;
-
-        @Override
-        public void draw(Batch batch, float parentAlpha) {
-            stateTime += Gdx.graphics.getDeltaTime();
-            batch.draw(Exodus.explosionLarge.getKeyFrame(stateTime, false), getX(), getY(), 192, 192);
-        }
     }
 
 }
