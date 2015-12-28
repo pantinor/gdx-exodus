@@ -59,7 +59,16 @@ public class SpellUtil implements Constants {
             return false;
         }
 
-        Party party = context.getParty();
+        switch (spell) {
+            case PONTORI:
+            case REPOND:
+                if (caster.usedFreeSpellInCombat) {
+                    Exodus.hud.add("Can't!");
+                    return false;
+                } else {
+                    caster.usedFreeSpellInCombat = true;
+                }
+        }
 
         if (context.getAura().getType() == AuraType.NEGATE) {
             Exodus.hud.add("Spell is negated!");
@@ -76,12 +85,13 @@ public class SpellUtil implements Constants {
             public void run() {
                 switch (spell) {
                     case REPOND:
-                        spellRepel(screen, caster);
+                        spellRepond(screen, caster);
                         break;
                     case MITTAR:
-                        spellMagicAttack((CombatScreen) screen, caster, Spell.MITTAR, dir, 64, 16);
+                        spellMagicAttack((CombatScreen) screen, caster, Spell.MITTAR, dir, 16, 24);
                         break;
                     case LORUM:
+                        ((DungeonScreen) screen).isTorchOn = true;
                         break;
                     case DOR_ACRON:
                         spellZdown(screen, caster);
@@ -90,32 +100,38 @@ public class SpellUtil implements Constants {
                         spellYup(screen, caster);
                         break;
                     case FULGAR:
-                        spellMagicAttack((CombatScreen) screen, caster, Spell.FULGAR, dir, 24, 128);
+                        spellMagicAttack((CombatScreen) screen, caster, Spell.FULGAR, dir, 32, 64);
                         break;
                     case DAG_ACRON:
                         spellBlink(screen, Direction.getRandomValidDirection(0xff));
                         break;
                     case MENTAR:
-                        spellMagicAttack((CombatScreen) screen, caster, Spell.MENTAR, dir, 64, 20);
+                        spellMagicAttack((CombatScreen) screen, caster, Spell.MENTAR, dir, 32, caster.getPlayer().intell);
                         break;
-                    case DAG_LORUM:
+                    case PABULUM:
+                        for (PartyMember pm : context.getParty().getMembers()) {
+                            pm.getPlayer().food += Utils.getRandomBetween(5, 10);
+                        }
                         break;
                     case FAL_DIVI:
+                        //REPLACE ME
                         break;
                     case NOXUM:
-                        spellTremor(screen, caster);
+                        spellGroupDamage(screen, caster, 24, caster.getPlayer().intell);
                         break;
                     case DECORP:
-                        spellMagicAttack((CombatScreen) screen, caster, Spell.DECORP, dir, -1, 232);
+                        spellMagicAttack((CombatScreen) screen, caster, Spell.DECORP, dir, 128, 255);
                         break;
                     case ALTAIR:
-                        context.getAura().set(AuraType.NEGATE, 10);
+                        context.getAura().set(AuraType.QUICKNESS, 5);
                         break;
                     case DAG_MENTAR:
+                        spellGroupDamage(screen, caster, 32, caster.getPlayer().intell);
                         break;
                     case NECORP:
+                        spellGroupDamage(screen, caster, 64, 128);
                         break;
-                    case NOTHING:
+                    case UNSPEAKABLE:
                         useRageOfGod(screen, caster);
                         break;
                     case PONTORI:
@@ -135,6 +151,7 @@ public class SpellUtil implements Constants {
                         subject.heal(HealType.HEAL);
                         break;
                     case LUMINAE:
+                        ((DungeonScreen) screen).isTorchOn = true;
                         break;
                     case REC_SU:
                         spellYup(screen, caster);
@@ -143,6 +160,7 @@ public class SpellUtil implements Constants {
                         spellZdown(screen, caster);
                         break;
                     case LIB_REC:
+                        spellLibRec(screen, caster);
                         break;
                     case ALCORT:
                         subject.heal(HealType.CURE);
@@ -151,6 +169,7 @@ public class SpellUtil implements Constants {
                         spellXit(screen, caster);
                         break;
                     case SOMINAE:
+                        //REPLACE ME
                         break;
                     case SANCTU_MANI:
                         subject.heal(HealType.FULLHEAL);
@@ -159,6 +178,7 @@ public class SpellUtil implements Constants {
                         spellView(screen, caster);
                         break;
                     case EXCUUN:
+                        spellMagicAttack((CombatScreen) screen, caster, Spell.EXCUUN, dir, 64, 255);
                         break;
                     case SURMANDUM:
                         subject.heal(HealType.RESURRECT);
@@ -167,6 +187,8 @@ public class SpellUtil implements Constants {
                         useMaskOfMinax(screen, caster);
                         break;
                     case ANJU_SERMANI:
+                        caster.getPlayer().wis -= 5;
+                        Exodus.hud.add("Lost 5 points of wisdom!");
                         subject.heal(HealType.RECALL);
                         break;
                     default:
@@ -287,7 +309,7 @@ public class SpellUtil implements Constants {
 
     }
 
-    public static void spellTremor(BaseScreen screen, PartyMember caster) {
+    public static void spellGroupDamage(BaseScreen screen, PartyMember caster, int minDamage, int maxDamage) {
 
         final CombatScreen combatScreen = (CombatScreen) screen;
 
@@ -295,41 +317,15 @@ public class SpellUtil implements Constants {
 
         for (Creature cr : combatScreen.combatMap.getCreatures()) {
 
-            if (cr.getHP() > 192) {
-                seq.addAction(Actions.run(new PlaySoundAction(Sound.EVADE)));
-                continue;
-            } else {
+            Utils.dealDamage(caster, cr, Utils.getRandomBetween(minDamage, maxDamage));
+            Tile tile = Exodus.baseTileSet.getTileByName("hit_flash");
+            Drawable d = new Drawable(combatScreen.combatMap, cr.currentX, cr.currentY, tile, Exodus.standardAtlas);
+            d.setX(cr.currentPos.x);
+            d.setY(cr.currentPos.y);
+            d.addAction(Actions.sequence(Actions.delay(.4f), Actions.fadeOut(.2f), Actions.removeActor()));
 
-                if (Utils.rand.nextInt(2) == 0) {
-                    /* Deal maximum damage to creature */
-                    Utils.dealDamage(caster, cr, 0xFF);
-
-                    Tile tile = Exodus.baseTileSet.getTileByName("hit_flash");
-                    Drawable d = new Drawable(combatScreen.combatMap, cr.currentX, cr.currentY, tile, Exodus.standardAtlas);
-                    d.setX(cr.currentPos.x);
-                    d.setY(cr.currentPos.y);
-                    d.addAction(Actions.sequence(Actions.delay(.4f), Actions.fadeOut(.2f), Actions.removeActor()));
-
-                    seq.addAction(Actions.run(new AddActorAction(combatScreen.getStage(), d)));
-                    seq.addAction(Actions.run(new PlaySoundAction(Sound.NPC_STRUCK)));
-
-                } else if (Utils.rand.nextInt(2) == 0) {
-                    /* Deal enough damage to creature to make it flee */
-                    if (cr.getHP() > 23) {
-                        Utils.dealDamage(caster, cr, cr.getHP() - 23);
-
-                        Tile tile = Exodus.baseTileSet.getTileByName("hit_flash");
-                        Drawable d = new Drawable(combatScreen.combatMap, cr.currentX, cr.currentY, tile, Exodus.standardAtlas);
-                        d.setX(cr.currentPos.x);
-                        d.setY(cr.currentPos.y);
-                        d.addAction(Actions.sequence(Actions.delay(.4f), Actions.fadeOut(.2f), Actions.removeActor()));
-
-                        seq.addAction(Actions.run(new AddActorAction(combatScreen.getStage(), d)));
-                        seq.addAction(Actions.run(new PlaySoundAction(Sound.NPC_STRUCK)));
-
-                    }
-                }
-            }
+            seq.addAction(Actions.run(new AddActorAction(combatScreen.getStage(), d)));
+            seq.addAction(Actions.run(new PlaySoundAction(Sound.NPC_STRUCK)));
 
             if (cr.getDamageStatus() == CreatureStatus.DEAD) {
                 seq.addAction(Actions.run(combatScreen.new RemoveCreatureAction(cr)));
@@ -369,7 +365,7 @@ public class SpellUtil implements Constants {
             if (level > 15) {
                 turn = true;
             }
-            
+
             if (cr.getUndead() && turn) {
                 Tile tile = Exodus.baseTileSet.getTileByName("hit_flash");
                 Drawable d = new Drawable(combatScreen.combatMap, cr.currentX, cr.currentY, tile, Exodus.standardAtlas);
@@ -400,7 +396,7 @@ public class SpellUtil implements Constants {
 
     }
 
-    public static void spellRepel(BaseScreen screen, PartyMember caster) {
+    public static void spellRepond(BaseScreen screen, PartyMember caster) {
 
         SequenceAction seq = Actions.action(SequenceAction.class);
 
@@ -471,80 +467,105 @@ public class SpellUtil implements Constants {
     }
 
     public static void spellYup(BaseScreen screen, PartyMember caster) {
-        if (screen.scType == ScreenType.DUNGEON) {
-            DungeonScreen dngScreen = (DungeonScreen) screen;
+        DungeonScreen dngScreen = (DungeonScreen) screen;
 
-            dngScreen.currentLevel--;
+        dngScreen.currentLevel--;
 
-            if (dngScreen.currentLevel < 0) {
-                dngScreen.currentLevel = 0;
-                if (dngScreen.mainGame != null) {
-                    dngScreen.mainGame.setScreen(dngScreen.gameScreen);
-                }
-            } else {
+        if (dngScreen.currentLevel < 0) {
+            dngScreen.currentLevel = 0;
+            if (dngScreen.mainGame != null) {
+                dngScreen.mainGame.setScreen(dngScreen.gameScreen);
+            }
+        } else {
 
-                for (int i = 0; i < 32; i++) {
-                    int x = Utils.rand.nextInt(8);
-                    int y = Utils.rand.nextInt(8);
-                    if (dngScreen.validTeleportLocation(x, y, dngScreen.currentLevel)) {
-                        dngScreen.currentPos = new Vector3(x + .5f, .5f, y + .5f);
-                        dngScreen.camera.position.set(dngScreen.currentPos);
-                        if (dngScreen.currentDir == Direction.EAST) {
-                            dngScreen.camera.lookAt(dngScreen.currentPos.x + 1, dngScreen.currentPos.y, dngScreen.currentPos.z);
-                        } else if (dngScreen.currentDir == Direction.WEST) {
-                            dngScreen.camera.lookAt(dngScreen.currentPos.x - 1, dngScreen.currentPos.y, dngScreen.currentPos.z);
-                        } else if (dngScreen.currentDir == Direction.NORTH) {
-                            dngScreen.camera.lookAt(dngScreen.currentPos.x, dngScreen.currentPos.y, dngScreen.currentPos.z - 1);
-                        } else if (dngScreen.currentDir == Direction.SOUTH) {
-                            dngScreen.camera.lookAt(dngScreen.currentPos.x, dngScreen.currentPos.y, dngScreen.currentPos.z + 1);
-                        }
-                        dngScreen.moveMiniMapIcon();
-                        break;
+            for (int i = 0; i < 32; i++) {
+                int x = Utils.rand.nextInt(16);
+                int y = Utils.rand.nextInt(16);
+                if (dngScreen.validTeleportLocation(x, y, dngScreen.currentLevel)) {
+                    dngScreen.currentPos = new Vector3(x + .5f, .5f, y + .5f);
+                    dngScreen.camera.position.set(dngScreen.currentPos);
+                    if (dngScreen.currentDir == Direction.EAST) {
+                        dngScreen.camera.lookAt(dngScreen.currentPos.x + 1, dngScreen.currentPos.y, dngScreen.currentPos.z);
+                    } else if (dngScreen.currentDir == Direction.WEST) {
+                        dngScreen.camera.lookAt(dngScreen.currentPos.x - 1, dngScreen.currentPos.y, dngScreen.currentPos.z);
+                    } else if (dngScreen.currentDir == Direction.NORTH) {
+                        dngScreen.camera.lookAt(dngScreen.currentPos.x, dngScreen.currentPos.y, dngScreen.currentPos.z - 1);
+                    } else if (dngScreen.currentDir == Direction.SOUTH) {
+                        dngScreen.camera.lookAt(dngScreen.currentPos.x, dngScreen.currentPos.y, dngScreen.currentPos.z + 1);
                     }
+                    dngScreen.moveMiniMapIcon();
+                    break;
                 }
-
-                dngScreen.createMiniMap();
             }
 
+            dngScreen.createMiniMap();
         }
+
     }
 
     public static void spellZdown(BaseScreen screen, PartyMember caster) {
-        if (screen.scType == ScreenType.DUNGEON) {
-            DungeonScreen dngScreen = (DungeonScreen) screen;
 
-            dngScreen.currentLevel++;
+        DungeonScreen dngScreen = (DungeonScreen) screen;
 
-            if (dngScreen.currentLevel > DungeonScreen.DUNGEON_LVLS) {
+        dngScreen.currentLevel++;
 
-                dngScreen.currentLevel = DungeonScreen.DUNGEON_LVLS;
+        if (dngScreen.currentLevel > DungeonScreen.DUNGEON_LVLS) {
 
-            } else {
+            dngScreen.currentLevel = DungeonScreen.DUNGEON_LVLS;
 
-                for (int i = 0; i < 32; i++) {
-                    int x = Utils.rand.nextInt(8);
-                    int y = Utils.rand.nextInt(8);
-                    if (dngScreen.validTeleportLocation(x, y, dngScreen.currentLevel)) {
-                        dngScreen.currentPos = new Vector3(x + .5f, .5f, y + .5f);
-                        dngScreen.camera.position.set(dngScreen.currentPos);
-                        if (dngScreen.currentDir == Direction.EAST) {
-                            dngScreen.camera.lookAt(dngScreen.currentPos.x + 1, dngScreen.currentPos.y, dngScreen.currentPos.z);
-                        } else if (dngScreen.currentDir == Direction.WEST) {
-                            dngScreen.camera.lookAt(dngScreen.currentPos.x - 1, dngScreen.currentPos.y, dngScreen.currentPos.z);
-                        } else if (dngScreen.currentDir == Direction.NORTH) {
-                            dngScreen.camera.lookAt(dngScreen.currentPos.x, dngScreen.currentPos.y, dngScreen.currentPos.z - 1);
-                        } else if (dngScreen.currentDir == Direction.SOUTH) {
-                            dngScreen.camera.lookAt(dngScreen.currentPos.x, dngScreen.currentPos.y, dngScreen.currentPos.z + 1);
-                        }
-                        dngScreen.moveMiniMapIcon();
-                        break;
+        } else {
+
+            for (int i = 0; i < 32; i++) {
+                int x = Utils.rand.nextInt(16);
+                int y = Utils.rand.nextInt(16);
+                if (dngScreen.validTeleportLocation(x, y, dngScreen.currentLevel)) {
+                    dngScreen.currentPos = new Vector3(x + .5f, .5f, y + .5f);
+                    dngScreen.camera.position.set(dngScreen.currentPos);
+                    if (dngScreen.currentDir == Direction.EAST) {
+                        dngScreen.camera.lookAt(dngScreen.currentPos.x + 1, dngScreen.currentPos.y, dngScreen.currentPos.z);
+                    } else if (dngScreen.currentDir == Direction.WEST) {
+                        dngScreen.camera.lookAt(dngScreen.currentPos.x - 1, dngScreen.currentPos.y, dngScreen.currentPos.z);
+                    } else if (dngScreen.currentDir == Direction.NORTH) {
+                        dngScreen.camera.lookAt(dngScreen.currentPos.x, dngScreen.currentPos.y, dngScreen.currentPos.z - 1);
+                    } else if (dngScreen.currentDir == Direction.SOUTH) {
+                        dngScreen.camera.lookAt(dngScreen.currentPos.x, dngScreen.currentPos.y, dngScreen.currentPos.z + 1);
                     }
+                    dngScreen.moveMiniMapIcon();
+                    break;
                 }
-
-                dngScreen.createMiniMap();
             }
 
+            dngScreen.createMiniMap();
         }
+
+    }
+
+    public static void spellLibRec(BaseScreen screen, PartyMember caster) {
+
+        DungeonScreen dngScreen = (DungeonScreen) screen;
+
+        for (int i = 0; i < 32; i++) {
+            int x = Utils.rand.nextInt(16);
+            int y = Utils.rand.nextInt(16);
+            if (dngScreen.validTeleportLocation(x, y, dngScreen.currentLevel)) {
+                dngScreen.currentPos = new Vector3(x + .5f, .5f, y + .5f);
+                dngScreen.camera.position.set(dngScreen.currentPos);
+                if (dngScreen.currentDir == Direction.EAST) {
+                    dngScreen.camera.lookAt(dngScreen.currentPos.x + 1, dngScreen.currentPos.y, dngScreen.currentPos.z);
+                } else if (dngScreen.currentDir == Direction.WEST) {
+                    dngScreen.camera.lookAt(dngScreen.currentPos.x - 1, dngScreen.currentPos.y, dngScreen.currentPos.z);
+                } else if (dngScreen.currentDir == Direction.NORTH) {
+                    dngScreen.camera.lookAt(dngScreen.currentPos.x, dngScreen.currentPos.y, dngScreen.currentPos.z - 1);
+                } else if (dngScreen.currentDir == Direction.SOUTH) {
+                    dngScreen.camera.lookAt(dngScreen.currentPos.x, dngScreen.currentPos.y, dngScreen.currentPos.z + 1);
+                }
+                dngScreen.moveMiniMapIcon();
+                break;
+            }
+        }
+
+        dngScreen.createMiniMap();
+
     }
 
     public static void destoryAllCreatures(BaseScreen screen, PartyMember caster) {
@@ -557,8 +578,7 @@ public class SpellUtil implements Constants {
 
             for (final Creature cr : screen.context.getCurrentMap().getCreatures()) {
 
-                /* Deal maximum damage to creature */
-                Utils.dealDamage(caster, cr, 0xFF);
+                Utils.dealDamage(caster, cr, 255);
 
                 Tile tile = Exodus.baseTileSet.getTileByName("hit_flash");
                 Drawable d = new Drawable(screen.context.getCurrentMap(), cr.currentX, cr.currentY, tile, Exodus.standardAtlas);
@@ -594,8 +614,7 @@ public class SpellUtil implements Constants {
             for (Creature cr : combatScreen.combatMap.getCreatures()) {
 
                 if (Utils.rand.nextInt(3) == 0) {
-                    /* Deal maximum damage to creature */
-                    Utils.dealDamage(caster, cr, 0xFF);
+                    Utils.dealDamage(caster, cr, 255);
                 } else {
                     if (cr.getHP() > 23) {
                         Utils.dealDamage(caster, cr, cr.getHP() * (3 / 4));
@@ -645,15 +664,12 @@ public class SpellUtil implements Constants {
             for (Creature cr : combatScreen.combatMap.getCreatures()) {
 
                 if (Utils.rand.nextInt(2) == 0) {
-                    /* Deal maximum damage to creature */
-                    Utils.dealDamage(caster, cr, 0xFF);
+                    Utils.dealDamage(caster, cr, 255);
                 } else if (Utils.rand.nextInt(2) == 0) {
-                    /* Deal enough damage to creature to make it flee */
                     if (cr.getHP() > 23) {
                         Utils.dealDamage(caster, cr, cr.getHP() - 23);
                     }
                 } else {
-                    //deal damage of half its hit points
                     Utils.dealDamage(caster, cr, cr.getHP() / 2);
                 }
 

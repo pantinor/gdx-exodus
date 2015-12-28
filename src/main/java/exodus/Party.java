@@ -252,6 +252,7 @@ public class Party extends Observable implements Constants {
     public void reset() {
         for (PartyMember pm : members) {
             pm.fled = false;
+            pm.usedFreeSpellInCombat = false;
             pm.combatMapExitDirection = null;
         }
         activePlayer = 0;
@@ -301,6 +302,7 @@ public class Party extends Observable implements Constants {
         private CharacterRecord player;
         private final Party party;
 
+        public boolean usedFreeSpellInCombat;
         public boolean fled;
         public Direction combatMapExitDirection;
         public Creature combatCr;
@@ -609,8 +611,8 @@ public class Party extends Observable implements Constants {
                             }
                         }
 
-                        if (member.player.food == 0) {
-                            member.applyDamage(rand.nextInt(3), false);
+                        if (member.player.food <= 0) {
+                            member.applyDamage(rand.nextInt(2)+1, false);
                         }
                     }
                 }

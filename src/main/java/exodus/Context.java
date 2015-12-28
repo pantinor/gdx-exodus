@@ -147,7 +147,7 @@ public class Context implements Constants {
             party.getSaveGame().partyX = (int) x;
             party.getSaveGame().partyY = (int) y;
             party.getSaveGame().dnglevel = (int) z;
-            party.getSaveGame().orientation = orientation.getVal() - 1;
+            party.getSaveGame().orientation = orientation.getVal();
         }
 
         party.getSaveGame().transport = this.transportContext.ordinal();

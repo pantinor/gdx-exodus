@@ -844,17 +844,13 @@ public class Utils implements Constants {
 
         final AttackVector av = Utils.castSpellAttack(scr.combatMap, attacker, dir, x, y, minDamage, maxDamage, spell);
 
-        Color color = Color.WHITE;
+        Color color = Color.BLUE;
         switch (spell) {
             case FULGAR:
                 color = Color.RED;
                 break;
             case DECORP:
                 color = Color.VIOLET;
-                break;
-            case MITTAR:
-            case MENTAR:
-                color = Color.BLUE;
                 break;
         }
 

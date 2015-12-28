@@ -260,6 +260,9 @@ public class GameScreen extends BaseScreen {
 
             //load the dungeon if save game starts in dungeon
             if (Maps.get(sg.location) != Maps.SOSARIA) {
+                Portal p = Maps.SOSARIA.getMap().getPortal(sg.location);
+                newMapPixelCoords = getMapPixelCoords(p.getX(), p.getY());
+                recalcFOV(context.getCurrentMap(), p.getX(), p.getY());
                 loadNextMap(Maps.get(sg.location), sg.partyX, sg.partyY, sg.partyX, sg.partyY, sg.dnglevel, Direction.getByValue(sg.orientation), true);
                 //loadNextMap(Maps.DOOM, 0, 0, 3, 1, 1, Direction.WEST, true);
                 //loadNextMap(Maps.DESTARD, 0, 0, 3, 5, 3, Direction.SOUTH, true);
@@ -670,6 +673,8 @@ public class GameScreen extends BaseScreen {
             return false;
         } else if (keycode == Keys.P) {
             peerGem();
+        } else if (keycode == Keys.N) {
+            negateTime();
         } else if (keycode == Keys.O) {
 
             log("What other command?");
@@ -798,7 +803,10 @@ public class GameScreen extends BaseScreen {
                 spawnCreature(null, currentX, currentY);
             }
 
-            context.getCurrentMap().moveObjects(this, currentX, currentY);
+            boolean quick = context.getAura().getType() == AuraType.QUICKNESS;
+            if (!quick) {
+                context.getCurrentMap().moveObjects(this, currentX, currentY);
+            }
 
         } catch (PartyDeathException t) {
             partyDeath();
@@ -1171,6 +1179,19 @@ public class GameScreen extends BaseScreen {
             }
         }
         log("Thou dost have no gems!");
+    }
+    
+    private void negateTime() {
+        //find first party member which has powder
+        for (PartyMember pm : context.getParty().getMembers()) {
+            if (pm.getPlayer().powder > 0) {
+                pm.getPlayer().powder--;
+                log("Stop time with a powder!");
+                context.getAura().set(AuraType.QUICKNESS, 6);
+                return;
+            }
+        }
+        log("None!");
     }
 
     public void peerTelescope() {

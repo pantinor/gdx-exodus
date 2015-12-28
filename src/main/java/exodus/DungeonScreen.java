@@ -1011,7 +1011,7 @@ public class DungeonScreen extends BaseScreen {
             }
 
         } else if (keycode == Keys.M) {
-            
+
             log("Modify Order:");
             log("exhange #:");
             NewOrderInputAdapter noia = new NewOrderInputAdapter(this);
@@ -1118,7 +1118,11 @@ public class DungeonScreen extends BaseScreen {
             spawnDungeonCreature(null, currentX, currentY);
         }
 
-        moveDungeonCreatures(this, currentX, currentY);
+        boolean quick = context.getAura().getType() == AuraType.QUICKNESS;
+        if (!quick) {
+            moveDungeonCreatures(this, currentX, currentY);
+        }
+
     }
 
     public void getMark(DungeonTile type, int index) {

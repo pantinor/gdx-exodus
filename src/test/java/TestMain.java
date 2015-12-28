@@ -13,6 +13,7 @@ import exodus.CombatScreen;
 import exodus.Constants;
 import exodus.Constants.CreatureType;
 import exodus.Constants.Maps;
+import exodus.Constants.Profession;
 import exodus.Constants.WeaponType;
 import exodus.Context;
 import exodus.Exodus;
@@ -55,20 +56,34 @@ public class TestMain extends Game {
             context.setCurrentMap(Maps.SOSARIA.getMap());
             //party.setTransport(Exodus.baseTileSet.getTileByName("ship"));
 
+            sg.players[0].profession = Profession.FIGHTER;
             sg.players[0].health = 500;
             sg.players[0].exp = 350;
-            sg.players[0].weapons[5] = 1;
-            sg.players[0].armors[5] = 1;
-            sg.players[0].weapon = WeaponType.BOW;
-            
+            sg.players[0].weapon = WeaponType.SWORD_P2;
+
+            sg.players[1].profession = Profession.RANGER;
             sg.players[1].health = 500;
             sg.players[1].exp = 350;
             sg.players[1].weapon = WeaponType.BOW_P4;
             
-            Maps m = Maps.SHIPSEA_CON;
+            sg.players[2].profession = Profession.WIZARD;
+            sg.players[2].health = 500;
+            sg.players[2].exp = 350;
+            sg.players[2].intell = 75;
+            sg.players[2].mana = 75;
+            sg.players[2].weapon = WeaponType.DAGGER;
+            
+            sg.players[3].profession = Profession.CLERIC;
+            sg.players[3].health = 500;
+            sg.players[3].exp = 350;
+            sg.players[3].wis = 75;
+            sg.players[3].mana = 75;
+            sg.players[3].weapon = WeaponType.DAGGER;
+            
+            Maps m = Maps.GRASS_CON;
 
             TiledMap tmap = new UltimaTiledMapLoader(m, Exodus.standardAtlas, m.getMap().getWidth(), m.getMap().getHeight(), 32, 32).load();
-            CombatScreen sc = new CombatScreen(null, context, Maps.SOSARIA, m.getMap(), tmap, CreatureType.daemon, Exodus.creatures, Exodus.standardAtlas);
+            CombatScreen sc = new CombatScreen(null, context, Maps.SOSARIA, m.getMap(), tmap, CreatureType.rogue, Exodus.creatures, Exodus.standardAtlas);
             
             setScreen(sc);
             //atlas = a1;

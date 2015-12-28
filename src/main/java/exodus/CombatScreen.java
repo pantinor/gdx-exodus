@@ -375,7 +375,8 @@ public class CombatScreen extends BaseScreen {
                     Gdx.input.setInputProcessor(new SpellInputProcessor(this, context, stage, spellSelection, ap));
                     return false;
                 }
-
+            } else if (keycode == Keys.N) {
+                negateTime();
             } else if (keycode == Keys.U) {
                 Tile tile = combatMap.getTile(active.currentX, active.currentY);
 //                if (tile.getIndex() == 74 //altar
@@ -532,7 +533,7 @@ public class CombatScreen extends BaseScreen {
                 return;
             }
 
-            boolean quick = context.getAura().getType() == AuraType.QUICKNESS && (rand.nextInt(2) == 0);
+            boolean quick = context.getAura().getType() == AuraType.QUICKNESS;
 
             if (!quick) {
                 SequenceAction seq = Actions.action(SequenceAction.class);
@@ -552,6 +553,19 @@ public class CombatScreen extends BaseScreen {
     @Override
     public InputProcessor getPeerGemInputProcessor() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    private void negateTime() {
+        //find first party member which has powder
+        for (PartyMember pm : context.getParty().getMembers()) {
+            if (pm.getPlayer().powder > 0) {
+                pm.getPlayer().powder--;
+                log("Stop time with a powder!");
+                context.getAura().set(AuraType.QUICKNESS, 6);
+                return;
+            }
+        }
+        log("None!");
     }
 
     public class CreatureActionsAction implements Runnable {
