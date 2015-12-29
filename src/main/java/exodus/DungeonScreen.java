@@ -724,19 +724,19 @@ public class DungeonScreen extends BaseScreen {
         TiledMap tmap = new UltimaTiledMapLoader(tile.getCombatMap(), Exodus.standardAtlas, 11, 11, tilePixelWidth, tilePixelHeight).load();
         context.setCurrentTiledMap(tmap);
         CombatScreen sc = new CombatScreen(this, context, contextMap, tile.getCombatMap().getMap(), tmap, cr.getTile(), Exodus.creatures, Exodus.standardAtlas);
-        mainGame.setScreen(sc);
+        Exodus.mainGame.setScreen(sc);
         currentEncounter = cr;
     }
 
     @Override
     public void partyDeath() {
-        mainGame.setScreen(new StartScreen(mainGame));
+        Exodus.mainGame.setScreen(Exodus.startScreen);
     }
 
     @Override
     public void endCombat(boolean isWon, BaseMap combatMap, boolean wounded) {
 
-        mainGame.setScreen(this);
+        Exodus.mainGame.setScreen(this);
 
         if (isWon) {
 
@@ -790,7 +790,7 @@ public class DungeonScreen extends BaseScreen {
                         log("Entering " + m.getLabel() + "!");
                         DungeonScreen sc = new DungeonScreen(this.gameScreen, this.context, m);
                         sc.restoreSaveGameLocation(p.getStartx(), p.getStarty(), p.getStartlevel(), currentDir);
-                        mainGame.setScreen(sc);
+                        Exodus.mainGame.setScreen(sc);
                         this.gameScreen.newMapPixelCoords = this.gameScreen.getMapPixelCoords(p.getRetroActiveDest().getX(), p.getRetroActiveDest().getY());
                         return;
                     }
@@ -956,10 +956,8 @@ public class DungeonScreen extends BaseScreen {
                 currentLevel--;
                 if (currentLevel < 0) {
                     currentLevel = 0;
-                    if (mainGame != null) {
-                        mainGame.setScreen(gameScreen);
-                        dispose();
-                    }
+                    Exodus.mainGame.setScreen(gameScreen);
+                    dispose();
                 } else {
                     createMiniMap();
                 }
@@ -1098,7 +1096,7 @@ public class DungeonScreen extends BaseScreen {
                 label.addAction(sequence(Actions.moveTo(32 * 6, 32 * 8, 2f), Actions.fadeOut(2f), Actions.removeActor(label)));
                 break;
             case TIME_LORD:
-                Label greet = new Label("Greetings!\nI am the Time Lord.\nTo seal EXODUS,\nremember this..\nThere is only one way.\nLove, Sol.... Moon, Death.",
+                Label greet = new Label("You see a vision of the Time Lord.\nHe says...There is only one way.\nLove, Sol, Moons and Death.\nAll else fails.",
                         Exodus.skin, "small-ultima", Color.BLUE);
                 greet.setPosition(32 * 6, 32 * 10);
                 stage.addActor(greet);

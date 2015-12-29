@@ -24,7 +24,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import static exodus.BaseScreen.mainGame;
 import objects.SaveGame.CharacterRecord;
 
 public class ShrineScreen extends BaseScreen {
@@ -198,11 +197,11 @@ public class ShrineScreen extends BaseScreen {
                 
                 if (c.gold < amt * 100) {
                     log("You cannot cheat the gods!");
-                    mainGame.setScreen(returnScreen);
+                    Exodus.mainGame.setScreen(returnScreen);
                     return false;
                 } else if (amt == 0) {
                     log("Begone then!");
-                    mainGame.setScreen(returnScreen);
+                    Exodus.mainGame.setScreen(returnScreen);
                     return false;
                 }
                 
@@ -239,7 +238,7 @@ public class ShrineScreen extends BaseScreen {
                     c.wis = c.race.getMaxWis();
                 }
 
-                mainGame.setScreen(returnScreen);
+                Exodus.mainGame.setScreen(returnScreen);
             }
             
             return false;

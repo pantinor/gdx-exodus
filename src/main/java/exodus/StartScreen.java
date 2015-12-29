@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package exodus;
 
 import com.badlogic.gdx.Gdx;
@@ -48,7 +43,6 @@ public class StartScreen implements Screen, Constants {
     OrthogonalTiledMapRenderer splashRenderer;
     OrthographicCamera camera;
     Viewport viewPort;
-    Exodus mainGame;
     Stage stage;
     Texture title;
     IntroAnim animator = new IntroAnim();
@@ -60,8 +54,7 @@ public class StartScreen implements Screen, Constants {
 
     BitmapFont exodusFont;
 
-    public StartScreen(Exodus main) {
-        this.mainGame = main;
+    public StartScreen() {
 
         title = new Texture(Gdx.files.classpath("assets/graphics/splash.png"));
 
@@ -81,7 +74,7 @@ public class StartScreen implements Screen, Constants {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
                 Sounds.play(Sound.TRIGGER);
-                mainGame.setScreen(new BookScreen(mainGame, StartScreen.this, Exodus.skin));
+                Exodus.mainGame.setScreen(new BookScreen(StartScreen.this, Exodus.skin));
             }
         });
         manual.setX(220);
@@ -94,7 +87,7 @@ public class StartScreen implements Screen, Constants {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
                 Sounds.play(Sound.TRIGGER);
-                mainGame.setScreen(new ManagePartyScreen(mainGame, StartScreen.this, Exodus.skin));
+                Exodus.mainGame.setScreen(new ManagePartyScreen(StartScreen.this, Exodus.skin));
             }
         });
         manage.setX(410);
@@ -108,7 +101,7 @@ public class StartScreen implements Screen, Constants {
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
                 Sounds.play(Sound.TRIGGER);
                 if (!Gdx.files.internal(PARTY_SAV_BASE_FILENAME).file().exists()) {
-                    mainGame.setScreen(new ManagePartyScreen(mainGame, StartScreen.this, Exodus.skin));
+                    Exodus.mainGame.setScreen(new ManagePartyScreen(StartScreen.this, Exodus.skin));
                 } else {
                     SaveGame saveGame = new SaveGame();
                     try {
@@ -117,9 +110,9 @@ public class StartScreen implements Screen, Constants {
                     }
                     SaveGame.CharacterRecord r = saveGame.players[0];
                     if (r == null || r.name.length() < 1) {
-                        mainGame.setScreen(new ManagePartyScreen(mainGame, StartScreen.this, Exodus.skin));
+                        Exodus.mainGame.setScreen(new ManagePartyScreen(StartScreen.this, Exodus.skin));
                     } else {
-                        mainGame.setScreen(new GameScreen(mainGame));
+                        Exodus.mainGame.setScreen(new GameScreen());
                         stage.clear();
                     }
                 }

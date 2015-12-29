@@ -460,8 +460,8 @@ public class SpellUtil implements Constants {
         if (screen.scType == ScreenType.DUNGEON) {
             DungeonScreen dngScreen = (DungeonScreen) screen;
             screen.log("Leaving " + dngScreen.dngMap.getLabel());
-            if (DungeonScreen.mainGame != null) {
-                DungeonScreen.mainGame.setScreen(dngScreen.gameScreen);
+            if (Exodus.mainGame != null) {
+                Exodus.mainGame.setScreen(dngScreen.gameScreen);
             }
         }
     }
@@ -473,9 +473,7 @@ public class SpellUtil implements Constants {
 
         if (dngScreen.currentLevel < 0) {
             dngScreen.currentLevel = 0;
-            if (dngScreen.mainGame != null) {
-                dngScreen.mainGame.setScreen(dngScreen.gameScreen);
-            }
+            Exodus.mainGame.setScreen(dngScreen.gameScreen);
         } else {
 
             for (int i = 0; i < 32; i++) {

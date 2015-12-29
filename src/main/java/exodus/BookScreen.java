@@ -28,16 +28,14 @@ import org.apache.commons.io.IOUtils;
 public class BookScreen extends InputAdapter implements Screen, Constants {
 
     private final Stage stage;
-    private final Exodus mainGame;
     private final Screen returnScreen;
     private final java.util.List<Label> labels = new ArrayList<>();
     private final java.util.Map<Integer, Page> pages = new HashMap<>();
 
     private int currentPage = 0;
     
-    public BookScreen(Exodus mainGame, Screen returnScreen, Skin skin) {
+    public BookScreen(Screen returnScreen, Skin skin) {
         this.returnScreen = returnScreen;
-        this.mainGame = mainGame;
         this.stage = new Stage();
         
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.classpath("assets/fonts/sansblack.ttf"));
@@ -211,9 +209,7 @@ public class BookScreen extends InputAdapter implements Screen, Constants {
     
     @Override
     public boolean keyUp(int i) {
-        if (mainGame != null) {
-            mainGame.setScreen(returnScreen);
-        }
+        Exodus.mainGame.setScreen(returnScreen);
         return false;
     }
     

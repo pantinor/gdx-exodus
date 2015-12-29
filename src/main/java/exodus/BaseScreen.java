@@ -26,8 +26,6 @@ public abstract class BaseScreen implements Screen, InputProcessor, Constants {
 
     public ScreenType scType;
 
-    public static Exodus mainGame;
-
     protected BaseScreen returnScreen;
     public Context context;
     protected Stage stage;
@@ -89,7 +87,7 @@ public abstract class BaseScreen implements Screen, InputProcessor, Constants {
         bookButt.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                mainGame.setScreen(new BookScreen(mainGame, BaseScreen.this, Exodus.skin));
+                Exodus.mainGame.setScreen(new BookScreen(BaseScreen.this, Exodus.skin));
             }
         });
         bookButt.setX(625);

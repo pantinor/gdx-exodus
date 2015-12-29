@@ -21,8 +21,6 @@ public class Weapon {
     private int minDamage;
     private int maxDamage;
     private boolean attackthroughobjects;
-    private boolean choosedistance;
-    private boolean dontshowtravel;
     private String hittile = "none";
     private String leavetile;
     private boolean lose;
@@ -65,16 +63,6 @@ public class Weapon {
     @XmlAttribute
     public boolean getAttackthroughobjects() {
         return attackthroughobjects;
-    }
-
-    @XmlAttribute
-    public boolean getChoosedistance() {
-        return choosedistance;
-    }
-
-    @XmlAttribute
-    public boolean getDontshowtravel() {
-        return dontshowtravel;
     }
 
     @XmlAttribute
@@ -143,14 +131,6 @@ public class Weapon {
 
     public void setAttackthroughobjects(boolean attackthroughobjects) {
         this.attackthroughobjects = attackthroughobjects;
-    }
-
-    public void setChoosedistance(boolean choosedistance) {
-        this.choosedistance = choosedistance;
-    }
-
-    public void setDontshowtravel(boolean dontshowtravel) {
-        this.dontshowtravel = dontshowtravel;
     }
 
     public void setHittile(String hittile) {

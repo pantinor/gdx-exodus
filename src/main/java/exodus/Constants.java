@@ -1,7 +1,6 @@
 package exodus;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
@@ -17,7 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.List;
 import util.XORShiftRandom;
 
 public interface Constants {
@@ -720,7 +718,6 @@ public interface Constants {
         DAG_MENTAR("N", 65, "Major multi-fireball", Profession.WIZARD.val(), MapType.combat.val()),
         NECORP("O", 70, "Weakens enemies", Profession.WIZARD.val(), MapType.combat.val()),
         UNSPEAKABLE("P", 75, "Multi-death bolt", Profession.WIZARD.val(), MapType.combat.val()),
-        
         PONTORI("A", 0, "Turn the undead", Profession.CLERIC.val() | Profession.ILLUSIONIST.val() | Profession.PALADIN.val() | Profession.RANGER.val() | Profession.DRUID.val(), MapType.combat.val()),
         APPAR_UNEM("B", 5, "Disarm chest safely", Profession.CLERIC.val() | Profession.ILLUSIONIST.val() | Profession.PALADIN.val() | Profession.RANGER.val() | Profession.DRUID.val(), MapType.city.val() | MapType.world.val() | MapType.dungeon.val()),
         SANCTU("C", 10, "Minor healing", Profession.CLERIC.val() | Profession.ILLUSIONIST.val() | Profession.PALADIN.val() | Profession.RANGER.val() | Profession.DRUID.val(), 0xff),
@@ -794,66 +791,9 @@ public interface Constants {
         public boolean canCast(Profession prof) {
             return (prof.val() & this.castableMask) > 0;
         }
-        
+
         public boolean canCastLocation(MapType mt) {
             return (mt.val() & this.locationMask) > 0;
-        }
-
-    }
-
-    public enum Item {
-
-        SKULL("Skull of Mondain", true, 0x000001),
-        SKULL_DESTROYED("Skull Destroyed", false, 0x000002),
-        CANDLE("Candle of Love", true, 0x000004),
-        BOOK("Book of Truth", true, 0x000008),
-        BELL("Bell of Courage", true, 0x000010),
-        KEY_C("Key of Courage", true, 0x000020),
-        KEY_L("Key of Love", true, 0x000040),
-        KEY_T("Key of Truth", true, 0x000080),
-        HORN("Silver Horn", true, 0x000100),
-        WHEEL("Wheel of HMS Cape", true, 0x000200),
-        CANDLE_USED("Candle Used", false, 0x000400),
-        BOOK_USED("Book Used", false, 0x000800),
-        BELL_USED("Bell Used", false, 0x001000),
-        MASK_MINAX("Mask of Minax", true, 0x002000),
-        RAGE_GOD("Rage of God", true, 0x004000),
-        IRON_ORE("Iron Ore", true, 0x008000),
-        RUNE_MOLD("Rune Mold", true, 0x010000),
-        IRON_RUNE("Iron Rune", true, 0x020000),
-        SONG_HUM("Song of Humility", true, 0x040000),
-        PARCH("Magic Parchment", true, 0x080000),
-        GREED_RUNE("Rune of Greed", true, 0x100000);
-
-        private boolean visible;
-        private String desc;
-        private int loc;
-
-        private Item(String desc, boolean v, int loc) {
-            this.desc = desc;
-            this.visible = v;
-            this.loc = loc;
-        }
-
-        public static Item get(int v) {
-            for (Item x : values()) {
-                if (x.ordinal() == (v & 0xff)) {
-                    return x;
-                }
-            }
-            return null;
-        }
-
-        public boolean isVisible() {
-            return this.visible;
-        }
-
-        public String getDesc() {
-            return this.desc;
-        }
-
-        public int getLoc() {
-            return loc;
         }
 
     }
@@ -1011,8 +951,8 @@ public interface Constants {
         dragon(51, 10, 7),
         balron(52, 10, 8),
         grass(60),
-        brick_floor(61),
-        chest(62),
+        chest(61),
+        brick_floor(62),
         cleric(63);
 
         private final int intValue;

@@ -743,7 +743,7 @@ public class BaseMap implements Constants {
                     if (p == null || p.isRemovedFromMap()) {
                         continue;
                     }
-                    if (p.getX() == x && p.getY() == y) {
+                    if (p.getX() == x && p.getY() == y && !p.getEmulatingCreature().getIsWalkableOver()) {
                         canmove = false;
                         break;
                     }

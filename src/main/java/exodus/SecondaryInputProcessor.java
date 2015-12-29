@@ -10,10 +10,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import exodus.Party.PartyMember;
 import java.util.Map;
+import objects.SaveGame;
+import util.PartyDeathException;
 
 public class SecondaryInputProcessor extends InputAdapter implements Constants {
 
@@ -48,8 +55,11 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
             case Keys.T:
                 screen.log("TALK> Which party member? (1-4)");
                 break;
-            case Keys.O:
+            case Keys.L:
                 screen.log("OPEN> ");
+                break;
+            case Keys.O:
+                screen.log("OTHER COMMAND> Which party member? (1-4)");
                 break;
             case Keys.U:
                 screen.log("UNLOCK> Which party member? (1-4)");
@@ -77,7 +87,7 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                 break;
             case Keys.J:
                 screen.log("JOIN GOLD> To party member? (1-4)");
-                break;        
+                break;
         }
     }
 
@@ -87,7 +97,7 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
         this.currentX = x;
         this.currentY = y;
         buffer = new StringBuilder();
-        
+
         switch (k) {
             case Keys.G:
                 screen.log("GET> Which party member? (1-4)");
@@ -248,6 +258,16 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                 } else {
                     screen.log("Nobody selected!");
                 }
+
+            } else if (initialKeyCode == Keys.O) {
+
+                if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
+                    screen.log("What other command?");
+                    Gdx.input.setInputProcessor(new OtherCommandInputAdapter(screen.context.getParty().getMember(keycode - 7 - 1), gameScreen));
+                    return false;
+                } else {
+                    screen.log("Nobody selected!");
+                }
             } else if (initialKeyCode == Keys.J) {
 
                 if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
@@ -265,7 +285,8 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                         screen.log("No spells to cast!");
                     } else {
                         Gdx.input.setInputProcessor(new SpellInputProcessor(gameScreen, screen.context, stage, spellSelection, pm));
-                        return false;                    }
+                        return false;
+                    }
                 } else {
                     screen.log("Nobody selected!");
                 }
@@ -321,9 +342,14 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                 PartyMember attacker = combatScreen.party.getActivePartyMember();
                 WeaponType wt = attacker.getPlayer().weapon;
 
-                Sounds.play(Sound.PC_ATTACK);
-                int range = wt.getWeapon().getRange();
-                Utils.animateAttack(stage, combatScreen, attacker, dir, x, y, range);
+                if (combatScreen.contextMap == Maps.EXODUS && wt != WeaponType.EXOTIC) {
+                    Sounds.play(Sound.NEGATIVE_EFFECT);
+                    combatScreen.finishPlayerTurn();
+                } else {
+                    Sounds.play(Sound.PC_ATTACK);
+                    int range = wt.getWeapon().getRange();
+                    Utils.animateAttack(stage, combatScreen, attacker, dir, x, y, range);
+                }
 
                 Gdx.input.setInputProcessor(new InputMultiplexer(screen, stage));
                 return false;
@@ -409,7 +435,7 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                     Gdx.input.setInputProcessor(new ReadyWearInputAdapter(screen.context.getParty().getMember(keycode - 7 - 1), false));
                     return false;
                 }
-            
+
             } else if (initialKeyCode == Keys.C) {
 
                 if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
@@ -419,7 +445,8 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                         screen.log("No spells to cast!");
                     } else {
                         Gdx.input.setInputProcessor(new SpellInputProcessor(screen, screen.context, stage, spellSelection, pm));
-                        return false;                    }
+                        return false;
+                    }
                 } else {
                     screen.log("Nobody selected!");
                 }
@@ -547,6 +574,160 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
             }
             return false;
         }
+    }
+
+    private class OtherCommandInputAdapter extends InputAdapter {
+
+        GameScreen screen;
+        StringBuilder buffer = new StringBuilder();
+        PartyMember pm;
+
+        public OtherCommandInputAdapter(PartyMember pm, GameScreen screen) {
+            this.screen = screen;
+            this.pm = pm;
+        }
+
+        @Override
+        public boolean keyUp(int keycode) {
+
+            if (keycode == Keys.ENTER) {
+
+                if (buffer.length() < 1) {
+                    return false;
+                }
+
+                String text = buffer.toString().toUpperCase();
+
+                switch (text) {
+                    case "STEAL":
+                        break;
+                    case "PRAY":
+                        if (currentX >= 44 && currentX <= 52 && currentY >= 44 && currentY <= 52 && bm.getId() == Maps.YEW.getId()) {
+                            this.screen.log("Yell 'EVOCARE'");
+                        } else {
+                            this.screen.log("A calmness and silence of the soul.");
+                        }
+                        break;
+                    case "BRIBE":
+                        break;
+                    case "INSERT":
+                        if (currentX >= 30 && currentX <= 33 && currentY == 12 && bm.getId() == Maps.EXODUS.getId()) {
+                            screen.log("D, S, L, M:");
+                            Gdx.input.setInputProcessor(new InsertCardInputAdapter(pm, this.screen));
+                            return false;
+                        } else {
+                            screen.log("What?");
+                        }
+                        break;
+                    default:
+                        screen.log("What?");
+                        break;
+                }
+
+                Gdx.input.setInputProcessor(new InputMultiplexer(screen, stage));
+
+                screen.finishTurn(currentX, currentY);
+
+            } else if (keycode == Keys.BACKSPACE) {
+                if (buffer.length() > 0) {
+                    buffer.deleteCharAt(buffer.length() - 1);
+                    screen.logDeleteLastChar();
+                }
+            } else if (keycode >= 29 && keycode <= 54) {
+                buffer.append(Keys.toString(keycode).toUpperCase());
+                screen.logAppend(Keys.toString(keycode).toUpperCase());
+            }
+            return false;
+        }
+    }
+
+    private class InsertCardInputAdapter extends InputAdapter {
+
+        GameScreen screen;
+        PartyMember pm;
+
+        public InsertCardInputAdapter(PartyMember pm, GameScreen screen) {
+            this.screen = screen;
+            this.pm = pm;
+        }
+
+        @Override
+        public boolean keyUp(int keycode) {
+
+            try {
+
+                if (keycode == Keys.D) {
+                    insertCard(0, 33, 0x8);
+                } else if (keycode == Keys.S) {
+                    insertCard(1, 31, 0x2);
+                } else if (keycode == Keys.L) {
+                    insertCard(3, 30, 0x1);
+                } else if (keycode == Keys.M) {
+                    insertCard(2, 32, 0x4);
+                } else {
+                    screen.log("What?");
+                }
+
+                Gdx.input.setInputProcessor(new InputMultiplexer(screen, stage));
+                screen.finishTurn(currentX, currentY);
+
+            } catch (PartyDeathException e) {
+                screen.partyDeath();
+            }
+
+            return false;
+        }
+
+        private void insertCard(int idx, int x, int mask) throws PartyDeathException {
+            if (pm.getPlayer().cards[idx] > 0) {
+                pm.getPlayer().cards[idx]--;
+                if (currentX == x && currentY == 12) {
+                    this.screen.context.getParty().getSaveGame().exodusCardsStatus |= mask;
+                    Sounds.play(Sound.DIVINE_MEDITATION);
+                    animateExodusDeath(x, 11);
+                } else {
+                    Sounds.play(Sound.SPIRITS);
+                    pm.applyDamage(pm.getPlayer().health + 1, false);
+                }
+            } else {
+                screen.log("None owned!");
+            }
+        }
+
+        private void animateExodusDeath(final int x, final int y) {
+
+            Actor d = new Exodus.ExplosionLargeDrawable();
+            Vector3 v = screen.getMapPixelCoords(x, y);
+            d.setX(v.x - 72);
+            d.setY(v.y - 72);
+
+            SequenceAction seq = Actions.action(SequenceAction.class);
+            seq.addAction(Actions.run(new AddActorAction(screen.projectilesStage, d)));
+            seq.addAction(Actions.run(new PlaySoundAction(Sound.DIVINE_MEDITATION)));
+            seq.addAction(Actions.delay(2f));
+            seq.addAction(Actions.removeActor(d));
+            seq.addAction(new Action() {
+                @Override
+                public boolean act(float delta) {
+                    screen.replaceTile("lava", x, y);
+                    return true;
+                }
+            });
+
+            SaveGame sg = this.screen.context.getParty().getSaveGame();
+            if ((sg.exodusCardsStatus & 0x1) > 0 && (sg.exodusCardsStatus & 0x2) > 0 && (sg.exodusCardsStatus & 0x4) > 0 && (sg.exodusCardsStatus & 0x8) > 0) {
+                seq.addAction(new Action() {
+                    @Override
+                    public boolean act(float delta) {
+                        Exodus.mainGame.setScreen(new FinalScreen(sg));
+                        return true;
+                    }
+                });
+            }
+
+            screen.projectilesStage.addAction(seq);
+        }
+
     }
 
 }

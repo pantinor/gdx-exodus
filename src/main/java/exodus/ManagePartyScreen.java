@@ -30,7 +30,6 @@ import objects.SaveGame.CharacterRecord;
 
 public class ManagePartyScreen implements Screen, Constants {
 
-    Exodus mainGame;
     Screen returnScreen;
     Stage stage;
     Batch batch;
@@ -67,8 +66,7 @@ public class ManagePartyScreen implements Screen, Constants {
 
     SaveGame saveGame = new SaveGame();
 
-    public ManagePartyScreen(Exodus main, Screen rs, Skin skin) {
-        this.mainGame = main;
+    public ManagePartyScreen(Screen rs, Skin skin) {
         this.stage = new Stage();
         this.batch = new SpriteBatch();
         this.returnScreen = rs;
@@ -292,14 +290,14 @@ public class ManagePartyScreen implements Screen, Constants {
                 } catch (Exception e) {
                 }
                 Sounds.play(Sound.TRIGGER);
-                mainGame.setScreen(returnScreen);
+                Exodus.mainGame.setScreen(returnScreen);
             }
         });
 
         cancel.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                mainGame.setScreen(returnScreen);
+                Exodus.mainGame.setScreen(returnScreen);
             }
         });
         

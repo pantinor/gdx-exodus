@@ -27,10 +27,9 @@ public class SaveGame implements Constants {
     public int dnglevel;
     public int orientation;
     public int shiphull;
-    public int pc1;
-    public int pc2;
-    public int pc3;
-    public int pc4;
+    
+    public byte exodusCardsStatus;
+    public byte empty1;
 
     public byte[] monster_save_tileids = new byte[8];
     public byte[] monster_save_x = new byte[8];
@@ -66,10 +65,10 @@ public class SaveGame implements Constants {
         dos.writeByte(orientation);
         dos.writeByte(shiphull);
 
-        dos.writeByte(pc1);
-        dos.writeByte(pc2);
-        dos.writeByte(pc3);
-        dos.writeByte(pc4);
+        dos.writeByte(exodusCardsStatus);
+        dos.writeByte(empty1);
+        dos.writeByte(empty1);
+        dos.writeByte(empty1);
 
         for (int i = 0; i < 4; i++) {
             if (players[i] == null) {
@@ -125,10 +124,10 @@ public class SaveGame implements Constants {
         orientation = dis.readByte() & 0xff;
         shiphull = dis.readByte() & 0xff;
 
-        pc1 = dis.readByte() & 0xff;
-        pc2 = dis.readByte() & 0xff;
-        pc3 = dis.readByte() & 0xff;
-        pc4 = dis.readByte() & 0xff;
+        exodusCardsStatus = dis.readByte();
+        empty1 = dis.readByte();
+        empty1 = dis.readByte();
+        empty1 = dis.readByte();
 
         for (int i = 0; i < 4; i++) {
             players[i] = new CharacterRecord();

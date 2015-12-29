@@ -14,7 +14,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.utils.Array;
-import util.XORShiftRandom;
 
 @XmlRootElement(name = "creatures")
 public class CreatureSet {

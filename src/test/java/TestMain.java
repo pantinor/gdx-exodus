@@ -1,5 +1,4 @@
 
-
 import objects.SaveGame;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
@@ -11,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import exodus.CombatScreen;
 import exodus.Constants;
+import exodus.Constants.ArmorType;
 import exodus.Constants.CreatureType;
 import exodus.Constants.Maps;
 import exodus.Constants.Profession;
@@ -22,7 +22,7 @@ import util.UltimaTiledMapLoader;
 
 public class TestMain extends Game {
 
-    Animation a1,a2,a3;
+    Animation a1, a2, a3;
     Texture tr;
 
     float time = 0;
@@ -40,7 +40,7 @@ public class TestMain extends Game {
     public void create() {
 
         try {
-            
+
             Exodus ult = new Exodus();
             ult.create();
 
@@ -59,44 +59,47 @@ public class TestMain extends Game {
             sg.players[0].profession = Profession.FIGHTER;
             sg.players[0].health = 500;
             sg.players[0].exp = 350;
-            sg.players[0].weapon = WeaponType.SWORD_P2;
+            sg.players[0].weapon = WeaponType.EXOTIC;
+            sg.players[0].armor = ArmorType.EXOTIC;
 
             sg.players[1].profession = Profession.RANGER;
             sg.players[1].health = 500;
             sg.players[1].exp = 350;
-            sg.players[1].weapon = WeaponType.BOW_P4;
-            
+            sg.players[1].weapon = WeaponType.EXOTIC;
+            sg.players[1].armor = ArmorType.EXOTIC;
+
             sg.players[2].profession = Profession.WIZARD;
             sg.players[2].health = 500;
             sg.players[2].exp = 350;
             sg.players[2].intell = 75;
             sg.players[2].mana = 75;
-            sg.players[2].weapon = WeaponType.DAGGER;
-            
+            sg.players[2].weapon = WeaponType.EXOTIC;
+            sg.players[2].armor = ArmorType.EXOTIC;
+
             sg.players[3].profession = Profession.CLERIC;
             sg.players[3].health = 500;
             sg.players[3].exp = 350;
             sg.players[3].wis = 75;
             sg.players[3].mana = 75;
-            sg.players[3].weapon = WeaponType.DAGGER;
-            
+            sg.players[3].weapon = WeaponType.EXOTIC;
+            sg.players[3].armor = ArmorType.EXOTIC;
+
             Maps m = Maps.GRASS_CON;
 
             TiledMap tmap = new UltimaTiledMapLoader(m, Exodus.standardAtlas, m.getMap().getWidth(), m.getMap().getHeight(), 32, 32).load();
-            CombatScreen sc = new CombatScreen(null, context, Maps.SOSARIA, m.getMap(), tmap, CreatureType.rogue, Exodus.creatures, Exodus.standardAtlas);
-            
+            CombatScreen sc = new CombatScreen(null, context, Maps.EXODUS, m.getMap(), tmap, CreatureType.dragon, Exodus.creatures, Exodus.standardAtlas);
+
             setScreen(sc);
             //atlas = a1;
             //tr = Utils.peerGem(Maps.LYCAEUM, a1);
 
             batch2 = new SpriteBatch();
-            
+
 //            atlas = new TextureAtlas(Gdx.files.internal("sprites-atlas.txt"));
 //
 //            a1 = new Animation(0.45f, atlas.findRegions("shallows"));
 //            a2 = new Animation(0.45f, atlas.findRegions("water"));
 //            a3 = new Animation(0.45f, atlas.findRegions("sea"));
-        
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -140,5 +143,4 @@ public class TestMain extends Game {
 //        batch2.end();
 //
 //    }
-
 }

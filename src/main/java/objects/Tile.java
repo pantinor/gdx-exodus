@@ -22,7 +22,7 @@ public class Tile {
     private boolean tiledInDungeon;
     private boolean usesReplacementTileAsBackground;
     private boolean usesWaterReplacementTileAsBackground;
-    private Maps combatMap = null;//Maps.BRICK_CON;
+    private Maps combatMap = Maps.BRICK_CON;
 
     @XmlAttribute
     public String getName() {

@@ -23,6 +23,7 @@ public class Creature implements Constants {
     private boolean camouflage;
     private String camouflageTile;
     private boolean canMoveOntoAvatar;
+    private boolean isWalkableOver;
     private String casts;
     private boolean divides;
     private int encounterSize;
@@ -77,6 +78,7 @@ public class Creature implements Constants {
 
         this.camouflageTile = clone.camouflageTile;
         this.canMoveOntoAvatar = clone.canMoveOntoAvatar;
+        this.isWalkableOver = clone.isWalkableOver;
         this.casts = clone.casts;
         this.divides = clone.divides;
         this.encounterSize = clone.encounterSize;
@@ -129,6 +131,11 @@ public class Creature implements Constants {
     @XmlAttribute
     public boolean getCanMoveOntoAvatar() {
         return canMoveOntoAvatar;
+    }
+    
+    @XmlAttribute
+    public boolean getIsWalkableOver() {
+        return isWalkableOver;
     }
 
     @XmlAttribute
@@ -276,6 +283,10 @@ public class Creature implements Constants {
 
     public void setCanMoveOntoAvatar(boolean canMoveOntoAvatar) {
         this.canMoveOntoAvatar = canMoveOntoAvatar;
+    }
+    
+    public void setIsWalkableOver(boolean isWalkableOver) {
+        this.isWalkableOver = isWalkableOver;
     }
 
     public void setCasts(String casts) {

@@ -36,6 +36,7 @@ public enum Sound {
     SPIRITS("AncientSpirits.ogg", false, 0.3f),
     RAGE("RageOfGod.ogg", false, 0.3f),
     DIVINE_INTERVENTION("divineint.ogg", false, 0.3f),
+    DIVINE_MEDITATION("DivineMed.ogg", false, 0.3f),
     WAVE("chaowave.ogg", false, 0.3f),
     GIGGLE("giggle.mp3", false, 0.3f),
     //music

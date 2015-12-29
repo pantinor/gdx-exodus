@@ -794,8 +794,6 @@ public class Utils implements Constants {
                         break;
                 }
 
-                //scr.replaceTile(av.leaveTileName, av.x, av.y);
-
                 scr.finishPlayerTurn();
 
                 return true;
@@ -816,7 +814,7 @@ public class Utils implements Constants {
         boolean foundTarget = false;
         int distance = 1;
         for (AttackVector v : path) {
-            AttackResult res = attackAt(combatMap, v, attacker, dir, range, distance);
+            AttackResult res = attackAt(combatMap, v, attacker, range, distance);
             target = v;
             target.result = res;
             target.distance = distance;
@@ -832,10 +830,6 @@ public class Utils implements Constants {
                 Exodus.hud.add("Last One!");
             }
         }
-
-//        if (wt.getWeapon().getLeavetile() != null && combatMap.getTile(target.x, target.y).walkable()) {
-//            target.leaveTileName = wt.getWeapon().getLeavetile();
-//        }
 
         return target;
     }
@@ -935,7 +929,7 @@ public class Utils implements Constants {
         return AttackResult.HIT;
     }
     
-    private static AttackResult attackAt(BaseMap combatMap, AttackVector target, PartyMember attacker, Direction dir, int range, int distance) {
+    private static AttackResult attackAt(BaseMap combatMap, AttackVector target, PartyMember attacker, int range, int distance) {
         AttackResult res = AttackResult.NONE;
         Creature creature = null;
         for (Creature c : combatMap.getCreatures()) {
@@ -949,8 +943,6 @@ public class Utils implements Constants {
         boolean wrongRange = (wt.getWeapon().getAbsolute_range() > 0 && (distance != range));
 
         if (creature == null || wrongRange) {
-            if (!wt.getWeapon().getDontshowtravel()) {
-            }
             return res;
         }
 

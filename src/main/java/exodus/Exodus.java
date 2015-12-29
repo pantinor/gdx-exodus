@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package exodus;
 
 import com.badlogic.gdx.Files;
@@ -55,7 +50,9 @@ public class Exodus extends Game {
     public static BitmapFont largeFont;
     public static BitmapFont ultimaFont;
     
+    public static Exodus mainGame;
     public static StartScreen startScreen;
+    
     public static Skin skin;
 
     public static boolean playMusic = true;
@@ -203,7 +200,8 @@ public class Exodus extends Game {
             e.printStackTrace();
         }
 
-        startScreen = new StartScreen(this);
+        mainGame = this;
+        startScreen = new StartScreen();
 
         setScreen(startScreen);
     }

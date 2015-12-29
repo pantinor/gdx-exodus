@@ -63,7 +63,7 @@ public class CombatScreen extends BaseScreen {
 
     private CursorActor cursor;
 
-    private Maps contextMap;
+    public Maps contextMap;
     public BaseMap combatMap;
     private CreatureType crType;
     private CreatureSet creatureSet;
@@ -640,8 +640,8 @@ public class CombatScreen extends BaseScreen {
         if (defender == null) {
             return false;
         }
-
-        AttackResult res = Utils.attackHit(attacker, defender);
+        
+        AttackResult res = (this.contextMap == Maps.EXODUS && defender.getPlayer().armor != ArmorType.EXOTIC ? AttackResult.HIT : Utils.attackHit(attacker, defender));
 
         TileEffect effect = TileEffect.NONE;
         Color col = Color.WHITE;
@@ -758,8 +758,10 @@ public class CombatScreen extends BaseScreen {
         switch (action) {
             case ATTACK: {
                 Sounds.play(Sound.NPC_ATTACK);
+                
+                AttackResult res = (this.contextMap == Maps.EXODUS && target.getPlayer().armor != ArmorType.EXOTIC ? AttackResult.HIT : Utils.attackHit(creature, target));
 
-                if (Utils.attackHit(creature, target) == AttackResult.HIT) {
+                if (res == AttackResult.HIT) {
                     Sounds.play(Sound.PC_STRUCK);
                     wounded = true;
 
