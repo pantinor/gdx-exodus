@@ -49,6 +49,7 @@ import static exodus.Constants.tilePixelWidth;
 import exodus.Exodus.ExplosionDrawable;
 import exodus.Party.PartyMember;
 import java.util.Iterator;
+import java.util.List;
 import util.PartyDeathException;
 import util.Utils;
 
@@ -133,17 +134,14 @@ public class GameScreen extends BaseScreen {
         Array<AtlasRegion> horse = Exodus.standardAtlas.findRegions("horse");
         Array<AtlasRegion> ship = Exodus.standardAtlas.findRegions("ship");
 
+        avatarAnim = new Animation(1f, avatar);
+        shipAnim = new Animation(1f, ship);
+        
         Array<AtlasRegion> tmp = new Array<>(4);
         for (int i = 0; i < 4; i++) {
-            tmp.add(avatar.get(0));
+            tmp.add(corps.get(0));
         }
-        avatarAnim = new Animation(0.25f, tmp);
-
-        Array<AtlasRegion> tmp2 = new Array<>(4);
-        for (int i = 0; i < 4; i++) {
-            tmp2.add(corps.get(0));
-        }
-        corpseAnim = new Animation(0.25f, tmp2);
+        corpseAnim = new Animation(1f, tmp);
 
         tmp = new Array<>(4);
         AtlasRegion ar = new AtlasRegion(horse.get(0));
@@ -151,11 +149,9 @@ public class GameScreen extends BaseScreen {
         tmp.add(horse.get(0));
         tmp.add(horse.get(0));
         tmp.add(ar);
-
         tmp.add(horse.get(0));
-        horseAnim = new Animation(0.25f, tmp);
+        horseAnim = new Animation(1f, tmp);
 
-        shipAnim = new Animation(0.25f, ship);
     }
 
     public class GameTimer implements Runnable {

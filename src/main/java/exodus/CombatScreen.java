@@ -735,7 +735,7 @@ public class CombatScreen extends BaseScreen {
         CombatAction action = null;
         if (creature.getTeleports() && rand.nextInt(100) <= 25) {
             action = CombatAction.TELEPORT;
-        } else if (creature.getRanged() && rand.nextInt(100) <= 25) {
+        } else if (creature.getRanged() && rand.nextInt(100) <= 33) {
             action = CombatAction.RANGED;
         } else {
             action = CombatAction.ATTACK;

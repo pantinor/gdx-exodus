@@ -969,7 +969,8 @@ public class BaseMap implements Constants {
                 setTile(Exodus.baseTileSet.getTileByName("water"), x, y);
                 break;
             case "chest":
-                setTile(Exodus.baseTileSet.getTileByName("brick_floor"), x, y);
+                String t = (this.id == Maps.SOSARIA.getId() ? "grass" : "brick_floor");
+                setTile(Exodus.baseTileSet.getTileByName(t), x, y);
                 break;
         }
         this.objects.add(dr);

@@ -15,9 +15,11 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
+import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.UBJsonReader;
 
 public class ModelTest implements ApplicationListener {
@@ -54,11 +56,10 @@ public class ModelTest implements ApplicationListener {
 
         UBJsonReader jsonReader = new UBJsonReader();
         G3dModelLoader modelLoader = new G3dModelLoader(jsonReader);
-        model = modelLoader.loadModel(Gdx.files.classpath("assets/graphics/wizard2.g3db"));
+        model = modelLoader.loadModel(Gdx.files.classpath("assets/graphics/helvetica.g3db"));
         modelInstance = new ModelInstance(model);
         modelInstance.transform.scale(.010f, .010f, .010f);
-        modelInstance.transform.rotate(0, 1, 0, 75);
-        
+                
         model2 = modelLoader.loadModel(Gdx.files.classpath("assets/graphics/wizard.g3db"));
         modelInstance2 = new ModelInstance(model2);
         modelInstance2.transform.scale(.350f, .350f, .350f);
@@ -94,7 +95,7 @@ public class ModelTest implements ApplicationListener {
 
         modelBatch.render(modelInstance, environment);
         
-        modelBatch.render(modelInstance2, environment);
+        //modelBatch.render(modelInstance2, environment);
         
         modelBatch.end();
     }

@@ -866,8 +866,6 @@ public class Utils implements Constants {
 
                 scr.replaceTile(av.leaveTileName, av.x, av.y);
 
-                scr.finishPlayerTurn();
-
                 return true;
             }
         }, fadeOut(.2f), removeActor(p)));

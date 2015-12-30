@@ -40,7 +40,7 @@
     <creature id="31" encounterSize="15" name="Gremlin" tile="gremlin"      basehp="48" exp="4" steals="food" />
     <creature id="34" encounterSize="15" name="Insect Swarm" tile="insect_swarm" basehp="48" exp="3" good="true" leader="25" nochest="true" />
     <creature id="38" encounterSize="12" name="Skeleton" tile="skeleton"    basehp="48" exp="4" undead="true" resists="sleep" leader="45" />
-    <creature id="40" encounterSize="10" name="Brigand" tile="fighter"      basehp="48" exp="4" leader="39" />
+    <creature id="40" encounterSize="10" name="Brigand" tile="bard"      basehp="48" exp="4" leader="39" />
     <creature id="42" encounterSize="8" name="Headless" tile="headless"     basehp="64" exp="5" leader="35" />
     <creature id="44" encounterSize="12" name="Wisp" tile="wisp"            basehp="64" exp="5" teleports="true" leader="36" nochest="true" />
     <creature id="27" encounterSize="6" name="Giant Spider" tile="spider"   basehp="64" exp="4" ranged="true" rangedhittile="poison_field" rangedmisstile="poison_field" spawntile="swamp" good="true" poisons="true" leader="25" />

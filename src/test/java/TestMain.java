@@ -87,60 +87,16 @@ public class TestMain extends Game {
             Maps m = Maps.GRASS_CON;
 
             TiledMap tmap = new UltimaTiledMapLoader(m, Exodus.standardAtlas, m.getMap().getWidth(), m.getMap().getHeight(), 32, 32).load();
-            CombatScreen sc = new CombatScreen(null, context, Maps.EXODUS, m.getMap(), tmap, CreatureType.dragon, Exodus.creatures, Exodus.standardAtlas);
+            CombatScreen sc = new CombatScreen(null, context, Maps.SOSARIA, m.getMap(), tmap, CreatureType.brigand, Exodus.creatures, Exodus.standardAtlas);
 
             setScreen(sc);
-            //atlas = a1;
-            //tr = Utils.peerGem(Maps.LYCAEUM, a1);
 
             batch2 = new SpriteBatch();
 
-//            atlas = new TextureAtlas(Gdx.files.internal("sprites-atlas.txt"));
-//
-//            a1 = new Animation(0.45f, atlas.findRegions("shallows"));
-//            a2 = new Animation(0.45f, atlas.findRegions("water"));
-//            a3 = new Animation(0.45f, atlas.findRegions("sea"));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-//    @Override
-//    public void render() {
-//        time += Gdx.graphics.getDeltaTime();
-//
-//        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-//
-//        batch2.begin();
-//        
-//        int dim = 32;
-//        
-//        for (int x=0;x<3;x++) {
-//            for (int y=0;y<3;y++) {
-//                int dx = dim*x + 100;
-//                int dy = dim*y + 200;
-//                batch2.draw(a1.getKeyFrame(time, true),dx,dy);
-//            }
-//        }
-//        
-//        for (int x=0;x<3;x++) {
-//            for (int y=0;y<3;y++) {
-//                int dx = dim*x + 300;
-//                int dy = dim*y + 200;
-//                batch2.draw(a2.getKeyFrame(time, true),dx,dy);
-//            }
-//        }
-//                
-//        for (int x=0;x<3;x++) {
-//            for (int y=0;y<3;y++) {
-//                int dx = dim*x + 600;
-//                int dy = dim*y + 200;
-//                batch2.draw(a3.getKeyFrame(time, true),dx,dy);
-//            }
-//        }
-//
-//        batch2.end();
-//
-//    }
 }

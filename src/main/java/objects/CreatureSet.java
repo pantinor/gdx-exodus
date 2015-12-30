@@ -47,27 +47,19 @@ public class CreatureSet {
     public Creature getInstance(CreatureType type, TextureAtlas atlas1) {
         for (Creature cr : creatures) {
             //System.err.printf("%s %s %s\n", type, cr.getTile(), cr.getName());
-            if (cr.getTile() == type) {
+            if (cr.getTile() == type || cr.getName().toLowerCase().equals(type.toString())) {
 
                 Creature newCr = new Creature(cr);
 
                 Array<AtlasRegion> tr = atlas1.findRegions(cr.getTile().toString());
-
                 int frameRate = Utils.getRandomBetween(1, 3);
-
+                newCr.setAnim(new Animation(frameRate, tr));
+                
                 int fr = Utils.getRandomBetween(0, tr.size);
                 TextureRegion reg = tr.get(fr);
-
-                //newCr.setAnim(new Animation(frameRate, reg));
-                newCr.setAnim(new Animation(frameRate, tr));
-
                 Decal d = Decal.newDecal(reg, true);
                 d.setScale(.018f);
                 newCr.setDecal(d);
-
-                if (type == CreatureType.pirate_ship) {
-                    //newCr.setAnim(new Animation(frameRate, tr));
-                }
                 
                 if (type == CreatureType.twister) {
                     newCr.setAnim(new Animation(.2f, tr));

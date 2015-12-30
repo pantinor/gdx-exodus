@@ -55,7 +55,7 @@ public class Creature implements Constants, Comparable {
     private boolean teleports;
     private boolean undead;
     private boolean wontattack;
-
+    
     private CreatureType tile;
     private Animation anim;
     private Decal decal;
