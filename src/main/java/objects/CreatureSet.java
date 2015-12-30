@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.utils.Array;
+import java.util.Collections;
 
 @XmlRootElement(name = "creatures")
 public class CreatureSet {
@@ -39,6 +40,8 @@ public class CreatureSet {
                 System.err.printf("CreatureSet.init: Could not find creature type with id %d\n", cr.getId());
             }
         }
+        
+        Collections.sort(creatures);
     }
 
     public Creature getInstance(CreatureType type, TextureAtlas atlas1) {

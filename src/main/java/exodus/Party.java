@@ -96,6 +96,14 @@ public class Party extends Observable implements Constants {
         }
         members.get(index).getPlayer().gold = total;
     }
+    
+    public int getAverageMaxHealth() {
+        int total = 0;
+        for (PartyMember pm : members) {
+            total+=pm.getPlayer().getMaxHealth();
+        }
+        return total / members.size();
+    }
 
     public int getTorchduration() {
         return torchduration;

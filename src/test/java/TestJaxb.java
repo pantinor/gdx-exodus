@@ -4,6 +4,7 @@ import exodus.Constants.InventoryType;
 import exodus.Constants.Maps;
 import static exodus.Constants.PARTY_SAV_BASE_FILENAME;
 import exodus.Context;
+import exodus.Exodus;
 import exodus.Party;
 import java.io.File;
 import java.util.Random;
@@ -11,12 +12,17 @@ import javax.swing.JOptionPane;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import objects.BaseMap;
+import objects.Creature;
+import objects.CreatureSet;
 import objects.MapSet;
 import objects.SaveGame;
 import objects.SaveGame.CharacterRecord;
 import objects.Tile;
 import objects.TileSet;
 import org.testng.Assert;
+import org.testng.annotations.Test;
+import util.Utils;
+import util.XORShiftRandom;
 import vendor.OracleService;
 import vendor.VendorClassSet;
 
@@ -195,5 +201,31 @@ public class TestJaxb {
         }
     }
 
+    @Test(invocationCount = 1)
+    public void fillCreatureTable() throws Exception {
+
+        CreatureSet creatures = (CreatureSet) Utils.loadXml("assets/xml/creatures.xml", CreatureSet.class);
+        creatures.init();
+
+        for (Creature c : creatures.getCreatures()) {
+            //System.out.println(c);
+        }
+
+        int era = 15;
+        int[] buckets = new int[63];
+
+        Random rand = new XORShiftRandom();
+        for (int x = 0; x < 300; x++) {
+            int randId = CreatureType.orc.getValue();
+            randId += era & rand.nextInt(16);// & rand.nextInt(16);
+            buckets[randId]++;
+        }
+
+        for (int x = 0; x < buckets.length; x++) {
+            CreatureType ct = CreatureType.get(x);
+            System.out.println(String.format("%d %s", buckets[x], ct));
+        }
+
+    }
 
 }

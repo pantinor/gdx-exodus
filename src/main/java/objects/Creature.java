@@ -18,7 +18,7 @@ import util.Utils;
 import util.XORShiftRandom;
 
 @XmlRootElement(name = "creature")
-public class Creature implements Constants {
+public class Creature implements Constants, Comparable {
 
     private boolean camouflage;
     private String camouflageTile;
@@ -59,7 +59,7 @@ public class Creature implements Constants {
     private CreatureType tile;
     private Animation anim;
     private Decal decal;
-    private final TextureRegion healthBar = new TextureRegion(Utils.fillRectangle(32, 3, Color.GREEN, .5f));
+    private TextureRegion healthBar;
 
     public int currentX;
     public int currentY;
@@ -132,7 +132,7 @@ public class Creature implements Constants {
     public boolean getCanMoveOntoAvatar() {
         return canMoveOntoAvatar;
     }
-    
+
     @XmlAttribute
     public boolean getIsWalkableOver() {
         return isWalkableOver;
@@ -284,7 +284,7 @@ public class Creature implements Constants {
     public void setCanMoveOntoAvatar(boolean canMoveOntoAvatar) {
         this.canMoveOntoAvatar = canMoveOntoAvatar;
     }
-    
+
     public void setIsWalkableOver(boolean isWalkableOver) {
         this.isWalkableOver = isWalkableOver;
     }
@@ -404,18 +404,12 @@ public class Creature implements Constants {
 
     public CreatureStatus getDamageStatus() {
 
-        int heavy_threshold, light_threshold, crit_threshold;
-
-        crit_threshold = basehp >> 2; /* (basehp / 4) */
-
-        heavy_threshold = basehp >> 1; /* (basehp / 2) */
-
-        light_threshold = crit_threshold + heavy_threshold;
+        int crit_threshold = basehp / 4;
+        int heavy_threshold = basehp / 2;
+        int light_threshold = crit_threshold + heavy_threshold;
 
         if (hp <= 0) {
             return CreatureStatus.DEAD;
-        } else if (hp < 24) {
-            return CreatureStatus.FLEEING;
         } else if (hp < crit_threshold) {
             return CreatureStatus.CRITICAL;
         } else if (hp < heavy_threshold) {
@@ -444,11 +438,6 @@ public class Creature implements Constants {
 
     public void setDecal(Decal d) {
         this.decal = d;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("Creature [id=%s, name=%s, tile=%s, currentX=%d, currentY=%d currentPos=%s, sailDir=%s]", id, name, tile, currentX, currentY, currentPos, sailDir);
     }
 
     @XmlTransient
@@ -525,8 +514,11 @@ public class Creature implements Constants {
     public void setVisible(boolean isVisible) {
         this.isVisible = isVisible;
     }
-    
+
     public TextureRegion getHealthBar() {
+        if (healthBar == null) {
+            healthBar = new TextureRegion(Utils.fillRectangle(32, 3, Color.GREEN, .5f));
+        }
         return this.healthBar;
     }
 
@@ -539,9 +531,55 @@ public class Creature implements Constants {
         if (bar > 32) {
             bar = 32;
         }
-        if (this.healthBar != null) {
-            this.healthBar.setRegion(0, 0, (int) bar, 3);
+        getHealthBar().setRegion(0, 0, (int) bar, 3);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%d\t%s\t\t%s\t\t%d\texp:%d\tldr: %d", id, tile, name, basehp, exp, leader);
+    }
+    
+
+    @Override
+    public int compareTo(Object obj) {
+        if (obj == null) {
+            return 0;
+        }
+        if (getClass() != obj.getClass()) {
+            return 0;
+        }
+        final Creature other = (Creature) obj;
+        if (this.id > other.id) {
+            return 1;
+        } else if (this.id < other.id) {
+            return -1;
+        } else {
+            return 0;
         }
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 79 * hash + this.id;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Creature other = (Creature) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        return true;
+    }
+    
+    
 
 }

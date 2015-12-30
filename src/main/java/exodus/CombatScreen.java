@@ -216,7 +216,7 @@ public class CombatScreen extends BaseScreen {
                 if (CreatureType.get(baseType.getCreature().getLeader()) != baseType.getCreature().getTile() && i != (numCreatures - 1)) {
                     if (rand.nextInt(32) == 0) { // leader's leader
                         CreatureType t1 = CreatureType.get(baseType.getCreature().getLeader());
-                        CreatureType t2 = CreatureType.get(t1.getCreature().getLeader());
+                        CreatureType t2 = (t1.getCreature().getLeader() == 0 ? t1 : CreatureType.get(t1.getCreature().getLeader()));
                         current = t2;
                     } else if (rand.nextInt(8) == 0) { // leader
                         current = CreatureType.get(baseType.getCreature().getLeader());

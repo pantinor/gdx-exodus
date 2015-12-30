@@ -259,7 +259,6 @@ public class GameScreen extends BaseScreen {
 //                party.getMember(x).getPlayer().wis = 75;
 //                party.getMember(x).getPlayer().mana = 75;
 //            }
-
             //load the surface world first
             loadNextMap(Maps.SOSARIA, sg.partyX, sg.partyY);
             //loadNextMap(Maps.SOSARIA, 40, 212);
@@ -275,7 +274,7 @@ public class GameScreen extends BaseScreen {
                 //loadNextMap(Maps.DESTARD, 0, 0, 3, 5, 3, Direction.SOUTH, true);
                 //loadNextMap(Maps.DELVE_SORROWS, 0, 0, 3, 19, 1, Direction.EAST, true);
             }
-            
+
             context.setTransport(Transport.values()[sg.transport]);
             mainAvatar = avatarAnim;
             if (sg.transport == Transport.SHIP.ordinal()) {
@@ -950,16 +949,26 @@ public class GameScreen extends BaseScreen {
             return cr;
         }
 
-        if (context.getParty().getSaveGame().moves > 30000) {
-            era = 15;
-        } else if (context.getParty().getSaveGame().moves > 20000) {
-            era = 7;
+        randId = CreatureType.orc.getValue();
+        int avgPtyHlth = this.context.getParty().getAverageMaxHealth();
+
+        if (avgPtyHlth > 700) {
+            era = 0x1111; //15
+            randId += era & rand.nextInt(16);
+        } else if (avgPtyHlth > 500) {
+            era = 0x1111; //15
+            randId += era & rand.nextInt(16) & rand.nextInt(16);
+        } else if (avgPtyHlth > 400) {
+            era = 0x0111; //7
+            randId += era & rand.nextInt(16) ;
+        } else if (avgPtyHlth > 300) {
+            era = 0x0111; //7
+            randId += era & rand.nextInt(16) & rand.nextInt(16);
         } else {
-            era = 3;
+            era = 0x0011; //3
+            randId += era & rand.nextInt(16);
         }
 
-        randId = CreatureType.orc.getValue();
-        randId += era & rand.nextInt(16) & rand.nextInt(16);
         Creature cr = Exodus.creatures.getInstance(CreatureType.get(randId), Exodus.standardAtlas);
 
         return cr;

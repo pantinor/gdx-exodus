@@ -82,7 +82,7 @@ public class Exodus extends Game {
     public static void main(String[] args) {
 
         LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
-        cfg.title = "Exodus";
+        cfg.title = "Ultima 3 - Exodus";
         cfg.width = SCREEN_WIDTH;
         cfg.height = SCREEN_HEIGHT;
         cfg.addIcon("assets/graphics/exodus.png", Files.FileType.Classpath);

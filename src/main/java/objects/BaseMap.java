@@ -395,6 +395,8 @@ public class BaseMap implements Constants {
                 CreatureType ct = CreatureType.get(tname);
                 if (ct != null) {
                     p.setEmulatingCreature(ct.getCreature());
+                } else {
+                    System.err.printf("%s - ct is null %s\n", p, tname);
                 }
 
             }
