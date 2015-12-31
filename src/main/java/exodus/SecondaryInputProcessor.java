@@ -280,7 +280,7 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
 
                 if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
                     PartyMember pm = screen.context.getParty().getMember(keycode - 7 - 1);
-                    Map<String, Spell> spellSelection = Spell.getCastables(pm.getPlayer().profession, bm.getType());
+                    Map<String, Spell> spellSelection = Spell.getCastables(pm, bm.getType());
                     if (spellSelection.size() < 1) {
                         screen.log("No spells to cast!");
                     } else {
@@ -440,7 +440,7 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
 
                 if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_4) {
                     PartyMember pm = screen.context.getParty().getMember(keycode - 7 - 1);
-                    Map<String, Spell> spellSelection = Spell.getCastables(pm.getPlayer().profession, MapType.dungeon);
+                    Map<String, Spell> spellSelection = Spell.getCastables(pm, MapType.dungeon);
                     if (spellSelection.size() < 1) {
                         screen.log("No spells to cast!");
                     } else {

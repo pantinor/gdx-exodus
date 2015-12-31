@@ -87,7 +87,7 @@ public class TestMain extends Game {
             Maps m = Maps.GRASS_CON;
 
             TiledMap tmap = new UltimaTiledMapLoader(m, Exodus.standardAtlas, m.getMap().getWidth(), m.getMap().getHeight(), 32, 32).load();
-            CombatScreen sc = new CombatScreen(null, context, Maps.SOSARIA, m.getMap(), tmap, CreatureType.brigand, Exodus.creatures, Exodus.standardAtlas);
+            CombatScreen sc = new CombatScreen(null, context, Maps.SOSARIA, m.getMap(), tmap, CreatureType.gazer, Exodus.creatures, Exodus.standardAtlas);
 
             setScreen(sc);
 

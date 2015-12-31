@@ -760,7 +760,6 @@ public class DungeonScreen extends BaseScreen {
         } else {
             if (combatMap.getType() == MapType.combat && context.getParty().didAnyoneFlee()) {
                 log("Battle is lost!");
-                //no flee penalty in dungeons
             } else if (!context.getParty().isAnyoneAlive()) {
                 partyDeath();
             }
@@ -1110,15 +1109,15 @@ public class DungeonScreen extends BaseScreen {
     public void finishTurn(int currentX, int currentY) {
         context.getAura().passTurn();
 
-        creatureCleanup(currentX, currentY);
+        creatureCleanup();
 
         if (checkRandomDungeonCreatures()) {
-            spawnDungeonCreature(null, currentX, currentY);
+            spawnDungeonCreature();
         }
 
         boolean quick = context.getAura().getType() == AuraType.QUICKNESS;
         if (!quick) {
-            moveDungeonCreatures(this, currentX, currentY);
+            moveDungeonCreatures(currentX, currentY);
         }
 
     }
@@ -1128,8 +1127,6 @@ public class DungeonScreen extends BaseScreen {
             return;
         }
         Party.PartyMember pm = context.getParty().getMember(index);
-        int x = (Math.round(currentPos.x) - 1);
-        int y = (Math.round(currentPos.z) - 1);
 
         log("You touch the " + type.getType() + "!");
 
@@ -1156,18 +1153,6 @@ public class DungeonScreen extends BaseScreen {
             partyDeath();
         }
 
-//        //remove model instance
-//        DungeonTileModelInstance mark = null;
-//        for (DungeonTileModelInstance dmi : modelInstances) {
-//            if (dmi.getTile() == DungeonTile.MARK) {
-//                if (dmi.x == x && dmi.y == y && dmi.getLevel() == currentLevel) {
-//                    mark = dmi;
-//                    break;
-//                }
-//            }
-//        }
-//        modelInstances.remove(mark);
-//        dungeonTiles[currentLevel][x][y] = DungeonTile.NOTHING;
     }
 
     public void dungeonDrinkFountain(DungeonTile type, int index) {
@@ -1251,7 +1236,7 @@ public class DungeonScreen extends BaseScreen {
         }
     }
 
-    private void creatureCleanup(int currentX, int currentY) {
+    private void creatureCleanup() {
         Iterator<Creature> i = dngMap.getMap().getCreatures().iterator();
         while (i.hasNext()) {
             Creature cr = i.next();
@@ -1262,7 +1247,7 @@ public class DungeonScreen extends BaseScreen {
     }
 
     private boolean checkRandomDungeonCreatures() {
-        int spawnValue = 32;// - (currentLevel << 2);
+        int spawnValue = 32 - currentLevel * 2;
         if (dngMap.getMap().getCreatures().size() >= MAX_WANDERING_CREATURES_IN_DUNGEON || rand.nextInt(spawnValue) != 0) {
             return false;
         }
@@ -1271,58 +1256,23 @@ public class DungeonScreen extends BaseScreen {
 
     /**
      * spawn a dungeon creature in a random walkable place in the level.
-     * monsters can walk thru rooms and such but not walls.
      */
-    private boolean spawnDungeonCreature(Creature creature, int currentX, int currentY) {
+    private boolean spawnDungeonCreature() {
 
         int dx = 0;
         int dy = 0;
-        int tmp = 0;
-
         boolean ok = false;
         int tries = 0;
         int MAX_TRIES = 10;
 
         while (!ok && (tries < MAX_TRIES)) {
-            dx = 7;
-            dy = rand.nextInt(7);
-
-            if (rand.nextInt(100) > 50) {
-                dx = -dx;
-            }
-            if (rand.nextInt(100) > 50) {
-                dy = -dy;
-            }
-            if (rand.nextInt(100) > 50) {
-                tmp = dx;
-                dx = dy;
-                dy = tmp;
-            }
-
-            dx = currentX + dx;
-            dy = currentY + dy;
-
-            if (dx < 0) {
-                dx = DUNGEON_DIM + dx;
-            } else if (dx > DUNGEON_DIM - 1) {
-                dx = dx - DUNGEON_DIM;
-            }
-            if (dy < 0) {
-                dy = DUNGEON_DIM + dy;
-            } else if (dy > DUNGEON_DIM - 1) {
-                dy = dy - DUNGEON_DIM;
-            }
-
-            /* make sure we can spawn the creature there */
-            if (creature != null) {
-                DungeonTile tile = dungeonTiles[currentLevel][dx][dy];
-                if (tile.getCreatureWalkable()) {
-                    ok = true;
-                } else {
-                    tries++;
-                }
-            } else {
+            dx = rand.nextInt(DUNGEON_DIM);
+            dy = rand.nextInt(DUNGEON_DIM);
+            DungeonTile tile = dungeonTiles[currentLevel][dx][dy];
+            if (tile.getCreatureWalkable()) {
                 ok = true;
+            } else {
+                tries++;
             }
         }
 
@@ -1330,50 +1280,39 @@ public class DungeonScreen extends BaseScreen {
             return false;
         }
 
-        if (creature != null) {
-
-        } else {
-
-            //Make a Weighted Random Choice with level as a factor
-            int total = 0;
-            for (CreatureType ct : CreatureType.values()) {
-                total += ct.getSpawnLevel() <= currentLevel ? ct.getSpawnWeight() : 0;
-            }
-
-            int thresh = rand.nextInt(total);
-            CreatureType monster = null;
-
-            for (CreatureType ct : CreatureType.values()) {
-                thresh -= ct.getSpawnLevel() <= currentLevel ? ct.getSpawnWeight() : 0;
-                if (thresh < 0) {
-                    monster = ct;
-                    break;
-                }
-            }
-
-            creature = Exodus.creatures.getInstance(monster, Exodus.standardAtlas);
+        //Make a Weighted Random Choice with level as a factor
+        int total = 0;
+        for (CreatureType ct : CreatureType.values()) {
+            total += ct.getSpawnLevel() <= currentLevel + 1 ? ct.getSpawnWeight() * ct.getSpawnLevel() : 0;
         }
 
-        if (creature != null) {
-            creature.currentX = dx;
-            creature.currentY = dy;
-            creature.currentLevel = currentLevel;
-            dngMap.getMap().addCreature(creature);
+        int thresh = rand.nextInt(total);
+        CreatureType monster = null;
 
-            System.out.println("spawned in dungeon: " + creature.getTile());
-            setCreatureRotations();
-        } else {
-            return false;
+        for (CreatureType ct : CreatureType.values()) {
+            thresh -= ct.getSpawnLevel() <= currentLevel + 1 ? ct.getSpawnWeight() * ct.getSpawnLevel() : 0;
+            if (thresh < 0) {
+                monster = ct;
+                break;
+            }
         }
+
+        Creature creature = Exodus.creatures.getInstance(monster, Exodus.standardAtlas);
+        creature.currentX = dx;
+        creature.currentY = dy;
+        creature.currentLevel = currentLevel;
+        dngMap.getMap().addCreature(creature);
+
+        System.out.printf("spawned in dungeon: %s (%d, %d)\n", creature.getTile(), dx, dy);
+        setCreatureRotations();
 
         return true;
     }
 
-    private void moveDungeonCreatures(BaseScreen screen, int avatarX, int avatarY) {
+    private void moveDungeonCreatures(int avatarX, int avatarY) {
         for (Creature cr : dngMap.getMap().getCreatures()) {
 
             int mask = getValidMovesMask(cr.currentX, cr.currentY, cr, avatarX, avatarY);
-            //dont use wrap border behavior with the dungeon maps
             Direction dir = Utils.getPath(MapBorderBehavior.wrap, DUNGEON_DIM, DUNGEON_DIM, avatarX, avatarY, mask, true, cr.currentX, cr.currentY);
             if (dir == null) {
                 continue;

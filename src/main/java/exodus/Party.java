@@ -352,7 +352,9 @@ public class Party extends Observable implements Constants {
                     break;
                 case LAVA:
                 case FIRE:
-                    applyDamage(16 + (rand.nextInt(32)), false);
+                    if (player.marks[1] == 0) {
+                        applyDamage(16 + (rand.nextInt(32)), false);
+                    }
                     break;
                 case POISONFIELD:
                 case POISON:
@@ -620,7 +622,7 @@ public class Party extends Observable implements Constants {
                         }
 
                         if (member.player.food <= 0) {
-                            member.applyDamage(rand.nextInt(2)+1, false);
+                            member.applyDamage(2, false);
                         }
                     }
                 }

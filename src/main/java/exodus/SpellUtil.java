@@ -149,6 +149,14 @@ public class SpellUtil implements Constants {
                         break;
                     case SANCTU:
                         subject.heal(HealType.HEAL);
+                        if (screen instanceof CombatScreen) {
+                            seq.addAction(Actions.run(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ((CombatScreen) screen).finishPlayerTurn();
+                                }
+                            }));
+                        }
                         break;
                     case LUMINAE:
                         ((DungeonScreen) screen).isTorchOn = true;
@@ -164,6 +172,14 @@ public class SpellUtil implements Constants {
                         break;
                     case ALCORT:
                         subject.heal(HealType.CURE);
+                        if (screen instanceof CombatScreen) {
+                            seq.addAction(Actions.run(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ((CombatScreen) screen).finishPlayerTurn();
+                                }
+                            }));
+                        }
                         break;
                     case SEQUITU:
                         spellXit(screen, caster);
@@ -173,6 +189,14 @@ public class SpellUtil implements Constants {
                         break;
                     case SANCTU_MANI:
                         subject.heal(HealType.FULLHEAL);
+                        if (screen instanceof CombatScreen) {
+                            seq.addAction(Actions.run(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ((CombatScreen) screen).finishPlayerTurn();
+                                }
+                            }));
+                        }
                         break;
                     case VIEDA:
                         spellView(screen, caster);
@@ -182,6 +206,14 @@ public class SpellUtil implements Constants {
                         break;
                     case SURMANDUM:
                         subject.heal(HealType.RESURRECT);
+                        if (screen instanceof CombatScreen) {
+                            seq.addAction(Actions.run(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ((CombatScreen) screen).finishPlayerTurn();
+                                }
+                            }));
+                        }
                         break;
                     case ZXKUQYB:
                         useMaskOfMinax(screen, caster);
@@ -190,6 +222,14 @@ public class SpellUtil implements Constants {
                         caster.getPlayer().wis -= 5;
                         Exodus.hud.add("Lost 5 points of wisdom!");
                         subject.heal(HealType.RECALL);
+                        if (screen instanceof CombatScreen) {
+                            seq.addAction(Actions.run(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ((CombatScreen) screen).finishPlayerTurn();
+                                }
+                            }));
+                        }
                         break;
                     default:
                         break;
@@ -197,16 +237,6 @@ public class SpellUtil implements Constants {
                 }
             }
         }));
-
-        if (screen instanceof CombatScreen) {
-            seq.addAction(Actions.delay(1f));
-            seq.addAction(Actions.run(new Runnable() {
-                @Override
-                public void run() {
-                    ((CombatScreen) screen).finishPlayerTurn();
-                }
-            }));
-        }
 
         screen.getStage().addAction(seq);
 
@@ -343,6 +373,13 @@ public class SpellUtil implements Constants {
 
         }
 
+        seq.addAction(Actions.run(new Runnable() {
+            @Override
+            public void run() {
+                combatScreen.finishPlayerTurn();
+            }
+        }));
+
         combatScreen.getStage().addAction(seq);
 
     }
@@ -386,7 +423,15 @@ public class SpellUtil implements Constants {
             if (cr.getDamageStatus() == CreatureStatus.DEAD) {
                 seq.addAction(Actions.run(combatScreen.new RemoveCreatureAction(cr)));
             }
+
         }
+
+        seq.addAction(Actions.run(new Runnable() {
+            @Override
+            public void run() {
+                combatScreen.finishPlayerTurn();
+            }
+        }));
 
         combatScreen.getStage().addAction(seq);
 
@@ -432,7 +477,15 @@ public class SpellUtil implements Constants {
             if (cr.getDamageStatus() == CreatureStatus.DEAD) {
                 seq.addAction(Actions.run(combatScreen.new RemoveCreatureAction(cr)));
             }
+
         }
+        
+        seq.addAction(Actions.run(new Runnable() {
+            @Override
+            public void run() {
+                combatScreen.finishPlayerTurn();
+            }
+        }));
 
         combatScreen.getStage().addAction(seq);
 
@@ -622,7 +675,14 @@ public class SpellUtil implements Constants {
             }
 
         }
-
+        
+        seq.addAction(Actions.run(new Runnable() {
+            @Override
+            public void run() {
+                combatScreen.finishPlayerTurn();
+            }
+        }));
+        
         combatScreen.getStage().addAction(seq);
 
     }
@@ -660,6 +720,13 @@ public class SpellUtil implements Constants {
 
         }
 
+        seq.addAction(Actions.run(new Runnable() {
+            @Override
+            public void run() {
+                combatScreen.finishPlayerTurn();
+            }
+        }));
+        
         combatScreen.getStage().addAction(seq);
 
     }

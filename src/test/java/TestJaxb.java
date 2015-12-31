@@ -1,6 +1,7 @@
 
 import exodus.Constants.CreatureType;
 import exodus.Constants.InventoryType;
+import static exodus.Constants.MAX_WANDERING_CREATURES_IN_DUNGEON;
 import exodus.Constants.Maps;
 import static exodus.Constants.PARTY_SAV_BASE_FILENAME;
 import exodus.Context;
@@ -176,32 +177,50 @@ public class TestJaxb {
 
     //@Test
     public void testRandDung() throws Exception {
-        Random rand = new Random();
-        int currentLevel = 8;
+        Random rand = new XORShiftRandom();
 
-        for (int i = 0; i < 20; i++) {
+        for (int currentLevel = 1; currentLevel < 9; currentLevel++) {
 
-            int total = 0;
-            for (CreatureType ct : CreatureType.values()) {
-                total += (ct.getSpawnLevel() <= currentLevel) ? ct.getSpawnWeight() : 0;
+            int[] buckets = new int[63];
+
+            int totCount = 0;
+            for (int i = 0; i < 1000; i++) {
+
+                int spawnValue = 32 - currentLevel * 2;
+                int f = rand.nextInt(spawnValue);
+                if (f != 0) {
+                    continue;
+                }
+
+                int total = 0;
+                for (CreatureType ct : CreatureType.values()) {
+                    total += (ct.getSpawnLevel() <= currentLevel) ? ct.getSpawnWeight() * ct.getSpawnLevel() : 0;
+                }
+
+                int thresh = rand.nextInt(total);
+                CreatureType monster = null;
+
+                for (CreatureType ct : CreatureType.values()) {
+                    thresh -= (ct.getSpawnLevel() <= currentLevel) ? ct.getSpawnWeight() * ct.getSpawnLevel() : 0;
+                    if (thresh < 0) {
+                        monster = ct;
+                        break;
+                    }
+                }
+                buckets[monster.getValue()]++;
+                totCount++;
             }
 
-            int thresh = rand.nextInt(total);
-            CreatureType monster = null;
-
-            for (CreatureType ct : CreatureType.values()) {
-                thresh -= (ct.getSpawnLevel() <= currentLevel) ? ct.getSpawnWeight() : 0;
-                if (thresh < 0) {
-                    monster = ct;
-                    break;
+            for (int x = 0; x < buckets.length; x++) {
+                CreatureType ct = CreatureType.get(x);
+                if (buckets[x] > 0) {
+                    System.out.println(String.format("Level %d - %s %d of %d", currentLevel, ct, buckets[x], totCount));
                 }
             }
-
-            System.out.printf("spawned on level %s : %s\n", currentLevel, monster.toString());
         }
     }
 
-    @Test(invocationCount = 1)
+    //@Test(invocationCount = 1)
     public void fillCreatureTable() throws Exception {
 
         CreatureSet creatures = (CreatureSet) Utils.loadXml("assets/xml/creatures.xml", CreatureSet.class);

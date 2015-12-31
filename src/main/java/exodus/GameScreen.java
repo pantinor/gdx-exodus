@@ -49,7 +49,6 @@ import static exodus.Constants.tilePixelWidth;
 import exodus.Exodus.ExplosionDrawable;
 import exodus.Party.PartyMember;
 import java.util.Iterator;
-import java.util.List;
 import util.PartyDeathException;
 import util.Utils;
 

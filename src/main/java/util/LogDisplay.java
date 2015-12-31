@@ -61,7 +61,11 @@ public class LogDisplay {
         for (int i = 0; i < party.getMembers().size(); i++) {
             PartyMember pm = party.getMember(i);
 
-            Exodus.smallFont.setColor(i == party.getActivePlayer() ? Color.YELLOW : Color.WHITE);
+            Exodus.smallFont.setColor(Color.WHITE);
+
+            if (pm.getPlayer().food <=0) {
+                Exodus.smallFont.setColor(Color.ORANGE);
+            }
             if (pm.getPlayer().status == StatusType.POISONED) {
                 Exodus.smallFont.setColor(Color.GREEN);
             }
@@ -71,8 +75,11 @@ public class LogDisplay {
             if (pm.getPlayer().status == StatusType.DEAD) {
                 Exodus.smallFont.setColor(Color.DARK_GRAY);
             }
-            if (pm.getPlayer().health > 0 && pm.getPlayer().health < 3) {
+            if (pm.getPlayer().health > 0 && pm.getPlayer().health < 2) {
                 Exodus.smallFont.setColor(Color.RED);
+            }
+            if (i == party.getActivePlayer()) {
+                Exodus.smallFont.setColor(Color.YELLOW);
             }
             
             batch.draw(Exodus.faceTiles[pm.getPlayer().portaitIndex], LOG_X + 3, y + 5);

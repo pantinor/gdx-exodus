@@ -368,7 +368,7 @@ public class CombatScreen extends BaseScreen {
                 return false;
             } else if (keycode == Keys.C) {
 
-                Map<String, Spell> spellSelection = Spell.getCastables(ap.getPlayer().profession, MapType.combat);
+                Map<String, Spell> spellSelection = Spell.getCastables(ap, MapType.combat);
                 if (spellSelection.size() < 1) {
                     log("No spells to cast!");
                 } else {

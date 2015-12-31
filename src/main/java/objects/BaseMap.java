@@ -20,6 +20,8 @@ import exodus.Exodus;
 import exodus.GameScreen;
 import exodus.Party;
 import exodus.Party.PartyMember;
+import exodus.Sound;
+import exodus.Sounds;
 import java.util.Iterator;
 import javax.xml.bind.annotation.XmlTransient;
 import util.PartyDeathException;
@@ -540,12 +542,13 @@ public class BaseMap implements Constants {
 
                 if (cr.getWontattack()) {
                     if (cr.getTile() == CreatureType.whirlpool) {
-                        screen.context.damageShip(-1, 10);
+                        Sounds.play(Sound.WAVE);
                         Exodus.hud.add("A huge swirling Whirlpool engulfs you and your ship dragging both to a watery grave!");
                         Exodus.hud.add("As the water enters your lungs you pass into Darkness!");
                         Exodus.hud.add("You awaken on the shores of a forgotten Land.");
                         Exodus.hud.add("Your ship and crew lost to the sea!");
                         screen.context.setTransport(Transport.FOOT);
+                        GameScreen.mainAvatar = GameScreen.avatarAnim;
                         screen.loadNextMap(Maps.AMBROSIA, 32, 54);
                         break;
                     } else if (cr.getTile() == CreatureType.twister) {

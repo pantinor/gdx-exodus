@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import exodus.Party.PartyMember;
 import java.util.HashMap;
 import java.util.Map;
 import util.XORShiftRandom;
@@ -760,11 +761,12 @@ public interface Constants {
             this.sound = sound;
         }
 
-        public static Map<String, Spell> getCastables(Profession prof, MapType mt) {
+        public static Map<String, Spell> getCastables(PartyMember pm, MapType mt) {
             Map<String, Spell> ret = new HashMap<>();
+            Profession prof = pm.getPlayer().profession;
             int count = Keys.A;
             for (Spell s : Spell.values()) {
-                if (s.canCast(prof) && s.canCastLocation(mt)) {
+                if (s.canCast(prof) && s.canCastLocation(mt) && s.getCost() <= pm.getPlayer().mana) {
                     ret.put(Keys.toString(count), s);
                     count++;
                 }
@@ -923,33 +925,33 @@ public interface Constants {
         sea_horse(22),
         twister(23),
         whirlpool(24),
-        rat(25, 5, 0),
-        bat(26, 5, 0),
-        spider(27, 5, 1),
-        ghost(28, 5, 1),
-        slime(29, 5, 0),
-        troll(30, 5, 2),
-        gremlin(31, 5, 3),
-        mimic(32, 5, 5),
+        rat(25,         5,      1),
+        bat(26,         5,      1),
+        spider(27,      5,      1),
+        ghost(28,       5,      2),
+        slime(29,       5,      1),
+        troll(30,       5,      2),
+        gremlin(31,     5,      3),
+        mimic(32,       5,      4),
         insect_swarm(34),
-        gazer(35, 3, 5),
-        phantom(36, 3, 4),
-        orc(37, 5, 0),
-        skeleton(38, 5, 0),
+        gazer(35,       5,      4),
+        phantom(36,     5,      3),
+        orc(37,         5,      1),
+        skeleton(38,    5,      1),
         rogue(39),
         brigand(40),
-        ettin(41, 5, 3),
-        headless(42, 5, 3),
-        cyclops(43, 5, 4),
-        wisp(44, 5, 5),
-        evil_mage(45, 5, 5),
-        liche(46, 8, 7),
+        ettin(41,       5,      3),
+        headless(42,    5,      2),
+        cyclops(43,     5,      4),
+        wisp(44,        5,      4),
+        evil_mage(45,   5,      4),
+        liche(46,       5,      5),
         lava_lizard(47),
-        zorn(48, 5, 8),
-        daemon(49, 3, 4),
-        hydra(50, 5, 5),
-        dragon(51, 10, 7),
-        balron(52, 10, 8),
+        zorn(48,        5,      7),
+        daemon(49,      5,      5),
+        hydra(50,       5,      6),
+        dragon(51,      5,      7),
+        balron(52,      5,      8),
         grass(60),
         chest(61),
         brick_floor(62),
