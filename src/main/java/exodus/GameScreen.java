@@ -135,7 +135,7 @@ public class GameScreen extends BaseScreen {
 
         avatarAnim = new Animation(1f, avatar);
         shipAnim = new Animation(1f, ship);
-        
+
         Array<AtlasRegion> tmp = new Array<>(4);
         for (int i = 0; i < 4; i++) {
             tmp.add(corps.get(0));
@@ -231,29 +231,40 @@ public class GameScreen extends BaseScreen {
             Party party = new Party(sg);
             context.setParty(party);
 
-//            for (int x = 0; x < 4; x++) {
-//                party.getMember(x).getPlayer().torches = 5;
-//                party.getMember(x).getPlayer().keys = 50;
-//                party.getMember(x).getPlayer().gems = 50;
+//            for (PartyMember pm : party.getMembers()) {
+//                pm.getPlayer().torches = 5;
+//                pm.getPlayer().keys = 50;
+//                pm.getPlayer().gems = 50;
+//                
+//                pm.getPlayer().weapons[1] = 10;
+//                pm.getPlayer().weapons[2] = 5;
+//                pm.getPlayer().weapons[3] = 5;
 //
-//                party.getMember(x).getPlayer().marks[0] = 1;
-//                party.getMember(x).getPlayer().marks[1] = 1;
-//                party.getMember(x).getPlayer().marks[2] = 1;
-//                party.getMember(x).getPlayer().marks[3] = 1;
+//                pm.getPlayer().armors[3] = 5;
+//                pm.getPlayer().armors[4] = 5;
+//                pm.getPlayer().armors[5] = 5;
 //
-//                party.getMember(x).getPlayer().cards[0] = 1;
-//                party.getMember(x).getPlayer().cards[1] = 1;
-//                party.getMember(x).getPlayer().cards[2] = 1;
-//                party.getMember(x).getPlayer().cards[3] = 1;
-//                party.getMember(x).getPlayer().weapon = WeaponType.EXOTIC;
-//                party.getMember(x).getPlayer().armor = ArmorType.EXOTIC;
 //
-//                party.getMember(x).getPlayer().health = 500;
-//                party.getMember(x).getPlayer().exp = 350;
-//                party.getMember(x).getPlayer().intell = 75;
-//                party.getMember(x).getPlayer().wis = 75;
-//                party.getMember(x).getPlayer().mana = 75;
+//                pm.getPlayer().marks[0] = 1;
+//                pm.getPlayer().marks[1] = 1;
+//                pm.getPlayer().marks[2] = 1;
+//                pm.getPlayer().marks[3] = 1;
+//
+//                pm.getPlayer().cards[0] = 1;
+//                pm.getPlayer().cards[1] = 1;
+//                pm.getPlayer().cards[2] = 1;
+//                pm.getPlayer().cards[3] = 1;
+//                pm.getPlayer().weapon = WeaponType.EXOTIC;
+//                pm.getPlayer().armor = ArmorType.EXOTIC;
+//
+//                pm.getPlayer().health = 500;
+//                pm.getPlayer().exp = 350;
+//                pm.getPlayer().intell = 75;
+//                pm.getPlayer().wis = 75;
+//                pm.getPlayer().mana = 75;
+//                break;
 //            }
+            
             //load the surface world first
             loadNextMap(Maps.SOSARIA, sg.partyX, sg.partyY);
             //loadNextMap(Maps.SOSARIA, 40, 212);
@@ -432,13 +443,10 @@ public class GameScreen extends BaseScreen {
                     Tile st = Exodus.baseTileSet.getTileByName("ship");
                     context.getCurrentMap().addObject(st, currentEncounter.currentX, currentEncounter.currentY);
                 }
-            } else {
-
-                if (context.getParty().didAnyoneFlee()) {
-                    log("Battle is lost!");
-                } else if (!context.getParty().isAnyoneAlive()) {
-                    partyDeath();
-                }
+            } else if (context.getParty().didAnyoneFlee()) {
+                log("Battle is lost!");
+            } else if (!context.getParty().isAnyoneAlive()) {
+                partyDeath();
             }
 
             context.getCurrentMap().removeCreature(currentEncounter);
@@ -660,6 +668,10 @@ public class GameScreen extends BaseScreen {
             if (showZstats > STATS_PLAYER4) {
                 showZstats = STATS_NONE;
             }
+        } else if (keycode == Keys.H) {
+            
+            new HandDialog(this, this.context).show(stage);
+            
         } else if (keycode == Keys.B) {
 
             board((int) v.x, (int) v.y);
@@ -955,7 +967,7 @@ public class GameScreen extends BaseScreen {
             randId += era & rand.nextInt(16) & rand.nextInt(16);
         } else if (avgPtyHlth > 400) {
             era = 0x0111; //7
-            randId += era & rand.nextInt(16) ;
+            randId += era & rand.nextInt(16);
         } else if (avgPtyHlth > 300) {
             era = 0x0111; //7
             randId += era & rand.nextInt(16) & rand.nextInt(16);
