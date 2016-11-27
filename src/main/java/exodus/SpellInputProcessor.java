@@ -34,7 +34,7 @@ public class SpellInputProcessor extends InputAdapter implements Constants {
     @Override
     public boolean keyUp(int keycode) {
 
-        if (keycode >= Keys.A && keycode <= this.spellSelection.size() + Keys.A) {
+        if (keycode >= Keys.A && keycode < this.spellSelection.size() + Keys.A) {
 
             spell = this.spellSelection.get(Keys.toString(keycode));
             screen.log("" + spell.getDesc() + "!");
