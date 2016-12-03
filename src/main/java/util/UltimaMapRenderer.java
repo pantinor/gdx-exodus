@@ -53,7 +53,7 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
     TextureRegion door;
     TextureRegion brick_floor;
     TextureRegion locked_door;
-    
+
     public UltimaMapRenderer(Context context, TextureAtlas atlas, BaseMap bm, TiledMap map, float unitScale) {
         super(map, unitScale);
         this.bm = bm;
@@ -78,7 +78,7 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
     }
 
     @Override
-    public void render() {        
+    public void render() {
         beginRender();
         for (MapLayer layer : map.getLayers()) {
             if (layer.isVisible()) {
@@ -125,22 +125,28 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
                 TiledMapTileLayer.Cell cell = null;
 
                 if (bm.getBorderbehavior() == MapBorderBehavior.wrap) {
-
+                    
                     int cx = col;
+                    boolean wrapped = false;
                     if (col < 0) {
                         cx = layerWidth + col;
+                        wrapped = true;
                     } else if (col >= layerWidth) {
                         cx = col - layerWidth;
+                        wrapped = true;
                     }
+                    
                     int cy = row;
                     if (row < 0) {
                         cy = layerHeight + row;
+                        wrapped = true;
                     } else if (row >= layerHeight) {
                         cy = row - layerHeight;
+                        wrapped = true;
                     }
 
                     cell = layer.getCell(cx, cy);
-                    color = getColor(batchColor, cx, layerHeight - cy - 1);
+                    color = wrapped ? getColor(batchColor, -1, -1) : getColor(batchColor, cx, layerHeight - cy - 1);
 
                 } else {
                     cell = layer.getCell(col, row);
@@ -208,14 +214,14 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
             }
             y -= layerTileHeight;
         }
-        
+
         if (bm.getPeople() != null) {
             for (Person p : bm.getPeople()) {
 
                 if (p == null || p.isRemovedFromMap()) {
                     continue;
                 }
-                
+
                 if (p.getAnim() != null) {
                     draw(p.getAnim().getKeyFrame(stateTime, true), p.getCurrentPos().x, p.getCurrentPos().y, p.getX(), p.getY());
                 } else {
@@ -242,7 +248,7 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
 
             }
         }
-        
+
         for (Drawable dr : bm.getObjects()) {
             draw(dr.getTexture(), dr.getX(), dr.getY(), dr.getCx(), dr.getCy());
         }
@@ -265,7 +271,7 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
             val = val > .85f ? 1f : val;
             return Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, val);
         }
-        
+
     }
 
     private void draw(TextureRegion region, float x, float y, int locX, int locY) {
@@ -274,9 +280,9 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
         float y1 = y;
         float x2 = x1 + tilePixelWidth;
         float y2 = y1 + tilePixelHeight;
-        
+
         Rectangle b = new Rectangle(x, y, 5, 5);
-        
+
         if (viewBounds.contains(b)) {
 
             float u1 = region.getU();
