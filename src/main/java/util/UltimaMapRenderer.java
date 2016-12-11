@@ -125,7 +125,7 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
                 TiledMapTileLayer.Cell cell = null;
 
                 if (bm.getBorderbehavior() == MapBorderBehavior.wrap) {
-                    
+
                     int cx = col;
                     boolean wrapped = false;
                     if (col < 0) {
@@ -135,7 +135,7 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
                         cx = col - layerWidth;
                         wrapped = true;
                     }
-                    
+
                     int cy = row;
                     if (row < 0) {
                         cy = layerHeight + row;
@@ -274,16 +274,24 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
 
     }
 
+    private static final ThreadLocal<Rectangle> LOCAL_RECTANGLE = new ThreadLocal<Rectangle>() {
+        @Override
+        public Rectangle initialValue() {
+            return new Rectangle();
+        }
+    };
+
     private void draw(TextureRegion region, float x, float y, int locX, int locY) {
 
-        float x1 = x;
-        float y1 = y;
-        float x2 = x1 + tilePixelWidth;
-        float y2 = y1 + tilePixelHeight;
-
-        Rectangle b = new Rectangle(x, y, 5, 5);
+        Rectangle b = LOCAL_RECTANGLE.get();
+        b.set(x, y, 5, 5);
 
         if (viewBounds.contains(b)) {
+
+            float x1 = x;
+            float y1 = y;
+            float x2 = x1 + tilePixelWidth;
+            float y2 = y1 + tilePixelHeight;
 
             float u1 = region.getU();
             float v1 = region.getV2();
@@ -291,7 +299,6 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
             float v2 = region.getV();
 
             float color = getColor(batch.getColor(), locX, locY);
-
             vertices[X1] = x1;
             vertices[Y1] = y1;
             vertices[C1] = color;
