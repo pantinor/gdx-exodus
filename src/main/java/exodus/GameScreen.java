@@ -56,11 +56,11 @@ public class GameScreen extends BaseScreen {
 
     TextureAtlas moonAtlas;
 
-    public static Animation mainAvatar;
-    public static Animation avatarAnim;
-    public static Animation corpseAnim;
-    public static Animation horseAnim;
-    public static Animation shipAnim;
+    public static Animation<TextureRegion> mainAvatar;
+    public static Animation<TextureRegion> avatarAnim;
+    public static Animation<TextureRegion> corpseAnim;
+    public static Animation<TextureRegion> horseAnim;
+    public static Animation<TextureRegion> shipAnim;
     public static int avatarDirection = Direction.WEST.getVal();
 
     TiledMap map;
@@ -133,23 +133,23 @@ public class GameScreen extends BaseScreen {
         Array<AtlasRegion> horse = Exodus.standardAtlas.findRegions("horse");
         Array<AtlasRegion> ship = Exodus.standardAtlas.findRegions("ship");
 
-        avatarAnim = new Animation(1f, avatar);
-        shipAnim = new Animation(1f, ship);
+        avatarAnim = new Animation<>(1f, avatar);
+        shipAnim = new Animation<>(1f, ship);
 
-        Array<AtlasRegion> tmp = new Array<>(4);
+        AtlasRegion[] tmp = new AtlasRegion[4];
         for (int i = 0; i < 4; i++) {
-            tmp.add(corps.get(0));
+            tmp[i] = corps.get(0);
         }
-        corpseAnim = new Animation(1f, tmp);
+        corpseAnim = new Animation<>(1f, tmp);
 
-        tmp = new Array<>(4);
+        AtlasRegion[] tmp3 = new AtlasRegion[4];
         AtlasRegion ar = new AtlasRegion(horse.get(0));
         ar.flip(true, false);
-        tmp.add(horse.get(0));
-        tmp.add(horse.get(0));
-        tmp.add(ar);
-        tmp.add(horse.get(0));
-        horseAnim = new Animation(1f, tmp);
+        tmp3[0] = horse.get(0);
+        tmp3[1] = horse.get(0);
+        tmp3[2] = ar;
+        tmp3[3] = horse.get(0);
+        horseAnim = new Animation<>(1f, tmp3);
 
     }
 

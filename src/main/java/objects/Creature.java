@@ -57,7 +57,7 @@ public class Creature implements Constants, Comparable {
     private boolean wontattack;
     
     private CreatureType tile;
-    private Animation anim;
+    private Animation<TextureRegion> anim;
     private Decal decal;
     private TextureRegion healthBar;
 
@@ -423,7 +423,7 @@ public class Creature implements Constants, Comparable {
     }
 
     @XmlTransient
-    public Animation getAnim() {
+    public Animation<TextureRegion> getAnim() {
         return anim;
     }
 

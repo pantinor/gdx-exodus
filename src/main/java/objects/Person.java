@@ -21,7 +21,7 @@ public class Person implements Constants {
     private int tileIndex;
 
     private TextureRegion textureRegion;
-    private Animation anim;
+    private Animation<TextureRegion> anim;
     private Vector3 currentPos;
     private String conversation;
     private boolean isTalking = false;
@@ -134,11 +134,11 @@ public class Person implements Constants {
         this.conversation = conversation;
     }
 
-    public Animation getAnim() {
+    public Animation<TextureRegion> getAnim() {
         return anim;
     }
 
-    public void setAnim(Animation anim) {
+    public void setAnim(Animation<TextureRegion> anim) {
         this.anim = anim;
     }
 

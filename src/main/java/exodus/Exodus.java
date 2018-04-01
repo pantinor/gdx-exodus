@@ -73,9 +73,9 @@ public class Exodus extends Game {
     public static TextureRegion missTile;
     public static TextureRegion corpse;
 
-    public static Animation explosionLarge;
-    public static Animation explosion;
-    public static Animation cloud;
+    public static Animation<TextureRegion> explosionLarge;
+    public static Animation<TextureRegion> explosion;
+    public static Animation<TextureRegion> cloud;
 
     public static TextureRegion[] faceTiles = new TextureRegion[13 * 16];
 
