@@ -118,7 +118,7 @@ public class Utils implements Constants {
             setTilesFromTMX(map, Maps.get(map.getId()), fname, ts);
         } else {
 
-            InputStream is = ClassLoader.class.getResourceAsStream("/assets/data/" + fname);
+            InputStream is = Utils.class.getResourceAsStream("/assets/data/" + fname);
             byte[] bytes = IOUtils.toByteArray(is);
 
             Tile[] tiles = new Tile[map.getWidth() * map.getHeight()];
@@ -960,7 +960,7 @@ public class Utils implements Constants {
     //was used for TMX type dungeon maps
     public static Texture peerGem(TiledMapTileLayer layer, String[] ids, TextureAtlas atlas, int cx, int cy) throws Exception {
         FileTextureData d = (FileTextureData) (atlas.getRegions().first().getTexture().getTextureData());
-        InputStream is = ClassLoader.class.getResourceAsStream("/assets/graphics/" + d.getFileHandle().file().getName());
+        InputStream is = Utils.class.getResourceAsStream("/assets/graphics/" + d.getFileHandle().file().getName());
         BufferedImage sheet = ImageIO.read(is);
         BufferedImage canvas = new BufferedImage(32 * layer.getWidth(), 32 * layer.getHeight(), BufferedImage.TYPE_INT_ARGB);
 
@@ -999,7 +999,7 @@ public class Utils implements Constants {
 
         if (map.getMap().getType() == MapType.city) {
             FileTextureData d = (FileTextureData) (atlas.getRegions().first().getTexture().getTextureData());
-            InputStream is = ClassLoader.class.getResourceAsStream("/assets/graphics/" + d.getFileHandle().file().getName());
+            InputStream is = Utils.class.getResourceAsStream("/assets/graphics/" + d.getFileHandle().file().getName());
             BufferedImage sheet = ImageIO.read(is);
             BufferedImage canvas = new BufferedImage(64 * 32, 64 * 32, BufferedImage.TYPE_INT_ARGB);
 
@@ -1047,7 +1047,7 @@ public class Utils implements Constants {
     //used for view gem on the world map only
     public static Texture peerGem(BaseMap worldMap, int avatarX, int avatarY, TextureAtlas atlas) throws Exception {
         FileTextureData d = (FileTextureData) (atlas.getRegions().first().getTexture().getTextureData());
-        InputStream is = ClassLoader.class.getResourceAsStream("/assets/graphics/" + d.getFileHandle().file().getName());
+        InputStream is = Utils.class.getResourceAsStream("/assets/graphics/" + d.getFileHandle().file().getName());
         BufferedImage sheet = ImageIO.read(is);
         BufferedImage canvas = new BufferedImage(32 * 64, 32 * 64, BufferedImage.TYPE_INT_ARGB);
 

@@ -149,7 +149,7 @@ public class BookScreen extends InputAdapter implements Screen, Constants {
     
     private void addPages(BitmapFont font, String fn, Label.LabelStyle labs) {
         try {
-            List<String> lines = IOUtils.readLines(ClassLoader.class.getResourceAsStream(fn));
+            List<String> lines = IOUtils.readLines(BookScreen.class.getResourceAsStream(fn));
             GlyphLayout gl = new GlyphLayout(font, "");
             StringBuilder sb = new StringBuilder();
             for (String line : lines) {

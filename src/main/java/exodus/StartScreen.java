@@ -25,6 +25,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import static exodus.Constants.PARTY_SAV_BASE_FILENAME;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import objects.SaveGame;
@@ -47,7 +48,7 @@ public class StartScreen implements Screen, Constants {
     Texture title;
     IntroAnim animator = new IntroAnim();
     TiledMap splashMap;
-    
+
     TextButton manual;
     TextButton manage;
     TextButton journey;
@@ -68,7 +69,7 @@ public class StartScreen implements Screen, Constants {
         viewPort = new ScreenViewport(camera);
 
         batch = new SpriteBatch();
-        
+
         manual = new TextButton("Book", Exodus.skin, "wood");
         manual.addListener(new ChangeListener() {
             @Override
@@ -261,7 +262,7 @@ public class StartScreen implements Screen, Constants {
     public static final byte[] movesData = new byte[512];
 
     static {
-        InputStream is1 = ClassLoader.class.getResourceAsStream("/assets/data/moves.ult");
+        InputStream is1 = StartScreen.class.getResourceAsStream("/assets/data/moves.ult");
         try {
             byte[] tmp = IOUtils.toByteArray(is1);
             System.arraycopy(tmp, 0, movesCommands, 0, 512);

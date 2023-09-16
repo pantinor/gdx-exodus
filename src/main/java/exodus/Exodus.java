@@ -198,6 +198,7 @@ public class Exodus extends Game {
 
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         mainGame = this;

@@ -209,7 +209,7 @@ public class DungeonScreen extends BaseScreen {
         }
 
         try {
-            InputStream is = ClassLoader.class.getResourceAsStream("/assets/data/" + dungeonFileName.toLowerCase());
+            InputStream is = DungeonScreen.class.getResourceAsStream("/assets/data/" + dungeonFileName.toLowerCase());
             byte[] bytes = IOUtils.toByteArray(is);
 
             int pos = 0;
