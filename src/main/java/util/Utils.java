@@ -308,7 +308,16 @@ public class Utils implements Constants {
                 }
             }
         }
-
+        
+        Iterator<Person> iter = people.iterator();
+        while (iter.hasNext()) {
+            Person p = iter.next();
+            CreatureType ct = CreatureType.get(p.getTile().getName());
+            if (ct == null) {
+                iter.remove();//remove null person objects
+            }
+        }
+        
         map.setPeople(people);
     }
 
