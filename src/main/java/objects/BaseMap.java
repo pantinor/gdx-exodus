@@ -53,7 +53,7 @@ public class BaseMap implements Constants {
     private final List<Drawable> objects = new ArrayList<>();
 
     private Tile[] tiles;
-    private float[][] shadownMap;
+    private float[][] shadowMap;
 
     //used to keep the pace of wandering to every 2 moves instead of every move, 
     //otherwise cannot catch up and talk to the character
@@ -328,12 +328,12 @@ public class BaseMap implements Constants {
         return getTile((int) v.x, (int) v.y);
     }
 
-    public float[][] getShadownMap() {
-        return shadownMap;
+    public float[][] getShadowMap() {
+        return shadowMap;
     }
 
-    public void setShadownMap(float[][] shadownMap) {
-        this.shadownMap = shadownMap;
+    public void setShadowMap(float[][] shadowMap) {
+        this.shadowMap = shadowMap;
     }
 
     public Person getPersonAt(int x, int y) {

@@ -58,7 +58,7 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
         super(map, unitScale);
         this.bm = bm;
         this.context = context;
-        this.fov = new SpreadFOV(bm.getWidth(), bm.getHeight(), bm.getBorderbehavior() == MapBorderBehavior.wrap);
+        this.fov = new SpreadFOV(bm.getShadowMap());
 
         if (atlas != null) {
 
@@ -93,9 +93,6 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
 
         stateTime += Gdx.graphics.getDeltaTime();
 
-        Color batchColor = batch.getColor();
-        float color = 0;
-
         int layerWidth = layer.getWidth();
         int layerHeight = layer.getHeight();
 
@@ -122,36 +119,22 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
             float x = startX;
             for (int col = col1; col < col2; col++) {
 
-                TiledMapTileLayer.Cell cell = null;
-
-                if (bm.getBorderbehavior() == MapBorderBehavior.wrap) {
-
-                    int cx = col;
-                    boolean wrapped = false;
-                    if (col < 0) {
-                        cx = layerWidth + col;
-                        wrapped = true;
-                    } else if (col >= layerWidth) {
-                        cx = col - layerWidth;
-                        wrapped = true;
-                    }
-
-                    int cy = row;
-                    if (row < 0) {
-                        cy = layerHeight + row;
-                        wrapped = true;
-                    } else if (row >= layerHeight) {
-                        cy = row - layerHeight;
-                        wrapped = true;
-                    }
-
-                    cell = layer.getCell(cx, cy);
-                    color = wrapped ? getColor(batchColor, -1, -1) : getColor(batchColor, cx, layerHeight - cy - 1);
-
-                } else {
-                    cell = layer.getCell(col, row);
-                    color = getColor(batchColor, col, layerHeight - row - 1);
+                int cx = col;
+                if (col < 0) {
+                    cx = layerWidth + col;
+                } else if (col >= layerWidth) {
+                    cx = col - layerWidth;
                 }
+
+                int cy = row;
+                if (row < 0) {
+                    cy = layerHeight + row;
+                } else if (row >= layerHeight) {
+                    cy = row - layerHeight;
+                }
+
+                TiledMapTileLayer.Cell cell = layer.getCell(cx, cy);
+                float color = getColor(layer, col, layerHeight - 1 - row);
 
                 if (cell == null) {
                     x += layerTileWidth;
@@ -217,15 +200,14 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
 
         if (bm.getPeople() != null) {
             for (Person p : bm.getPeople()) {
-
                 if (p == null || p.isRemovedFromMap()) {
                     continue;
                 }
-
+                float color = getColor(layer, (int) p.getCurrentPos().x, (int) p.getCurrentPos().y);
                 if (p.getAnim() != null) {
-                    draw(p.getAnim().getKeyFrame(stateTime, true), p.getCurrentPos().x, p.getCurrentPos().y, p.getX(), p.getY());
+                    draw(p.getAnim().getKeyFrame(stateTime, true), p.getCurrentPos().x, p.getCurrentPos().y, color);
                 } else {
-                    draw(p.getTextureRegion(), p.getCurrentPos().x, p.getCurrentPos().y, p.getX(), p.getY());
+                    draw(p.getTextureRegion(), p.getCurrentPos().x, p.getCurrentPos().y, color);
                 }
             }
 
@@ -234,71 +216,69 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
         List<Creature> crs = bm.getCreatures();
         if (crs.size() > 0) {
             for (Creature cr : crs) {
-
                 if (cr.currentPos == null || !cr.getVisible()) {
                     continue;
                 }
-
+                float color = getColor(layer, (int) cr.currentPos.x, (int) cr.currentPos.y);
                 if (cr.getTile() == CreatureType.pirate_ship) {
                     TextureRegion tr = cr.getAnim().getKeyFrames()[cr.sailDir.getVal() - 1];
-                    draw(tr, cr.currentPos.x, cr.currentPos.y, cr.currentX, cr.currentY);
+                    draw(tr, cr.currentPos.x, cr.currentPos.y, color);
                 } else {
-                    draw(cr.getAnim().getKeyFrame(stateTime, true), cr.currentPos.x, cr.currentPos.y, cr.currentX, cr.currentY);
+                    draw(cr.getAnim().getKeyFrame(stateTime, true), cr.currentPos.x, cr.currentPos.y, color);
                 }
 
             }
         }
 
         for (Drawable dr : bm.getObjects()) {
-            draw(dr.getTexture(), dr.getX(), dr.getY(), dr.getCx(), dr.getCy());
+            float color = getColor(layer, (int) dr.getX(), (int) dr.getY());
+            draw(dr.getTexture(), dr.getX(), dr.getY(), color);
         }
     }
 
-    private float getColor(Color batchColor, int x, int y) {
+    public float getColor(TiledMapTileLayer layer, int col, int row) {
 
-        float[][] lightMap = fov.getLightMap();
+        Color batchColor = this.batch.getColor();
+        int layerWidth = layer.getWidth();
+        int layerHeight = layer.getHeight();
 
-        if (!(x >= 0 && x < lightMap.length && y >= 0 && y < lightMap[0].length)) {
+        int cx = layerWidth + col;
+        int cy = layerHeight + row;
+
+        float[][] lightMap = fov.lightMap();
+
+        if (!(cx >= 0 && cx < lightMap.length && cy >= 0 && cy < lightMap[0].length)) {
             return Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, 1f);
         }
 
-        float val = lightMap[x][y];
+        float val = lightMap[cx][cy];
 
         if (val <= 0) {
-            return Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, .0f); //make it all black
+            return Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, 0); //make it all black
         } else {
-            val = val < .2f ? .2f : val;
-            val = val > .85f ? 1f : val;
             return Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, val);
         }
 
     }
 
-    private static final ThreadLocal<Rectangle> LOCAL_RECTANGLE = new ThreadLocal<Rectangle>() {
-        @Override
-        public Rectangle initialValue() {
-            return new Rectangle();
-        }
-    };
+    private final Rectangle box = new Rectangle();
 
-    private void draw(TextureRegion region, float x, float y, int locX, int locY) {
+    public void draw(TextureRegion region, float x, float y, float color) {
 
-        Rectangle b = LOCAL_RECTANGLE.get();
-        b.set(x, y, 5, 5);
+        this.box.set(x, y, 5, 5);
 
-        if (viewBounds.contains(b)) {
+        if (this.viewBounds.contains(this.box)) {
 
             float x1 = x;
             float y1 = y;
-            float x2 = x1 + tilePixelWidth;
-            float y2 = y1 + tilePixelHeight;
+            float x2 = x1 + region.getRegionWidth() * unitScale;
+            float y2 = y1 + region.getRegionHeight() * unitScale;
 
             float u1 = region.getU();
             float v1 = region.getV2();
             float u2 = region.getU2();
             float v2 = region.getV();
 
-            float color = getColor(batch.getColor(), locX, locY);
             vertices[X1] = x1;
             vertices[Y1] = y1;
             vertices[C1] = color;
@@ -323,7 +303,7 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
             vertices[U4] = u2;
             vertices[V4] = v1;
 
-            batch.draw(region.getTexture(), vertices, 0, 20);
+            this.batch.draw(region.getTexture(), vertices, 0, 20);
         }
     }
 }

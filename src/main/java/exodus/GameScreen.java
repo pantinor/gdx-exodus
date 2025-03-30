@@ -79,6 +79,8 @@ public class GameScreen extends BaseScreen {
     public GameTimer gameTimer = new GameTimer();
     public ExplosionsTimer explosionsTimer = new ExplosionsTimer();
 
+    private static final float FOV_RADIUS = 20f;
+
     public GameScreen() {
 
         scType = ScreenType.MAIN;
@@ -264,7 +266,6 @@ public class GameScreen extends BaseScreen {
 //                pm.getPlayer().mana = 75;
 //                break;
 //            }
-            
             //load the surface world first
             loadNextMap(Maps.SOSARIA, sg.partyX, sg.partyY);
             //loadNextMap(Maps.SOSARIA, 40, 212);
@@ -381,7 +382,7 @@ public class GameScreen extends BaseScreen {
 
             baseMap.initObjects(this, Exodus.standardAtlas, Exodus.standardAtlas);
 
-            renderer.getFOV().calculateFOV(baseMap.getShadownMap(), x, y, 17f);
+            renderer.getFOV().calculateFOV(x, y, FOV_RADIUS);
             newMapPixelCoords = getMapPixelCoords(x, y);
 
             Maps contextMap = Maps.get(context.getCurrentMap().getId());
@@ -403,7 +404,7 @@ public class GameScreen extends BaseScreen {
     }
 
     public void recalcFOV(BaseMap bm, int x, int y) {
-        renderer.getFOV().calculateFOV(bm.getShadownMap(), x, y, 17f);
+        renderer.getFOV().calculateFOV(x, y, FOV_RADIUS);
     }
 
     public void attackAt(Maps combat, Creature cr) {
@@ -669,9 +670,9 @@ public class GameScreen extends BaseScreen {
                 showZstats = STATS_NONE;
             }
         } else if (keycode == Keys.H) {
-            
+
             new HandDialog(this, this.context).show(stage);
-            
+
         } else if (keycode == Keys.B) {
 
             board((int) v.x, (int) v.y);
@@ -787,7 +788,7 @@ public class GameScreen extends BaseScreen {
                     Vector3 d = getDestinationForMoongate(g);
                     if (d != null) {
                         newMapPixelCoords = getMapPixelCoords((int) d.x, (int) d.y);
-                        renderer.getFOV().calculateFOV(context.getCurrentMap().getShadownMap(), (int) d.x, (int) d.y, 17f);
+                        renderer.getFOV().calculateFOV((int) d.x, (int) d.y, FOV_RADIUS);
                         return;
                     }
                 }
@@ -795,7 +796,7 @@ public class GameScreen extends BaseScreen {
 
         }
 
-        renderer.getFOV().calculateFOV(context.getCurrentMap().getShadownMap(), newx, newy, 17f);
+        renderer.getFOV().calculateFOV(newx, newy, FOV_RADIUS);
         log(dir.toString());
     }
 

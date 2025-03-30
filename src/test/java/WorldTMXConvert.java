@@ -144,7 +144,7 @@ public class WorldTMXConvert implements ApplicationListener {
                     dl, pl, ml, portals, moongates,
                     map.getLabels());
 
-            FileUtils.writeStringToFile(new File("tmx/map_" + map.getId() + "_Sosaria.tmx"), c.toString());
+            FileUtils.writeStringToFile(new File("tmx/map_" + map.getId() + "_Andius.tmx"), c.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }

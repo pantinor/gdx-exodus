@@ -370,9 +370,9 @@ public class Utils implements Constants {
                     String key = keys.next();
                     String value = obj.getProperties().get(key).toString();
                     if (key.equals("x")) {
-                        p.setX(new Integer(value));
+                        p.setX(Integer.valueOf(value));
                     } else if (key.equals("y")) {
-                        p.setY(new Integer(value));
+                        p.setY(Integer.valueOf(value));
                     }
                 }
             }
@@ -389,9 +389,9 @@ public class Utils implements Constants {
                     String key = keys.next();
                     String value = obj.getProperties().get(key).toString();
                     if (key.equals("x")) {
-                        m.setX(new Integer(value));
+                        m.setX(Integer.valueOf(value));
                     } else if (key.equals("y")) {
-                        m.setY(new Integer(value));
+                        m.setY(Integer.valueOf(value));
                     }
                 }
             }

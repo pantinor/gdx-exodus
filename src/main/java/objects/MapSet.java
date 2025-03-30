@@ -28,7 +28,7 @@ public class MapSet {
 
             Maps map = Maps.get(m.getId());
             map.setMap(m);
-          
+
             try {
                 Utils.setMapTiles(m, ts);
             } catch (Exception e) {
@@ -36,7 +36,7 @@ public class MapSet {
             }
 
             if (m.getType() == MapType.world || m.getType() == MapType.city) {
-                
+
                 m.setObjects();
 
                 float[][] shadowMap = new float[m.getWidth()][m.getHeight()];
@@ -46,12 +46,12 @@ public class MapSet {
                     }
                 }
 
-                m.setShadownMap(shadowMap);
+                m.setShadowMap(shadowMap);
             }
 
         }
     }
-    
+
     public void init(MapType mt, TileSet ts) {
         for (BaseMap m : maps) {
             if (m.getType() != mt) {

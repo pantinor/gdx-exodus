@@ -1,16 +1,15 @@
 gdx-exodus
 =========
 
-A fun personal project to remake Ultima 3 Exodus using LIBGDX, with a few differences.
+An AMAZING port of Ultima III Exodus using LIBGDX, with a few updates...
 
-* Sosaria is now 256x256 instead of 64x64!
+* Sosaria is 256x256 instead of 64x64
 * One of the wizard light/torch spells is swapped out with a different more useful spell.
 * A few more monsters
 
-Download binary here: https://raw.github.com/pantinor/gdx-exodus/master/gdx-exodus-1.0.1-bin.zip
+This is a maven project..and it runs as it should, on a PEESEE.
 
-To run this, you will need to install java first (if not already installed), and then extract 
-this binary zip archive and double click on the main jar file (gdx-exodus-1.0.1/gdx-exodus-1.0.1.jar).
+To journey onward, download the zip file, extract, and run the "java -jar command" and have fun!
 
 ![screenshot of the example](https://raw.github.com/pantinor/gdx-exodus/master/shot1.png)
 
