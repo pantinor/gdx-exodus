@@ -429,7 +429,7 @@ public interface Constants {
         MARK_KINGS((byte) 0x00, "Mark of Kings", "whirlpool", true),
         MARK_FORCE((byte) 0x00, "Mark of Force", "whirlpool", true),
         MARK_FIRE((byte) 0x00, "Mark of Fire", "whirlpool", true),
-        WIND_TRAP((byte) 0x03, "Winds/Darknes Trap", "hit_flash", true),
+        WIND_TRAP((byte) 0x03, "Winds/Darknes Trap", "magic_flash", true),
         GREMLINS((byte) 0x06, "Gremlins", "jester", true),
         PIT_TRAP((byte) 0x04, "Pit Trap", "hit_flash", true),
         FOUNTAIN_PLAIN((byte) 0x00, "Plain Fountain", "Z", true),

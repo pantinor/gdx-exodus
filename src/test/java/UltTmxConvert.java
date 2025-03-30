@@ -1,5 +1,6 @@
 
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import java.io.File;
 
@@ -17,6 +18,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData.Region;
 import java.io.FileInputStream;
@@ -26,6 +28,7 @@ import exodus.Constants.DungeonTile;
 import exodus.Constants.MapType;
 import exodus.Constants.Maps;
 import exodus.Constants.ObjectMovementBehavior;
+import exodus.Exodus;
 import java.util.ArrayList;
 
 public class UltTmxConvert implements ApplicationListener {
@@ -39,21 +42,10 @@ public class UltTmxConvert implements ApplicationListener {
     public void create() {
 
         try {
+            Exodus ult = new Exodus();
+            ult.create();
 
-            File file2 = new File("target/classes/assets/xml/tileset-base.xml");
-            JAXBContext jaxbContext = JAXBContext.newInstance(TileSet.class);
-            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            TileSet ts = (TileSet) jaxbUnmarshaller.unmarshal(file2);
-            ts.setMaps();
-
-            File file3 = new File("target/classes/assets/xml/maps.xml");
-            jaxbContext = JAXBContext.newInstance(MapSet.class);
-            jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            MapSet ms = (MapSet) jaxbUnmarshaller.unmarshal(file3);
-            ms.init(ts);
-
-            //load the atlas and determine the tile indexes per tilemap position
-            FileHandle f = new FileHandle("target/classes/assets/graphics/latest-atlas.txt");
+            FileHandle f = Gdx.files.classpath("assets/graphics/latest-atlas.txt");
             TextureAtlasData atlas = new TextureAtlasData(f, f.parent(), false);
             int png_grid_width = 24;
             Tile[] mapTileIds = new Tile[png_grid_width * Constants.tilePixelWidth + 1];
@@ -61,10 +53,10 @@ public class UltTmxConvert implements ApplicationListener {
                 int x = r.left / r.width;
                 int y = r.top / r.height;
                 int i = x + (y * png_grid_width) + 1;
-                mapTileIds[i] = ts.getTileByName(r.name);
+                mapTileIds[i] = Exodus.baseTileSet.getTileByName(r.name);
             }
 
-            for (BaseMap map : ms.getMaps()) {
+            for (BaseMap map : Exodus.maps.getMaps()) {
 
                 if (!map.getFname().endsWith("ult") || map.getId() == Maps.SOSARIA.getId()) {
                     continue;
@@ -79,10 +71,10 @@ public class UltTmxConvert implements ApplicationListener {
                     for (int x = 0; x < map.getWidth(); x++) {
                         int index = (bytes[pos] & 0xff) / 4;
                         pos++;
-                        Tile tile = ts.getTileByIndex(index);
+                        Tile tile = Exodus.baseTileSet.getTileByIndex(index);
                         if (tile == null) {
                             System.out.println("Tile index cannot be found: " + index + " using index 37 for black space.");
-                            tile = ts.getTileByIndex(37);
+                            tile = Exodus.baseTileSet.getTileByIndex(37);
                         }
                         tiles[x + y * map.getWidth()] = tile;
                     }
@@ -101,10 +93,10 @@ public class UltTmxConvert implements ApplicationListener {
                                 byte idx = bytes[pos];
                                 DungeonTile dt = DungeonTile.getTileByValue(idx);
                                 pos++;
-                                Tile tile = ts.getTileByName(dt.getTileName());
+                                Tile tile = Exodus.baseTileSet.getTileByName(dt.getTileName());
                                 if (tile == null) {
                                     System.out.println("Tile index cannot be found: " + dt.getTileName() + " using index 37 for black space.");
-                                    tile = ts.getTileByIndex(37);
+                                    tile = Exodus.baseTileSet.getTileByIndex(37);
                                 }
                                 data.append(findTileMapId(mapTileIds, tile.getName())).append(",");
                                 count++;
@@ -118,7 +110,7 @@ public class UltTmxConvert implements ApplicationListener {
                         d = d.substring(0, d.length() - 2);
                         csv[lvl] = d;
                     }
-                    
+
                     pos = 0x800;
                     int[] textOffsets = new int[8];
                     for (int x = 0; x < 8; x++) {
@@ -154,178 +146,6 @@ public class UltTmxConvert implements ApplicationListener {
 
                 } else {
 
-                    //doors
-                    for (int y = 0; y < map.getHeight(); y++) {
-                        for (int x = 0; x < map.getWidth(); x++) {
-                            Tile tile = tiles[x + y * map.getWidth()];
-                            Tile left = x > 0 ? tiles[(x - 1) + y * map.getWidth()] : null;
-                            Tile right = x < map.getWidth() - 1 ? tiles[(x + 1) + y * map.getWidth()] : null;
-                            if (tile.getIndex() == 46 && (left != null && left.getRule() != Constants.TileRule.signs) && (right != null && right.getRule() != Constants.TileRule.signs)) {
-                                tiles[x + y * map.getWidth()] = ts.getTileByName("locked_door");
-                            }
-                        }
-                    }
-
-                    //ambrosia doors
-                    if (map.getId() == Maps.AMBROSIA.getId()) {
-                        tiles[34 + 5 * map.getWidth()] = ts.getTileByName("locked_door");
-                        tiles[35 + 5 * map.getWidth()] = ts.getTileByName("locked_door");
-                        tiles[36 + 5 * map.getWidth()] = ts.getTileByName("locked_door");
-                    }
-
-                    List<Person> people = new ArrayList<>();
-
-                    pos = 0x1180;
-                    for (int x = 0; x < 32; x++) {
-                        int index = (bytes[pos] & 0xff) / 4;
-                        pos++;
-                        Tile tile = ts.getTileByIndex(index);
-                        if (tile == null) {
-                            System.out.println("Tile index cannot be found: " + index + " using index 37 for black space.");
-                            tile = ts.getTileByIndex(37);
-                        }
-                        Person p = new Person();
-                        p.setTile(tile);
-                        people.add(p);
-                    }
-
-                    pos = 0x11C0;
-                    for (int x = 0; x < 32; x++) {
-                        int dx = bytes[pos] & 0xff;
-                        pos++;
-                        people.get(x).setStart_x(dx);
-                        people.get(x).setX(dx);
-                    }
-
-                    pos = 0x11E0;
-                    for (int x = 0; x < 32; x++) {
-                        int dy = bytes[pos] & 0xff;
-                        pos++;
-                        people.get(x).setStart_y(dy);
-                        people.get(x).setY(dy);
-                    }
-
-                    pos = 0x1200;
-                    for (int x = 0; x < 32; x++) {
-                        int dialog = bytes[pos] & 0x0f;
-                        int m = (bytes[pos] >> 4) & 0x0f;
-                        ObjectMovementBehavior move = ObjectMovementBehavior.FIXED;
-                        if (m == 4) {
-                            move = ObjectMovementBehavior.WANDER;
-                        }
-                        if (m == 8) {
-                            move = ObjectMovementBehavior.FOLLOW_AVATAR;
-                        }
-                        if (m == 12) {
-                            move = ObjectMovementBehavior.ATTACK_AVATAR;
-                            //System.out.println(people.get(x).getTile().getName() + " attacks avatar.");
-                        }
-                        pos++;
-                        people.get(x).setMovement(move);
-                        people.get(x).setDialogId(dialog);
-                    }
-
-                    StringBuilder peopleBuffer = new StringBuilder();
-                    for (int y = 0; y < map.getHeight(); y++) {
-                        for (int x = 0; x < map.getWidth(); x++) {
-                            Person p = findPersonAtCoords(people, x, y);
-                            if (p == null || p.getTile().getIndex() == 0) {
-                                peopleBuffer.append("0,");
-                            } else {
-                                peopleBuffer.append(findTileMapId(mapTileIds, p.getTile().getName())).append(",");
-                            }
-                        }
-                        peopleBuffer.append("\n");
-                    }
-
-                    int count = 1;
-                    String p = peopleBuffer.toString();
-                    if (p == null || p.length() < 1) {
-                        count = 1;
-                        //make empty
-                        for (int i = 0; i < map.getWidth() * map.getHeight(); i++) {
-                            peopleBuffer.append("0,");
-                            count++;
-                            if (count > map.getWidth()) {
-                                peopleBuffer.append("\n");
-                                count = 1;
-                            }
-                        }
-                        p = peopleBuffer.toString();
-                    }
-                    p = p.substring(0, p.length() - 2);
-
-                    pos = 0x11A0;
-                    for (int x = 0; x < 32; x++) {
-                        int index = (bytes[pos] & 0xff) / 4;
-                        pos++;
-                        Tile tile = ts.getTileByIndex(index);
-                        if (tile == null) {
-                            System.out.println("Tile index cannot be found: " + index + " using index 37 for black space.");
-                            tile = ts.getTileByIndex(37);
-                        }
-                        int dx = people.get(x).getX();
-                        int dy = people.get(x).getY();
-
-                        tiles[dx + dy * map.getWidth()] = tile;
-                    }
-
-                    pos = 0x1000;
-                    int[] textOffsets = new int[8];
-                    for (int x = 0; x < 8; x++) {
-                        textOffsets[x] = (bytes[pos] & 0xff) + 0x1000;
-                        pos += 2;
-                    }
-
-                    String[] texts = new String[8];
-                    for (int x = 0; x < 8; x++) {
-                        int os = textOffsets[x];
-                        byte[] b = new byte[64];
-                        int c = 0;
-                        while (true) {
-                            b[c] = bytes[os];
-                            if (b[c] == 0) {
-                                break;
-                            }
-                            os++;
-                            c++;
-                        }
-                        texts[x] = new String(b, "UTF-8").trim();
-                        texts[x] = texts[x].replaceAll("[<>]", "");
-                        texts[x] = texts[x].replaceAll("[\n\r]", " ");
-
-                    }
-
-                    for (int x = 0; x < 8; x++) {
-                        for (Person per : people) {
-                            if (per.getDialogId() == x + 1) {
-                                per.setConversation(texts[x]);
-                            }
-                        }
-                    }
-
-                    //map layer
-                    StringBuilder data = new StringBuilder();
-                    count = 1;
-                    for (int i = 0; i < tiles.length; i++) {
-                        Tile t = tiles[i];
-                        data.append(findTileMapId(mapTileIds, t.getName())).append(",");
-                        count++;
-                        if (count > 32) {
-                            data.append("\n");
-                            count = 1;
-                        }
-                    }
-
-                    String d = data.toString();
-                    d = d.substring(0, d.length() - 2);
-
-                    formatter = new Formatter(map.getFname(), "latest.png", map.getWidth(), map.getHeight(),
-                            Constants.tilePixelWidth, Constants.tilePixelWidth, d, p, people);
-
-                    String tmxFName = String.format("tmx/map_%s_%s.tmx", map.getId(), map.getFname().replace(".ult", ""));
-                    FileUtils.writeStringToFile(new File(tmxFName), formatter.toString());
-                    System.out.printf("Wrote: %s\n", tmxFName);
                 }
 
             }
@@ -478,14 +298,14 @@ public class UltTmxConvert implements ApplicationListener {
                     tileWidth, tileHeight,
                     tilesetName, tileWidth, tileHeight,
                     imageSource,
-                    mapWidth, mapHeight, writings[0],dungdata[0],
-                    mapWidth, mapHeight, writings[1],dungdata[1],
-                    mapWidth, mapHeight, writings[2],dungdata[2],
-                    mapWidth, mapHeight, writings[3],dungdata[3],
-                    mapWidth, mapHeight, writings[4],dungdata[4],
-                    mapWidth, mapHeight, writings[5],dungdata[5],
-                    mapWidth, mapHeight, writings[6],dungdata[6],
-                    mapWidth, mapHeight, writings[7],dungdata[7]
+                    mapWidth, mapHeight, writings[0], dungdata[0],
+                    mapWidth, mapHeight, writings[1], dungdata[1],
+                    mapWidth, mapHeight, writings[2], dungdata[2],
+                    mapWidth, mapHeight, writings[3], dungdata[3],
+                    mapWidth, mapHeight, writings[4], dungdata[4],
+                    mapWidth, mapHeight, writings[5], dungdata[5],
+                    mapWidth, mapHeight, writings[6], dungdata[6],
+                    mapWidth, mapHeight, writings[7], dungdata[7]
             );
 
         }
