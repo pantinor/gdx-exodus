@@ -30,88 +30,64 @@ public class ConvertToWizDungeon implements ApplicationListener {
     private static final String L9 = "000000000000000000000000541555551500504900000000405555560900000050570400010050145800050000004000190050245000014051554000190000000000094052554000050040154000048001001000100004001500008015400100441500000100000000000000541501001500000000000000004001000000004001000000849045884800141088444400540000055400540010004500580000458500440000454500480010001500444004005400494004005400504014001500444054405500444054404500444068404A0054400400440084040400410044080400410000400100000000400100000000000000000050155555150050490000000040555556090000005055040001005014580005000000400019005024500001405155400019000000000009405255400005004015400004800100100010000400150000801540010044150000010000000000000054150100150000000000000000000000000000500000000000500000000021641122120005042211110015004001150015000440110016004051210011004051110012000440050011100100150012100100550014100540050011101550150011101550110011101A901200151001001100210101401000110201401000005000000000005000000000800000008000000080FE070000FE0700000084A8000026B2006010B1006000000600309286010000800150008001000080010000800100008001060080010600F8010700F8010700800000008000000033333303333333333333333333033333333333330300000000000000003003000000000000000030033033333333303303300330333333000000033000303333333300000300003033333333000003000032333333000000030000303303303333330300013033033033333303000030330330000000030003303303303033030330033033033030330303300330330300303303003003303303303333330330030000003033333300300300000030333333003033333303333333333333333333033333333333338063000000000000000000000A0001000000000000000000000000000000000000000000000000000000090000000500000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000037000A0001000A00230037000A0002000A00230037000A0003000A002300";
     private static final String L10 = "55001555550014500054000001400010640000001500150000050000450040151504000000001415000054500000100010400101540000405114500000500004040000000000050000055001500040055441000000005510140050010004040054500501050054404540150000411559000001500501000001014101040045114205050040514155410040510055000041400055510001004141550001000500550005110400050054510005050055111448150055011554210055011554100054100550000014000114010014000445450004040451510000152055400004565014000004111001010005010004010014500054000001400010640000001500150000050000450040151504000000001415000054500000100010400101540000405114500000500004040000000000050000055001500040055441000000005510140050010004040054500501050054404540150000411559000001500501000055001555550040405000410051845041410050545055100050144015000010104055540000405050550000400140550041040140410055144041010055040552450055400555480055400515440015440114000005400045000005004151110001014154140040054815100081151405000041044440000041000041400000070E0000070E000007000000000000000080A8000020B2000010B10000000000003092001C0C00001C5C00001C0C000000000000000000000E0000000E0000000C00000E0000000EE000000EE000000800FFFF00F100000020FC0FFF0000F0F0FF0070FF0FFFF007F0F0F000F0FF0FFFF0FFFFF0F9FFFFFF0F00F0FFFFF0F0000FFFFFFFFF00F000F0000FFFFFFFFFF0FFFFFF000F0F00FF00F0FFFFFF00000F0FFFF0FFFFF7FFF0FF0F0FFF00F00000F0F000070FFFFFF040F0F000300F0FFFFFF000F0F0FF070F0F00FFF0FFFFF0FFFF0FFFFFFF0000F000FFFF0FFFFFFF0F60F00F0FF00F00F0FF0F00000FFFF0FFFFF00000000F0F00F00FB0FAF0FFF70FFFFFFF0F00FF0000FF0700FFFF0C00FFFFFFFF5F00FFFF60666666BBCB069000000A000A000A000A000A000A000A00FFFFFFFFFFFFFFFF000000000000000000000E00130011000A000900050000008C0099009D00000000000000000000000000020004000E00050012000C0000000100010001006000000000000000000046000A0001000A0023004A000A0001000A00230056000000000009000000";
     private static final String[] PMO_LEVEL_DATA = new String[]{L1, L2, L3, L4, L5, L6, L7, L8, L9, L10};
-    
+
     public enum WizardryCellType {
-        NORMAL, STAIRS, PIT, CHUTE, SPINNER, DARK, TELEPORT, DAMAGE, ELEVATOR, ROCK, NOSPELL, MESSAGE, ENCOUNTER
+        NORMAL, STAIRS, PIT, CHUTE, SPINNER, DARK, TELEPORT, DAMAGE, ELEVATOR, ROCK, NOSPELL, MESSAGE, ENCOUNTER, MARK, FOUNTAIN, CHEST
     }
-    
+
     public static void main(String[] args) throws Exception {
-        
+
         new LwjglApplication(new ConvertToWizDungeon());
     }
-    
+
     @Override
     public void create() {
-        
+
         try {
-            
+
             Exodus ult = new Exodus();
             ult.create();
-            
+
             Map<BaseMap, List<LevelData>> mapData = new HashMap<>();
-            
+
             for (BaseMap map : Exodus.maps.getMaps()) {
-                
+
                 if (!map.getFname().endsWith("ult") || map.getId() == Maps.SOSARIA.getId()) {
                     continue;
                 }
-                
+
                 FileInputStream is = new FileInputStream("src/main/resources/assets/data/" + map.getFname());
                 byte[] bytes = IOUtils.toByteArray(is);
-                
+
                 if (map.getType() == MapType.dungeon) {
-                    
-                    {
-                        StringBuilder sb = new StringBuilder("public static final String[] " + Maps.get(map.getId()) + "_LEVEL_DESC = new String[]{");
-                        
-                        int pos = 0x800;
-                        int[] textOffsets = new int[map.getLevels()];
-                        for (int x = 0; x < map.getLevels(); x++) {
-                            textOffsets[x] = (bytes[pos] & 0xff) + 0x800;
-                            pos += 2;
-                        }
-                        
-                        for (int x = 0; x < map.getLevels(); x++) {
-                            int os = textOffsets[x];
-                            byte[] b = new byte[64];
-                            int c = 0;
-                            while (true) {
-                                b[c] = bytes[os];
-                                if (b[c] == 0) {
-                                    break;
-                                }
-                                os++;
-                                c++;
-                            }
-                            
-                            String t = new String(b, "UTF-8").trim();
-                            t = t.replaceAll("[<>]", "");
-                            t = t.replaceAll("[\n\r]", " ");
-                            sb.append("\"" + t + "\",");
-                        }
-                        sb.append("};");
-                        //System.out.println(sb);
-                    }
-                    
+
                     List<LevelData> list = new ArrayList<>();
-                    
+
                     mapData.put(map, list);
-                    
+
                     int pos = 0;
                     for (int lvl = 0; lvl < map.getLevels(); lvl++) {
-                        
+
                         byte[] initial = DatatypeConverter.parseHexBinary(PMO_LEVEL_DATA[lvl + 2]);
-                        
+
                         DungeonTile[][] tiles = new DungeonTile[16][16];
                         for (int y = 0; y < 16; y++) {
                             for (int x = 0; x < 16; x++) {
                                 byte idx = bytes[pos];
                                 DungeonTile dt = DungeonTile.getTileByValue(idx);
+
+                                for (objects.Label l : map.getLabels()) {
+                                    if (l.getX() == x && l.getY() == y && l.getZ() == lvl) {
+                                        dt = DungeonTile.valueOf(l.getName());
+                                        break;
+                                    }
+                                }
+
                                 tiles[y][x] = dt;
                                 pos++;
                             }
                         }
-                        
+
                         byte[] d = new byte[initial.length];
                         for (int i = 0; i < initial.length; i++) {
                             d[i] = initial[i];
@@ -119,114 +95,248 @@ public class ConvertToWizDungeon implements ApplicationListener {
                         for (int i = 0; i < 0x360; i++) {
                             d[i] = (byte) 0;
                         }
-                        
+
                         LevelData ld = new LevelData(d);
                         list.add(ld);
-                        
+
                         int rockId = ld.addCellInfo(WizardryCellType.ROCK, 0, 0, 0);
                         int pitId = -1;
                         int darkId = -1;
-                        int msgId = -1;
                         int chestId = -1;
-                        
+                        int markKingId = -1;
+                        int markFireId = -1;
+                        int markForceid = -1;
+                        int markSnakeId = -1;
+                        int fntCureId = -1;
+                        int fntHealId = -1;
+                        int fntPoisonId = -1;
+                        int fntAcidId = -1;
+
                         for (int y = 0; y < 20; y++) {
                             for (int x = 0; x < 20; x++) {
                                 ld.cellInfoLocations[y][x] = (byte) rockId;
                             }
                         }
-                        
-                        for (int y = 0; y < 15; y++) {
-                            for (int x = 0; x < 15; x++) {
+
+                        for (int y = 0; y < 16; y++) {
+                            for (int x = 0; x < 16; x++) {
                                 ld.cellInfoLocations[y][x] = 0;
                             }
                         }
-                        
-                        for (int y = 1; y < 16; y++) {
-                            for (int x = 1; x < 16; x++) {
-                                
+
+                        for (int y = 0; y < 16; y++) {
+                            for (int x = 0; x < 16; x++) {
+
                                 DungeonTile dt = tiles[y][x];
-                                
-                                boolean ww = x - 1 < 0 ? true : tiles[y][x - 1] == DungeonTile.WALL;
-                                boolean ew = x + 1 >= 16 ? true : tiles[y][x + 1] == DungeonTile.WALL;
-                                boolean nw = y - 1 < 0 ? true : tiles[y - 1][x] == DungeonTile.WALL;
-                                boolean sw = y + 1 >= 16 ? true : tiles[y + 1][x] == DungeonTile.WALL;
-                                
+
+                                boolean ww = x - 1 < 0 ? tiles[y][15] == DungeonTile.WALL : tiles[y][x - 1] == DungeonTile.WALL;
+                                boolean ew = x + 1 >= 16 ? tiles[y][0] == DungeonTile.WALL : tiles[y][x + 1] == DungeonTile.WALL;
+                                boolean nw = y - 1 < 0 ? tiles[15][x] == DungeonTile.WALL : tiles[y - 1][x] == DungeonTile.WALL;
+                                boolean sw = y + 1 >= 16 ? tiles[0][x] == DungeonTile.WALL : tiles[y + 1][x] == DungeonTile.WALL;
+
                                 boolean wd = x - 1 < 0 ? false : tiles[y][x - 1] == DungeonTile.DOOR;
                                 boolean ed = x + 1 >= 16 ? false : tiles[y][x + 1] == DungeonTile.DOOR;
                                 boolean nd = y - 1 < 0 ? false : tiles[y - 1][x] == DungeonTile.DOOR;
                                 boolean sd = y + 1 >= 16 ? false : tiles[y + 1][x] == DungeonTile.DOOR;
-                                
+
                                 boolean hwd = x - 1 < 0 ? false : tiles[y][x - 1] == DungeonTile.SECRET_DOOR;
                                 boolean hed = x + 1 >= 16 ? false : tiles[y][x + 1] == DungeonTile.SECRET_DOOR;
                                 boolean hnd = y - 1 < 0 ? false : tiles[y - 1][x] == DungeonTile.SECRET_DOOR;
                                 boolean hsd = y + 1 >= 16 ? false : tiles[y + 1][x] == DungeonTile.SECRET_DOOR;
-                                
-                                int wx = x - 1;
+
+                                int wx = x - 0;
                                 int wy = 20 - 4 - y - 1;
-                                
+
                                 writeCellWallsDoors(wx, wy, dt,
                                         nw, sw, ew, ww,
                                         nd, sd, ed, wd,
                                         hnd, hsd, hed, hwd,
                                         d);
-                                
+
                                 if (dt == DungeonTile.WALL) {
                                     ld.cellInfoLocations[wx][wy] = (byte) rockId;
                                 }
-                                if (dt == DungeonTile.LADDER_UP && ld.canAdd()) {
-                                    ld.cellInfoLocations[wx][wy] = (byte) ld.cellInfoIndex;
-                                    ld.addCellInfo(WizardryCellType.STAIRS, lvl + 1 - 1, wy, wx);
-                                }
-                                if (dt == DungeonTile.LADDER_DOWN && ld.canAdd()) {
-                                    ld.cellInfoLocations[wx][wy] = (byte) ld.cellInfoIndex;
-                                    ld.addCellInfo(WizardryCellType.STAIRS, lvl + 1 + 1, wy, wx);
-                                }
-                                if (dt == DungeonTile.LADDER_UP_DOWN && ld.canAdd()) {
-                                    ld.cellInfoLocations[wx][wy] = (byte) ld.cellInfoIndex;
-                                    ld.addCellInfo(WizardryCellType.ELEVATOR, lvl - 2, lvl + 2, 1);
-                                }
-                                if (dt == DungeonTile.PIT_TRAP) {
-                                    if (pitId == -1 && ld.canAdd()) {
-                                        pitId = ld.addCellInfo(WizardryCellType.PIT, 5, 5, 2);
-                                    }
-                                    if (pitId > 0) {
-                                        ld.cellInfoLocations[wx][wy] = (byte) pitId;
+
+                                if (dt == DungeonTile.LADDER_UP) {
+                                    if (ld.canAdd()) {
+                                        ld.cellInfoLocations[wx][wy] = (byte) ld.cellInfoIndex;
+                                        ld.addCellInfo(WizardryCellType.STAIRS, lvl + 1 - 1, wy, wx);
+                                    } else {
+                                        System.out.printf("Cannot add tile %s in map %s [%d %d %d]\n", dt, map, lvl, x, y);
                                     }
                                 }
-                                if (dt == DungeonTile.WIND_TRAP) {
-                                    if (darkId == -1 && ld.canAdd()) {
-                                        darkId = ld.addCellInfo(WizardryCellType.DARK, 0, 0, 0);
+
+                                if (dt == DungeonTile.LADDER_DOWN) {
+                                    if (ld.canAdd()) {
+                                        ld.cellInfoLocations[wx][wy] = (byte) ld.cellInfoIndex;
+                                        ld.addCellInfo(WizardryCellType.STAIRS, lvl + 1 + 1, wy, wx);
+                                    } else {
+                                        System.out.printf("Cannot add tile %s in map %s [%d %d %d]\n", dt, map, lvl, x, y);
                                     }
-                                    if (darkId > 0) {
-                                        ld.cellInfoLocations[wx][wy] = (byte) darkId;
+
+                                }
+
+                                if (dt == DungeonTile.LADDER_UP_DOWN) {
+                                    if (ld.canAdd()) {
+                                        ld.cellInfoLocations[wx][wy] = (byte) ld.cellInfoIndex;
+                                        ld.addCellInfo(WizardryCellType.ELEVATOR, lvl - 2, lvl + 2, 1);
+                                    } else {
+                                        System.out.printf("Cannot add tile %s in map %s [%d %d %d]\n", dt, map, lvl, x, y);
                                     }
                                 }
-                                if (dt == DungeonTile.MISTY_WRITINGS) {
-                                    if (msgId == -1 && ld.canAdd()) {
-                                        //msgId = ld.addCellInfo(WizardryCellType.MESSAGE, -1, lvl, 1);
-                                    }
-                                    if (msgId > 0) {
-                                        //ld.cellInfoLocations[wx][wy] = (byte) msgId;
-                                    }
-                                }
-                                if (dt == DungeonTile.CHEST) {
-                                    if (chestId == -1 && ld.canAdd()) {
-                                        int itemId = 0;
-                                        if (lvl < 2) {
-                                            itemId = Utils.getRandomBetween(19, 33);
-                                        } else if (lvl < 4) {
-                                            itemId = Utils.getRandomBetween(35, 52);
-                                        } else if (lvl < 6) {
-                                            itemId = Utils.getRandomBetween(54, 80);
-                                        } else if (lvl < 9) {
-                                            itemId = Utils.getRandomBetween(80, 92);
+
+                                if (dt == DungeonTile.MARK_KINGS) {
+                                    if (markKingId == -1) {
+                                        if (ld.canAdd()) {
+                                            markKingId = ld.addCellInfo(WizardryCellType.MARK, 101, 201, 1);
+                                        } else {
+                                            System.out.printf("Cannot add tile %s in map %s [%d %d %d]\n", dt, map, lvl, x, y);
                                         }
-                                        chestId = ld.addCellInfo(WizardryCellType.MESSAGE, itemId, 200, 2);
+                                    }
+                                    if (markKingId > 0) {
+                                        ld.cellInfoLocations[wx][wy] = (byte) markKingId;
+                                    }
+                                }
+
+                                if (dt == DungeonTile.MARK_FIRE) {
+                                    if (markFireId == -1) {
+                                        if (ld.canAdd()) {
+                                            markFireId = ld.addCellInfo(WizardryCellType.MARK, 102, 202, 2);
+                                        } else {
+                                            System.out.printf("Cannot add tile %s in map %s [%d %d %d]\n", dt, map, lvl, x, y);
+                                        }
+                                    }
+                                    if (markFireId > 0) {
+                                        ld.cellInfoLocations[wx][wy] = (byte) markFireId;
+                                    }
+                                }
+
+                                if (dt == DungeonTile.MARK_FORCE) {
+                                    if (markForceid == -1) {
+                                        if (ld.canAdd()) {
+                                            markForceid = ld.addCellInfo(WizardryCellType.MARK, 103, 203, 3);
+                                        } else {
+                                            System.out.printf("Cannot add tile %s in map %s [%d %d %d]\n", dt, map, lvl, x, y);
+                                        }
+                                    }
+                                    if (markForceid > 0) {
+                                        ld.cellInfoLocations[wx][wy] = (byte) markForceid;
+                                    }
+                                }
+
+                                if (dt == DungeonTile.MARK_SNAKE) {
+                                    if (markSnakeId == -1) {
+                                        if (ld.canAdd()) {
+                                            markSnakeId = ld.addCellInfo(WizardryCellType.MARK, 104, 204, 4);
+                                        } else {
+                                            System.out.printf("Cannot add tile %s in map %s [%d %d %d]\n", dt, map, lvl, x, y);
+                                        }
+                                    }
+                                    if (markSnakeId > 0) {
+                                        ld.cellInfoLocations[wx][wy] = (byte) markSnakeId;
+                                    }
+                                }
+
+                                if (dt == DungeonTile.FOUNTAIN_CURE) {
+                                    if (fntCureId == -1) {
+                                        if (ld.canAdd()) {
+                                            fntCureId = ld.addCellInfo(WizardryCellType.FOUNTAIN, 0, 1, 12);
+                                        } else {
+                                            System.out.printf("Cannot add tile %s in map %s [%d %d %d]\n", dt, map, lvl, x, y);
+                                        }
+                                    }
+                                    if (fntCureId > 0) {
+                                        ld.cellInfoLocations[wx][wy] = (byte) fntCureId;
+                                    }
+                                }
+
+                                if (dt == DungeonTile.FOUNTAIN_HEAL) {
+                                    if (fntHealId == -1) {
+                                        if (ld.canAdd()) {
+                                            fntHealId = ld.addCellInfo(WizardryCellType.FOUNTAIN, 0, 2, 12);
+                                        } else {
+                                            System.out.printf("Cannot add tile %s in map %s [%d %d %d]\n", dt, map, lvl, x, y);
+                                        }
+                                    }
+                                    if (fntHealId > 0) {
+                                        ld.cellInfoLocations[wx][wy] = (byte) fntHealId;
+                                    }
+                                }
+
+                                if (dt == DungeonTile.FOUNTAIN_ACID) {
+                                    if (fntAcidId == -1) {
+                                        if (ld.canAdd()) {
+                                            fntAcidId = ld.addCellInfo(WizardryCellType.FOUNTAIN, 0, 3, 12);
+                                        } else {
+                                            System.out.printf("Cannot add tile %s in map %s [%d %d %d]\n", dt, map, lvl, x, y);
+                                        }
+                                    }
+                                    if (fntAcidId > 0) {
+                                        ld.cellInfoLocations[wx][wy] = (byte) fntAcidId;
+                                    }
+                                }
+
+                                if (dt == DungeonTile.FOUNTAIN_POISON) {
+                                    if (fntPoisonId == -1) {
+                                        if (ld.canAdd()) {
+                                            fntPoisonId = ld.addCellInfo(WizardryCellType.FOUNTAIN, 0, 4, 12);
+                                        } else {
+                                            System.out.printf("Cannot add tile %s in map %s [%d %d %d]\n", dt, map, lvl, x, y);
+                                        }
+                                    }
+                                    if (fntPoisonId > 0) {
+                                        ld.cellInfoLocations[wx][wy] = (byte) fntPoisonId;
+                                    }
+                                }
+
+                                if (dt == DungeonTile.CHEST) {
+                                    if (chestId == -1) {
+                                        if (ld.canAdd()) {
+                                            chestId = ld.addCellInfo(WizardryCellType.CHEST, 0, 200, 2);
+                                        } else {
+                                            System.out.printf("Cannot add tile %s in map %s [%d %d %d]\n", dt, map, lvl, x, y);
+                                        }
                                     }
                                     if (chestId > 0) {
                                         ld.cellInfoLocations[wx][wy] = (byte) chestId;
                                     }
                                 }
+
+                                if (dt == DungeonTile.PIT_TRAP) {
+                                    if (lvl == 7 && map.getFname().equals("fire.ult")) {
+                                        //do not add it
+                                    } else {
+                                        if (pitId == -1) {
+                                            if (ld.canAdd()) {
+                                                pitId = ld.addCellInfo(WizardryCellType.PIT, 5, 5, 2);
+                                            } else {
+                                                System.out.printf("Cannot add tile %s in map %s [%d %d %d]\n", dt, map, lvl, x, y);
+                                            }
+                                        }
+                                        if (pitId > 0) {
+                                            ld.cellInfoLocations[wx][wy] = (byte) pitId;
+                                        }
+                                    }
+                                }
+
+                                if (dt == DungeonTile.WIND_TRAP) {
+                                    if (lvl == 7 && map.getFname().equals("fire.ult")) {
+                                        //do not add it
+                                    } else {
+                                        if (darkId == -1 && ld.canAdd()) {
+                                            if (ld.canAdd()) {
+                                                darkId = ld.addCellInfo(WizardryCellType.DARK, 0, 0, 0);
+                                            } else {
+                                                System.out.printf("Cannot add tile %s in map %s [%d %d %d]\n", dt, map, lvl, x, y);
+                                            }
+                                        }
+
+                                        if (darkId > 0) {
+                                            ld.cellInfoLocations[wx][wy] = (byte) darkId;
+                                        }
+                                    }
+                                }
+
                                 if (dt == DungeonTile.GREMLINS) {
                                     int offset = wx * 4 + wy / 8;
                                     int value = ld.data[offset + 480] & 0xFF;
@@ -236,12 +346,12 @@ public class ConvertToWizDungeon implements ApplicationListener {
                                 }
                             }
                         }
-                        
+
                         ld.writeCellInfoLocations();
                     }
                 }
             }
-            
+
             for (BaseMap map : mapData.keySet()) {
                 List<LevelData> list = mapData.get(map);
                 for (int i = 0; i < list.size(); i++) {
@@ -249,20 +359,20 @@ public class ConvertToWizDungeon implements ApplicationListener {
                     System.out.println("private static final String ULT_EX_" + Maps.get(map.getId()) + "_" + i + " = \"" + DatatypeConverter.printHexBinary(bb) + "\";");
                 }
             }
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         System.out.println("DONE");
     }
-    
+
     private void writeCellWallsDoors(int column, int row, DungeonTile tile,
             boolean nw, boolean sw, boolean ew, boolean ww,
             boolean nd, boolean sd, boolean ed, boolean wd,
             boolean hnd, boolean hsd, boolean hed, boolean hwd,
             byte[] data) {
-        
+
         if (tile == DungeonTile.DOOR || tile == DungeonTile.SECRET_DOOR) {
             if (ew && ww) {
                 nd = true;
@@ -273,36 +383,36 @@ public class ConvertToWizDungeon implements ApplicationListener {
                 wd = true;
             }
         }
-        
+
         if (tile == DungeonTile.SECRET_DOOR) {
             nw = true;
             sw = true;
             ew = true;
             ww = true;
         }
-        
+
         if (hnd) {
             nw = true;
             nd = true;
         }
-        
+
         if (hsd) {
             sw = true;
             sd = true;
         }
-        
+
         if (hed) {
             ew = true;
             ed = true;
         }
-        
+
         if (hwd) {
             ww = true;
             wd = true;
         }
-        
+
         int offset = column * 6 + row / 4;
-        
+
         if (tile != DungeonTile.WALL) {
             setWallsDoors(data, offset, row, ww, wd);
             setWallsDoors(data, offset + 120, row, sw, sd);
@@ -317,19 +427,19 @@ public class ConvertToWizDungeon implements ApplicationListener {
                 value |= (1 << bitPosition);
                 data[offset + 480] = (byte) value;
             }
-            
+
         } else {
             //setWallsDoors(data, offset, row, true, false);
             //setWallsDoors(data, offset + 120, row, true, false);
             //setWallsDoors(data, offset + 240, row, true, false);
             //setWallsDoors(data, offset + 360, row, true, false);
         }
-        
+
     }
-    
+
     private void setWallsDoors(byte[] buffer, int offset, int row, boolean wall, boolean door) {
         int shift = (row % 4) * 2;
-        
+
         int currentValue = buffer[offset] & 0xFF;
         currentValue &= ~(3 << shift); // Clear the two bits at the position
 
@@ -339,17 +449,17 @@ public class ConvertToWizDungeon implements ApplicationListener {
         if (door) {
             currentValue |= (1 << (shift + 1));
         }
-        
+
         buffer[offset] = (byte) currentValue;
     }
-    
+
     private class LevelData {
-        
+
         final byte[] data;
         final byte[][] cellInfoLocations = new byte[20][20];
         final CellInfo[] cellInfo = new CellInfo[16];
         int cellInfoIndex = 1;
-        
+
         public LevelData(byte[] d) {
             this.data = d;
             int offset = 0x230;
@@ -364,25 +474,25 @@ public class ConvertToWizDungeon implements ApplicationListener {
                 cellInfo[i] = new CellInfo();
             }
         }
-        
+
         private boolean canAdd() {
             return this.cellInfoIndex < cellInfo.length;
         }
-        
+
         private int addCellInfo(WizardryCellType type, int v0, int v1, int v2) {
             int infoId = this.cellInfoIndex;
             this.cellInfoIndex++;
-            
+
             CellInfo ci = this.cellInfo[infoId];
             ci.type = type;
             ci.val[0] = (short) v0;
             ci.val[1] = (short) v1;
             ci.val[2] = (short) v2;
             ci.write(infoId, this.data, 0x2F8);
-            
+
             return infoId;
         }
-        
+
         private void writeCellInfoLocations() {
             int offset = 0x230;
             for (int col = 0; col < 20; col++) {
@@ -393,60 +503,60 @@ public class ConvertToWizDungeon implements ApplicationListener {
                 }
             }
         }
-        
+
     }
-    
+
     private static class CellInfo {
-        
+
         private WizardryCellType type = WizardryCellType.NORMAL;
         private final short[] val = new short[3];
         private final byte[][] data = new byte[3][2];
-        
+
         private void write(int index, byte[] buffer, int offset) {
             byte existingByte = buffer[offset + index / 2];
             int typeIndex = this.type.ordinal();
-            
+
             if (index % 2 == 0) {
                 existingByte = (byte) ((existingByte & 0xF0) | (typeIndex & 0x0F));
             } else {
                 existingByte = (byte) ((existingByte & 0x0F) | ((typeIndex & 0x0F) << 4));
             }
-            
+
             buffer[offset + index / 2] = existingByte;
-            
+
             buffer[offset + 8 + index * 2] = this.data[0][0];
             buffer[offset + 8 + index * 2 + 1] = this.data[0][1];
-            
+
             buffer[offset + 40 + index * 2] = this.data[1][0];
             buffer[offset + 40 + index * 2 + 1] = this.data[1][1];
-            
+
             buffer[offset + 72 + index * 2] = this.data[2][0];
             buffer[offset + 72 + index * 2 + 1] = this.data[2][1];
-            
+
             EndianUtils.writeSwappedShort(buffer, offset + 8 + index * 2, this.val[0]);
             EndianUtils.writeSwappedShort(buffer, offset + 40 + index * 2, this.val[1]);
             EndianUtils.writeSwappedShort(buffer, offset + 72 + index * 2, this.val[2]);
         }
     }
-    
+
     @Override
     public void resize(int width, int height) {
     }
-    
+
     @Override
     public void render() {
     }
-    
+
     @Override
     public void pause() {
     }
-    
+
     @Override
     public void resume() {
     }
-    
+
     @Override
     public void dispose() {
     }
-    
+
 }
