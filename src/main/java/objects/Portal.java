@@ -129,17 +129,10 @@ public class Portal implements Constants {
     @Override
     public String toString() {
 
-        String template = "<object name=\"%s\" type=\"portal\" x=\"%s\" y=\"%s\" width=\"32\" height=\"32\">\n"
-                + "<properties>\n"
-                + "<property name=\"condition\" value=\"%s\"/>\n"
-                + "<property name=\"x\" value=\"%s\"/>\n"
-                + "<property name=\"y\" value=\"%s\"/>\n"
-                + "<property name=\"destination\" value=\"%s\"/>\n"
-                + "<property name=\"message\" value=\"%s\"/>\n"
-                + "</properties>\n"
+        String template = "<object name=\"%s\" type=\"portal\" x=\"%s\" y=\"%s\" width=\"24\" height=\"24\">\n"
                 + "</object>\n";
 
-        return String.format(template, name, x * 32*4, y * 32*4, condition == null ? "" : condition, x, y, destmapid, message == null ? "" : message);
+        return String.format(template, name, x * 24, y * 24, condition == null ? "" : condition, x, y, destmapid, message == null ? "" : message);
     }
 
     public int getMapTileId() {

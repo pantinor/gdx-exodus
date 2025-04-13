@@ -1,35 +1,32 @@
 
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import java.io.File;
 import java.util.List;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-
 import objects.BaseMap;
-import objects.Label;
-import objects.MapSet;
 import objects.Moongate;
 import objects.Portal;
 import objects.Tile;
-import objects.TileSet;
-
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-
-import util.Utils;
-
-import com.badlogic.gdx.files.FileHandle;
-import exodus.Constants;
 import exodus.Constants.Maps;
+import exodus.Exodus;
+import java.util.Random;
 
 public class WorldTMXConvert implements ApplicationListener {
 
-    public static void main(String[] args) throws Exception {
+    //tile ids from uf_map
+    public final int GRASS1 = 146 + 1;
+    public final int GRASS2 = 147 + 1;
+    public final int FOREST = 185 + 1;
+    public final int MEADOW = 178 + 1;
+    public final int MOUNTAIN = 407 + 1;
+    public final int WATER = 92 + 1;
+    public final int TOWN = 386 + 1;
+    public final int CASTLE = 265 + 1;
+    public final int DUNGEON = 393 + 1;
+    public final int LAVA = 67 + 1;
 
+    public static void main(String[] args) throws Exception {
         new LwjglApplication(new WorldTMXConvert());
     }
 
@@ -38,111 +35,127 @@ public class WorldTMXConvert implements ApplicationListener {
 
         try {
 
-            File file2 = new File("target/classes/assets/xml/tileset-base.xml");
-            JAXBContext jaxbContext = JAXBContext.newInstance(TileSet.class);
-            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            TileSet ts = (TileSet) jaxbUnmarshaller.unmarshal(file2);
-            ts.setMaps();
+            Exodus ult = new Exodus();
+            ult.create();
 
-            File file3 = new File("target/classes/assets/xml/maps.xml");
-            jaxbContext = JAXBContext.newInstance(MapSet.class);
-            jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            MapSet ms = (MapSet) jaxbUnmarshaller.unmarshal(file3);
-            ms.init(ts);
+            Random random = new Random();
 
             BaseMap map = Maps.SOSARIA.getMap();
             Tile[] tiles = map.getTiles();
 
-            //load the atlas and determine the tile indexes per tilemap position
-            FileHandle f = new FileHandle("target/classes/assets/graphics/latest-atlas.txt");
-            TextureAtlas.TextureAtlasData atlas = new TextureAtlas.TextureAtlasData(f, f.parent(), false);
-            int png_grid_width = 24;
-            Tile[] mapTileIds = new Tile[png_grid_width * Constants.tilePixelWidth + 1];
-            for (TextureAtlas.TextureAtlasData.Region r : atlas.getRegions()) {
-                int x = r.left / r.width;
-                int y = r.top / r.height;
-                int i = x + (y * png_grid_width) + 1;
-                mapTileIds[i] = ts.getTileByName(r.name);
-            }
+            // map layers
+            StringBuilder props = new StringBuilder();
+            StringBuilder mountains = new StringBuilder();
+            StringBuilder forest = new StringBuilder();
+            StringBuilder meadow = new StringBuilder();
+            StringBuilder water = new StringBuilder();
+            StringBuilder grass = new StringBuilder();
+            StringBuilder lava = new StringBuilder();
 
-            // map layer
-            StringBuilder data = new StringBuilder();
             int count = 1;
-            int total = 1;
-            for (int i = 0; i < tiles.length; i++) {
-                Tile t = tiles[i];
-                data.append(findTileId(mapTileIds, t.getName())).append(",");
+            for (Tile t : tiles) {
+                int i = t.getIndex();
+
+                if (i == 0) {//water
+                    props.append("0").append(",");
+                    mountains.append("0").append(",");
+                    forest.append("0").append(",");
+                    meadow.append("0").append(",");
+                    water.append(WATER).append(",");
+                    grass.append("0").append(",");
+                    lava.append("0").append(",");
+                } else if (i == 1) {//grass
+                    props.append("0").append(",");
+                    mountains.append("0").append(",");
+                    forest.append("0").append(",");
+                    meadow.append("0").append(",");
+                    water.append("0").append(",");
+                    grass.append(random.nextBoolean() ? GRASS1 : GRASS2).append(",");
+                    lava.append("0").append(",");
+                } else if (i == 2) {//meadow
+                    props.append("0").append(",");
+                    mountains.append("0").append(",");
+                    forest.append("0").append(",");
+                    meadow.append(MEADOW).append(",");
+                    water.append("0").append(",");
+                    grass.append(random.nextBoolean() ? GRASS1 : GRASS2).append(",");
+                    lava.append("0").append(",");
+                } else if (i == 3) {//forest
+                    props.append("0").append(",");
+                    mountains.append("0").append(",");
+                    forest.append(FOREST).append(",");
+                    meadow.append("0").append(",");
+                    water.append("0").append(",");
+                    grass.append(random.nextBoolean() ? GRASS1 : GRASS2).append(",");
+                    lava.append("0").append(",");
+                } else if (i == 4) {//mountains
+                    props.append("0").append(",");
+                    mountains.append(MOUNTAIN).append(",");
+                    forest.append("0").append(",");
+                    meadow.append("0").append(",");
+                    water.append("0").append(",");
+                    grass.append("0").append(",");
+                    lava.append("0").append(",");
+                } else if (i == 5) {//dungeon
+                    props.append(DUNGEON).append(",");
+                    mountains.append("0").append(",");
+                    forest.append("0").append(",");
+                    meadow.append("0").append(",");
+                    water.append("0").append(",");
+                    grass.append(random.nextBoolean() ? GRASS1 : GRASS2).append(",");
+                    lava.append("0").append(",");
+                } else if (i == 6) {//town
+                    props.append(TOWN).append(",");
+                    mountains.append("0").append(",");
+                    forest.append("0").append(",");
+                    meadow.append("0").append(",");
+                    water.append("0").append(",");
+                    grass.append(random.nextBoolean() ? GRASS1 : GRASS2).append(",");
+                    lava.append("0").append(",");
+                } else if (i == 7) {//castle
+                    props.append(CASTLE).append(",");
+                    mountains.append("0").append(",");
+                    forest.append("0").append(",");
+                    meadow.append("0").append(",");
+                    water.append("0").append(",");
+                    grass.append(random.nextBoolean() ? GRASS1 : GRASS2).append(",");
+                    lava.append("0").append(",");
+                } else if (i == 33) {//lava
+                    props.append("0").append(",");
+                    mountains.append("0").append(",");
+                    forest.append("0").append(",");
+                    meadow.append("0").append(",");
+                    water.append("0").append(",");
+                    grass.append("0").append(",");
+                    lava.append(LAVA).append(",");
+                } else {
+                    props.append("0").append(",");
+                    mountains.append("0").append(",");
+                    forest.append("0").append(",");
+                    meadow.append("0").append(",");
+                    water.append(WATER).append(",");
+                    grass.append("0").append(",");
+                    lava.append("0").append(",");
+                }
+
                 count++;
-                total++;
-                if (count > 256) {
-                    data.append("\n");
+                if (count > 64) {
+                    props.append("\n");
+                    mountains.append("\n");
+                    forest.append("\n");
+                    meadow.append("\n");
+                    water.append("\n");
+                    grass.append("\n");
+                    lava.append("\n");
                     count = 1;
                 }
             }
 
-            String dl = data.toString();
-            dl = dl.substring(0, dl.length() - 2);
-
-            // portal layer
-            List<Portal> portals = map.getPortals();
-            StringBuilder portalBuffer = new StringBuilder();
-
-            if (portals != null && portals.size() > 0) {
-
-                //set map tile id per dest map type
-                for (Portal p : portals) {
-                    BaseMap destMap = Maps.get(p.getDestmapid()).getMap();
-                    p.setName(Constants.Maps.get(p.getDestmapid()).toString());
-                    String ttype = "town";//destMap.getCity() == null ? destMap.getType().toString() : destMap.getCity().getType();
-                    p.setMapTileId(findTileId(mapTileIds, ttype));
-                }
-
-                for (int y = 0; y < map.getHeight(); y++) {
-                    for (int x = 0; x < map.getWidth(); x++) {
-                        Portal p = findPortalAtCoords(portals, x, y);
-                        if (p == null) {
-                            portalBuffer.append("0,");
-                        } else {
-                            portalBuffer.append(p.getMapTileId() + ",");
-                        }
-                    }
-                    portalBuffer.append("\n");
-                }
-            }
-
-            String pl = portalBuffer.toString();
-            pl = pl.substring(0, pl.length() - 2);
-
-            // moongate layer
-            List<Moongate> moongates = map.getMoongates();
-            StringBuilder moongateBuffer = new StringBuilder();
-
-            if (moongates != null && moongates.size() > 0) {
-                //set map tile id per dest map type
-                for (Moongate m : moongates) {
-                    m.setMapTileId(findTileId(mapTileIds, "moongate"));
-                }
-                for (int y = 0; y < map.getHeight(); y++) {
-                    for (int x = 0; x < map.getWidth(); x++) {
-                        Moongate p = findMoongateAtCoords(moongates, x, y);
-                        if (p == null) {
-                            moongateBuffer.append("0,");
-                        } else {
-                            moongateBuffer.append(p.getMapTileId()).append(",");
-                        }
-                    }
-                    moongateBuffer.append("\n");
-                }
-            }
-
-            String ml = moongateBuffer.toString();
-            ml = ml.substring(0, ml.length() - 2);
-
-            Formatter c = new Formatter(map.getFname(), "latest.png",
+            Formatter c = new Formatter(map.getFname(), "u3ega-shapes.png",
                     map.getWidth(), map.getHeight(),
-                    Constants.tilePixelWidth, Constants.tilePixelWidth,
-                    dl, pl, ml, portals, moongates,
-                    map.getLabels());
+                    24, 24,
+                    props.toString(), mountains.toString(), forest.toString(), meadow.toString(), water.toString(), grass.toString(), lava.toString(),
+                    map.getPortals(), map.getMoongates());
 
             FileUtils.writeStringToFile(new File("tmx/map_" + map.getId() + "_Andius.tmx"), c.toString());
         } catch (Exception e) {
@@ -172,36 +185,6 @@ public class WorldTMXConvert implements ApplicationListener {
     public void dispose() {
     }
 
-    private static int findTileId(Tile[] tiles, String name) {
-        for (int i = 1; i < tiles.length; i++) {
-            if (tiles[i] == null) {
-                continue;
-            }
-            if (StringUtils.equals(tiles[i].getName(), name)) {
-                return i;
-            }
-        }
-        return 0;
-    }
-
-    private static Portal findPortalAtCoords(List<Portal> portals, int x, int y) {
-        for (Portal p : portals) {
-            if (p != null && (p.getX() == x && p.getY() == y)) {
-                return p;
-            }
-        }
-        return null;
-    }
-
-    private static Moongate findMoongateAtCoords(List<Moongate> moongates, int x, int y) {
-        for (Moongate p : moongates) {
-            if (p != null && (p.getX() == x && p.getY() == y)) {
-                return p;
-            }
-        }
-        return null;
-    }
-
     private static class Formatter {
 
         private String tilesetName;
@@ -211,23 +194,29 @@ public class WorldTMXConvert implements ApplicationListener {
         private int tileWidth;
         private int tileHeight;
 
-        private String dataLayer;
-        private String portalLayer;
-        private String moongateLayer;
+        private String props;
+        private String mountains;
+        private String forest;
+        private String meadow;
+        private String water;
+        private String grass;
+        private String lava;
 
-        private List<Portal> portalObjects;
-        private List<Moongate> moongateObjects;
-        private List<Label> labelObjects;
+        private List<Portal> portals;
+        private List<Moongate> moongates;
 
         public Formatter(String tilesetName, String imageSource,
                 int mapWidth, int mapHeight,
                 int tileWidth, int tileHeight,
-                String dataLayer, 
-                String portalLayer, 
-                String moongateLayer,
-                List<Portal> portalObjects, 
-                List<Moongate> moongateObjects, 
-                List<Label> labelObjects) {
+                String props,
+                String mountains,
+                String forest,
+                String meadow,
+                String water,
+                String grass,
+                String lava,
+                List<Portal> portals,
+                List<Moongate> moongates) {
 
             this.tilesetName = tilesetName;
             this.imageSource = imageSource;
@@ -236,22 +225,24 @@ public class WorldTMXConvert implements ApplicationListener {
             this.tileWidth = tileWidth;
             this.tileHeight = tileHeight;
 
-            this.dataLayer = dataLayer;
-            this.portalLayer = portalLayer;
-            this.moongateLayer = moongateLayer;
+            this.props = props.substring(0, props.length() - 2);
+            this.mountains = mountains.substring(0, mountains.length() - 2);
+            this.forest = forest.substring(0, forest.length() - 2);
+            this.meadow = meadow.substring(0, meadow.length() - 2);
+            this.water = water.substring(0, water.length() - 2);
+            this.grass = grass.substring(0, grass.length() - 2);
+            this.lava = lava.substring(0, lava.length() - 2);
 
-            this.portalObjects = portalObjects;
-            this.moongateObjects = moongateObjects;
-            this.labelObjects = labelObjects;
-
+            this.portals = portals;
+            this.moongates = moongates;
         }
 
         @Override
         public String toString() {
 
-            StringBuffer portalString = new StringBuffer();
-            if (portalObjects != null) {
-                for (Portal p : portalObjects) {
+            StringBuilder portalString = new StringBuilder();
+            if (portals != null) {
+                for (Portal p : portals) {
                     if (p == null) {
                         continue;
                     }
@@ -259,9 +250,9 @@ public class WorldTMXConvert implements ApplicationListener {
                 }
             }
 
-            StringBuffer moongateString = new StringBuffer();
-            if (moongateObjects != null) {
-                for (Moongate p : moongateObjects) {
+            StringBuilder moongateString = new StringBuilder();
+            if (moongates != null) {
+                for (Moongate p : moongates) {
                     if (p == null) {
                         continue;
                     }
@@ -269,41 +260,189 @@ public class WorldTMXConvert implements ApplicationListener {
                 }
             }
 
-            StringBuffer labelString = new StringBuffer();
-            if (labelObjects != null) {
-                for (Label p : labelObjects) {
-                    if (p == null) {
-                        continue;
-                    }
-                    labelString.append(p.toString());
-                }
-            }
+            String template = """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="24" tileheight="24" infinite="0" backgroundcolor="#000000" nextlayerid="14" nextobjectid="33">
+                 <properties>
+                  <property name="startX" value="44"/>
+                  <property name="startY" value="20"/>
+                 </properties>
+                 <tileset firstgid="1" name="uf_map" tilewidth="24" tileheight="24" tilecount="525" columns="25">
+                  <image source="uf_map.png" width="600" height="504"/>
+                  <tile id="17">
+                   <animation>
+                    <frame tileid="17" duration="500"/>
+                    <frame tileid="18" duration="500"/>
+                    <frame tileid="19" duration="500"/>
+                    <frame tileid="20" duration="500"/>
+                    <frame tileid="19" duration="500"/>
+                    <frame tileid="18" duration="500"/>
+                   </animation>
+                  </tile>
+                  <tile id="67">
+                   <animation>
+                    <frame tileid="67" duration="500"/>
+                    <frame tileid="68" duration="500"/>
+                    <frame tileid="69" duration="500"/>
+                    <frame tileid="70" duration="500"/>
+                    <frame tileid="69" duration="500"/>
+                    <frame tileid="68" duration="500"/>
+                   </animation>
+                  </tile>
+                  <tile id="92">
+                   <animation>
+                    <frame tileid="92" duration="500"/>
+                    <frame tileid="93" duration="500"/>
+                    <frame tileid="94" duration="500"/>
+                    <frame tileid="95" duration="500"/>
+                    <frame tileid="94" duration="500"/>
+                    <frame tileid="93" duration="500"/>
+                   </animation>
+                  </tile>
+                  <tile id="117">
+                   <animation>
+                    <frame tileid="117" duration="500"/>
+                    <frame tileid="118" duration="500"/>
+                    <frame tileid="119" duration="500"/>
+                    <frame tileid="120" duration="500"/>
+                    <frame tileid="119" duration="500"/>
+                    <frame tileid="118" duration="500"/>
+                   </animation>
+                  </tile>
+                  <tile id="260">
+                   <animation>
+                    <frame tileid="260" duration="200"/>
+                    <frame tileid="261" duration="200"/>
+                    <frame tileid="262" duration="200"/>
+                    <frame tileid="263" duration="200"/>
+                   </animation>
+                  </tile>
+                  <tile id="265">
+                   <animation>
+                    <frame tileid="265" duration="200"/>
+                    <frame tileid="266" duration="200"/>
+                    <frame tileid="267" duration="200"/>
+                    <frame tileid="268" duration="200"/>
+                   </animation>
+                  </tile>
+                  <tile id="285">
+                   <animation>
+                    <frame tileid="285" duration="200"/>
+                    <frame tileid="286" duration="200"/>
+                    <frame tileid="287" duration="200"/>
+                    <frame tileid="288" duration="200"/>
+                   </animation>
+                  </tile>
+                  <tile id="290">
+                   <animation>
+                    <frame tileid="290" duration="200"/>
+                    <frame tileid="291" duration="200"/>
+                    <frame tileid="292" duration="200"/>
+                    <frame tileid="293" duration="200"/>
+                   </animation>
+                  </tile>
+                  <tile id="388">
+                   <animation>
+                    <frame tileid="388" duration="300"/>
+                    <frame tileid="389" duration="300"/>
+                   </animation>
+                  </tile>
+                  <tile id="390">
+                   <animation>
+                    <frame tileid="390" duration="500"/>
+                    <frame tileid="391" duration="500"/>
+                   </animation>
+                  </tile>
+                  <tile id="410">
+                   <animation>
+                    <frame tileid="410" duration="400"/>
+                    <frame tileid="411" duration="400"/>
+                   </animation>
+                  </tile>
+                  <tile id="412">
+                   <animation>
+                    <frame tileid="412" duration="400"/>
+                    <frame tileid="413" duration="400"/>
+                   </animation>
+                  </tile>
+                  <tile id="414">
+                   <animation>
+                    <frame tileid="414" duration="400"/>
+                    <frame tileid="415" duration="400"/>
+                   </animation>
+                  </tile>
+                  <tile id="416">
+                   <animation>
+                    <frame tileid="416" duration="400"/>
+                    <frame tileid="417" duration="400"/>
+                   </animation>
+                  </tile>
+                  <tile id="443">
+                   <animation>
+                    <frame tileid="443" duration="200"/>
+                    <frame tileid="444" duration="200"/>
+                    <frame tileid="445" duration="200"/>
+                    <frame tileid="446" duration="200"/>
+                   </animation>
+                  </tile>
+                 </tileset>
 
-            String template = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                    + "<map version=\"1.0\" orientation=\"orthogonal\" width=\"%s\" height=\"%s\" tilewidth=\"%s\" tileheight=\"%s\" backgroundcolor=\"#000000\">\n"
-                    + "<tileset firstgid=\"1\" name=\"%s\" tilewidth=\"%s\" tileheight=\"%s\">\n"
-                    + "<image source=\"%s\" width=\"%s\" height=\"%s\"/>\n</tileset>\n"
-                    + "<layer name=\"Map Layer\" width=\"%s\" height=\"%s\">\n"
-                    + "<data encoding=\"csv\">\n%s\n</data>\n</layer>\n"
-                    + "<layer name=\"Portal Layer\" width=\"%s\" height=\"%s\">\n"
-                    + "<data encoding=\"csv\">\n%s\n</data>\n</layer>\n"
-                    + "<layer name=\"Moongate Layer\" width=\"%s\" height=\"%s\">\n"
-                    + "<data encoding=\"csv\">\n%s\n</data>\n</layer>\n"
-                    + "<objectgroup name=\"Portal Properties\" width=\"%s\" height=\"%s\">\n%s\n</objectgroup>\n"
-                    + "<objectgroup name=\"Moongate Properties\" width=\"%s\" height=\"%s\">\n%s\n</objectgroup>\n"
-                    + "<objectgroup name=\"Label Properties\" width=\"%s\" height=\"%s\">\n%s\n</objectgroup>\n"
-                    + "</map>";
+                <layer name="lava" width="64" height="64">
+                <data encoding="csv">
+                %s
+                </data>
+                </layer>
+
+                <layer name="grass" width="64" height="64">
+                <data encoding="csv">
+                %s
+                </data>
+                </layer>
+
+                <layer name="water" width="64" height="64">
+                <data encoding="csv">
+                %s
+                </data>
+                </layer>
+
+                <layer name="meadow" width="64" height="64">
+                <data encoding="csv">
+                %s
+                </data>
+                </layer>
+
+                <layer name="forest" width="64" height="64">
+                <data encoding="csv">
+                %s
+                </data>
+                </layer>
+
+                <layer name="mountains" width="64" height="64">
+                <data encoding="csv">
+                %s
+                </data>
+                </layer>
+
+                <layer name="props" width="64" height="64">
+                <data encoding="csv">
+                %s
+                </data>
+                </layer>
+
+                <objectgroup name="portals" width="64" height="64">
+                %s
+                </objectgroup>
+
+                <objectgroup name="moongates" width="64" height="64">
+                %s
+                </objectgroup>
+                              
+                </map>""";
 
             return String.format(template,
-                    mapWidth, mapHeight, tileWidth, tileHeight,
-                    tilesetName, tileWidth, tileHeight,
-                    imageSource, 768, 768,
-                    mapWidth, mapHeight, dataLayer,
-                    mapWidth, mapHeight, portalLayer,
-                    mapWidth, mapHeight, moongateLayer,
-                    mapWidth, mapHeight, portalString.toString(),
-                    mapWidth, mapHeight, moongateString.toString(),
-                    mapWidth, mapHeight, labelString.toString()
+                    lava, grass, water, meadow, forest, mountains, props,
+                    portalString.toString(),
+                    moongateString.toString()
             );
 
         }
