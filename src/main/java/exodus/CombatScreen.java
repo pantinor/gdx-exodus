@@ -399,7 +399,7 @@ public class CombatScreen extends BaseScreen {
             }
 
             finishPlayerTurn();
-            
+
         } catch (PartyDeathException e) {
             this.returnScreen.partyDeath();
         }
@@ -554,7 +554,7 @@ public class CombatScreen extends BaseScreen {
     public InputProcessor getPeerGemInputProcessor() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     private void negateTime() {
         //find first party member which has powder
         for (PartyMember pm : context.getParty().getMembers()) {
@@ -566,6 +566,16 @@ public class CombatScreen extends BaseScreen {
             }
         }
         log("None!");
+    }
+
+    @Override
+    public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(float amountX, float amountY) {
+        return false;
     }
 
     public class CreatureActionsAction implements Runnable {
@@ -640,7 +650,7 @@ public class CombatScreen extends BaseScreen {
         if (defender == null) {
             return false;
         }
-        
+
         AttackResult res = (this.contextMap == Maps.EXODUS && defender.getPlayer().armor != ArmorType.EXOTIC ? AttackResult.HIT : Utils.attackHit(attacker, defender));
 
         TileEffect effect = TileEffect.NONE;
@@ -758,7 +768,7 @@ public class CombatScreen extends BaseScreen {
         switch (action) {
             case ATTACK: {
                 Sounds.play(Sound.NPC_ATTACK);
-                
+
                 AttackResult res = (this.contextMap == Maps.EXODUS && target.getPlayer().armor != ArmorType.EXOTIC ? AttackResult.HIT : Utils.attackHit(creature, target));
 
                 if (res == AttackResult.HIT) {
@@ -906,10 +916,12 @@ public class CombatScreen extends BaseScreen {
         /* ok, now we've got the nearest party member.  Now, see if they're close enough */
         if (nearestPartyMember(cr.currentX, cr.currentY, dist, false) != null) {
             if ((dist.getVal() < 5) && !cr.getVisible()) {
-                cr.setVisible(true); /* show yourself */
+                cr.setVisible(true);
+                /* show yourself */
 
             } else if (dist.getVal() >= 5) {
-                cr.setVisible(false); /* hide and take no action! */
+                cr.setVisible(false);
+                /* hide and take no action! */
 
             }
         }

@@ -147,11 +147,6 @@ public abstract class BaseScreen implements Screen, InputProcessor, Constants {
     }
 
     @Override
-    public boolean scrolled(int amount) {
-        return false;
-    }
-
-    @Override
     public void show() {
     }
 

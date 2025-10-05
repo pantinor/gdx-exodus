@@ -248,15 +248,15 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
         float[][] lightMap = fov.lightMap();
 
         if (!(cx >= 0 && cx < lightMap.length && cy >= 0 && cy < lightMap[0].length)) {
-            return Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, 1f);
+            return Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, 1);
         }
 
         float val = lightMap[cx][cy];
 
         if (val <= 0) {
-            return Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, 0); //make it all black
+            return Color.BLACK.toFloatBits();
         } else {
-            return Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, val);
+            return Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, 1);
         }
 
     }

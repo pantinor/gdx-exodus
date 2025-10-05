@@ -70,11 +70,11 @@ public class ShrineScreen extends BaseScreen {
                 delay(.8f, moveTo(v3.x, v3.y, .1f)),
                 delay(.8f, moveTo(v4.x, v4.y, .1f)),
                 delay(.8f, moveTo(v5.x, v5.y, .1f)), new Action() {
-                    public boolean act(float delta) {
-                        log("Who will meditate?");
-                        return true;
-                    }
-                }
+            public boolean act(float delta) {
+                log("Who will meditate?");
+                return true;
+            }
+        }
         ));
 
         batch = new SpriteBatch();
@@ -145,6 +145,16 @@ public class ShrineScreen extends BaseScreen {
         return null;
     }
 
+    @Override
+    public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(float amountX, float amountY) {
+        return false;
+    }
+
     class AvatarActor extends Actor {
 
         TextureRegion texture;
@@ -179,7 +189,7 @@ public class ShrineScreen extends BaseScreen {
                     return false;
                 }
                 CharacterRecord c = party.getMember(playerIndex).getPlayer();
-                log(String.format("%s: Offering * 100?",c.name));
+                log(String.format("%s: Offering * 100?", c.name));
                 Gdx.input.setInputProcessor(new ShrineInputAdapter());
             }
             return false;
@@ -194,7 +204,7 @@ public class ShrineScreen extends BaseScreen {
 
                 CharacterRecord c = party.getMember(playerIndex).getPlayer();
                 int amt = (keycode - 7);
-                
+
                 if (c.gold < amt * 100) {
                     log("You cannot cheat the gods!");
                     Exodus.mainGame.setScreen(returnScreen);
@@ -204,10 +214,10 @@ public class ShrineScreen extends BaseScreen {
                     Exodus.mainGame.setScreen(returnScreen);
                     return false;
                 }
-                
+
                 log("Shazam!");
                 Sounds.play(Sound.DIVINE_INTERVENTION);
-                
+
                 c.adjustGold(amt * 100);
 
                 switch (map) {
@@ -240,7 +250,7 @@ public class ShrineScreen extends BaseScreen {
 
                 Exodus.mainGame.setScreen(returnScreen);
             }
-            
+
             return false;
         }
     }

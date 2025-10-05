@@ -1,12 +1,68 @@
 {
-com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
-    default: { imageUp:right-up, imageDown:right-down, imageOver:right-up, imageChecked:right-up, imageCheckedOver:right-up, imageDisabled:right-disabled },
-    right: { imageUp:right-up, imageDown:right-down, imageOver:right-up, imageChecked:right-up, imageCheckedOver:right-up, imageDisabled:right-disabled },
-    left: { imageUp:left-up, imageDown:left-down, imageOver:left-up, imageChecked:left-up, imageCheckedOver:left-up, imageDisabled:left-disabled },
-    up: { imageUp:up-up, imageDown:up-down, imageOver:up-up, imageChecked:up-up, imageCheckedOver:up-up, imageDisabled:up-disabled },
-    down: { imageUp:down-up, imageDown:down-down, imageOver:down-up, imageChecked:down-up, imageCheckedOver:down-up, imageDisabled:down-disabled },
-    clear: { imageUp:x-up, imageDown:x-down, imageOver:x-up, imageChecked:x-up, imageCheckedOver:x-up, imageDisabled:x-disabled },
-    sm-arr-left: { imageUp:left-arrow-up, imageDown:left-arrow-down, imageOver:left-arrow-up, imageChecked:left-arrow-up, imageCheckedOver:left-arrow-up, imageDisabled:left-arrow-disabled },
-    sm-arr-right: { imageUp:right-arrow-up, imageDown:right-arrow-down, imageOver:right-arrow-up, imageChecked:right-arrow-up, imageCheckedOver:right-arrow-up, imageDisabled:right-arrow-disabled }
-}
+    "com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle": {
+        "default": {
+            "imageUp": "right-up",
+            "imageDown": "right-down",
+            "imageOver": "right-up",
+            "imageChecked": "right-up",
+            "imageCheckedOver": "right-up",
+            "imageDisabled": "right-disabled"
+        },
+        "right": {
+            "imageUp": "right-up",
+            "imageDown": "right-down",
+            "imageOver": "right-up",
+            "imageChecked": "right-up",
+            "imageCheckedOver": "right-up",
+            "imageDisabled": "right-disabled"
+        },
+        "left": {
+            "imageUp": "left-up",
+            "imageDown": "left-down",
+            "imageOver": "left-up",
+            "imageChecked": "left-up",
+            "imageCheckedOver": "left-up",
+            "imageDisabled": "left-disabled"
+        },
+        "up": {
+            "imageUp": "up-up",
+            "imageDown": "up-down",
+            "imageOver": "up-up",
+            "imageChecked": "up-up",
+            "imageCheckedOver": "up-up",
+            "imageDisabled": "up-disabled"
+        },
+        "down": {
+            "imageUp": "down-up",
+            "imageDown": "down-down",
+            "imageOver": "down-up",
+            "imageChecked": "down-up",
+            "imageCheckedOver": "down-up",
+            "imageDisabled": "down-disabled"
+        },
+        "clear": {
+            "imageUp": "x-up",
+            "imageDown": "x-down",
+            "imageOver": "x-up",
+            "imageChecked": "x-up",
+            "imageCheckedOver": "x-up",
+            "imageDisabled": "x-disabled"
+        },
+        "sm-arr-left": {
+            "imageUp": "left-arrow-up",
+            "imageDown": "left-arrow-down",
+            "imageOver": "left-arrow-up",
+            "imageChecked": "left-arrow-up",
+            "imageCheckedOver": "left-arrow-up",
+            "imageDisabled": "left-arrow-disabled"
+        },
+        "sm-arr-right": {
+            "imageUp": "right-arrow-up",
+            "imageDown": "right-arrow-down",
+            "imageOver": "right-arrow-up",
+            "imageChecked": "right-arrow-up",
+            "imageCheckedOver": "right-arrow-up",
+            "imageDisabled": "right-arrow-disabled"
+        }
+    }
 }

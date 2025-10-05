@@ -168,7 +168,7 @@ public class BookScreen extends InputAdapter implements Screen, Constants {
                 }
             }
             labels.add(new Label(sb.toString().trim(), labs));
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
