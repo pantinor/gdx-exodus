@@ -991,11 +991,20 @@ public class DungeonScreen extends BaseScreen {
 
         } else if (keycode == Keys.I) {
 
-            for (Party.PartyMember pm : context.getParty().getMembers()) {
-                if (pm.getPlayer().torches > 0) {
-                    pm.getPlayer().torches--;
-                    isTorchOn = !isTorchOn;
-                    break;
+            if (isTorchOn) {
+                isTorchOn = false;
+            } else {
+                boolean foundTorch = false;
+                for (Party.PartyMember pm : context.getParty().getMembers()) {
+                    if (pm.getPlayer().torches > 0) {
+                        pm.getPlayer().torches--;
+                        isTorchOn = true;
+                        foundTorch = true;
+                        break;
+                    }
+                }
+                if (!foundTorch) {
+                    log("No Torches!");
                 }
             }
 
