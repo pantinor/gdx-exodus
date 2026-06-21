@@ -1,13 +1,19 @@
 gdx-exodus
 =========
 
-An java port of Ultima III Exodus using LibGDX framework.
+A java port of Ultima III Exodus using LibGDX framework.
 
 ## To Journey Onward
 
 This is a Maven-based Java project.
 It can run directly in your IDE (I use Netbeans) as a maven project, 
 or from the command line requiring Apache Maven and latest Java (JDK) installed.
+
+Build and run with these CLI commands:
+```
+mvn clean install
+java -jar ./target/gdx-exodus-1.0.1-jar-with-dependencies.jar
+```
 
 ![screenshot of the example](https://raw.github.com/pantinor/gdx-exodus/master/shot1.png)
 
