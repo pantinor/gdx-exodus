@@ -79,7 +79,7 @@ public class GameScreen extends BaseScreen {
     public GameTimer gameTimer = new GameTimer();
     public ExplosionsTimer explosionsTimer = new ExplosionsTimer();
 
-    private static final float FOV_RADIUS = 20f;
+    private static final float FOV_RADIUS = 5f;
 
     public GameScreen() {
 
@@ -497,19 +497,6 @@ public class GameScreen extends BaseScreen {
                 Exodus.MAP_HEIGHT);
 
         renderer.render();
-
-        mapBatch.begin();
-
-        if (context.getCurrentMap().getMoongates() != null) {
-            for (Moongate g : context.getCurrentMap().getMoongates()) {
-                TextureRegion t = g.getCurrentTexture();
-                if (t != null) {
-                    Vector3 v = getMapPixelCoords(g.getX(), g.getY());
-                    mapBatch.draw(t, v.x, v.y);
-                }
-            }
-        }
-        mapBatch.end();
 
         batch.begin();
 

@@ -42,6 +42,7 @@ import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import exodus.Context;
 import objects.Drawable;
+import objects.Moongate;
 
 public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constants {
 
@@ -203,7 +204,11 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
                 if (p == null || p.isRemovedFromMap()) {
                     continue;
                 }
-                float color = getColor(layer, (int) p.getCurrentPos().x, (int) p.getCurrentPos().y);
+
+                int tileX = (int) (p.getCurrentPos().x / layerTileWidth);
+                int tileY = layerHeight - 1 - (int) (p.getCurrentPos().y / layerTileHeight);
+                float color = getColor(layer, tileX, tileY);
+
                 if (p.getAnim() != null) {
                     draw(p.getAnim().getKeyFrame(stateTime, true), p.getCurrentPos().x, p.getCurrentPos().y, color);
                 } else {
@@ -214,12 +219,12 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
         }
 
         List<Creature> crs = bm.getCreatures();
-        if (crs.size() > 0) {
+        if (!crs.isEmpty()) {
             for (Creature cr : crs) {
                 if (cr.currentPos == null || !cr.getVisible()) {
                     continue;
                 }
-                float color = getColor(layer, (int) cr.currentPos.x, (int) cr.currentPos.y);
+                float color = getColor(layer, cr.currentX, cr.currentY);
                 if (cr.getTile() == CreatureType.pirate_ship) {
                     TextureRegion tr = cr.getAnim().getKeyFrames()[cr.sailDir.getVal() - 1];
                     draw(tr, cr.currentPos.x, cr.currentPos.y, color);
@@ -231,8 +236,26 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
         }
 
         for (Drawable dr : bm.getObjects()) {
-            float color = getColor(layer, (int) dr.getX(), (int) dr.getY());
+            float color = getColor(layer, dr.getCx(), dr.getCy());
             draw(dr.getTexture(), dr.getX(), dr.getY(), color);
+        }
+
+        if (context.getCurrentMap().getMoongates() != null) {
+            int mapPixelHeight = layer.getHeight() * tilePixelHeight;
+
+            for (Moongate g : context.getCurrentMap().getMoongates()) {
+                TextureRegion texture = g.getCurrentTexture();
+
+                if (texture == null) {
+                    continue;
+                }
+
+                float color = getColor(layer, g.getX(), g.getY());
+                float px = g.getX() * tilePixelWidth;
+                float py = mapPixelHeight - g.getY() * tilePixelHeight - tilePixelHeight;
+
+                draw(texture, px, py, color);
+            }
         }
     }
 

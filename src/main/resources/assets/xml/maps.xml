@@ -1,6 +1,6 @@
 <maps>
     
-    <map id="0" type="world" fname="map_0_sosaria_large.tmx" width="256" height="256" levels="1" borderbehavior="wrap" music="OUTSIDE">
+    <map id="0" type="world" fname="sosaria.ult" width="64" height="64" levels="1" borderbehavior="wrap" music="OUTSIDE">
         <portal x="45" y="18" destmapid="1" startx="32" starty="61" />
         <portal x="10" y="53" destmapid="2" startx="32" starty="62" />
         <portal x="46" y="19" destmapid="3" startx="2" starty="32" />
@@ -13,7 +13,7 @@
         <portal x="37" y="53" destmapid="11" startx="2" starty="32" />
         <portal x="56" y="31" destmapid="10" startx="5" starty="32" />
         <portal x="30" y="2" destmapid="12" startx="2" starty="32" />
-		
+
         <portal x="56" y="6" destmapid="14" startx="32" starty="62" />
         <portal x="46" y="7" destmapid="15" startx="32" starty="62" />
         <portal x="9" y="28" destmapid="16" startx="32" starty="62" />
@@ -30,7 +30,7 @@
         <moongate name="gibbouswan" phase="5" x="12" y="55" d1="7" d2="0" d3="1" />
         <moongate name="lastquarter" phase="6" x="31" y="31" d1="2" d2="3" d3="4" />
         <moongate name="crescentwan" phase="7" x="58" y="31" d1="5" d2="6" d3="7" />
-	
+
         <label name="EXOTIC_ARMOR" x="79" y="176" />
         <label name="EXOTIC_WEAPON" x="134" y="14" />
 
