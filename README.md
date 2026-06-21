@@ -1,15 +1,13 @@
 gdx-exodus
 =========
 
-An AMAZING port of Ultima III Exodus using LIBGDX, with a few updates...
+An java port of Ultima III Exodus using LibGDX framework.
 
-* Sosaria is 256x256 instead of 64x64
-* One of the wizard light/torch spells is swapped out with a different more useful spell.
-* A few more monsters
+## To Journey Onward
 
-This is a maven project..and it runs as it should, on a PEESEE.
-
-To journey onward, download the zip file, extract, and run the "java -jar command" and have fun!
+This is a Maven-based Java project.
+It can run directly in your IDE (I use Netbeans) as a maven project, 
+or from the command line requiring Apache Maven and latest Java (JDK) installed.
 
 ![screenshot of the example](https://raw.github.com/pantinor/gdx-exodus/master/shot1.png)
 
