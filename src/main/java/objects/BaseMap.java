@@ -5,12 +5,10 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
 import exodus.Constants;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
@@ -394,12 +392,7 @@ public class BaseMap implements Constants {
                 p.setX(p.getStart_x());
                 p.setY(p.getStart_y());
 
-                CreatureType ct = CreatureType.get(tname);
-                if (ct != null) {
-                    p.setEmulatingCreature(ct.getCreature());
-                } else {
-                    System.err.printf("%s - ct is null %s\n", p, tname);
-                }
+                p.setEmulatingCreature(tname);
 
             }
 
@@ -431,6 +424,8 @@ public class BaseMap implements Constants {
                     continue;
                 }
 
+                Creature cr = Exodus.creatures.getInstance(p.getEmulatingCreature(), Exodus.standardAtlas);
+
                 Vector3 pos = null;
                 Vector3 pixelPos = null;
                 Direction dir = null;
@@ -439,21 +434,20 @@ public class BaseMap implements Constants {
                     case ATTACK_AVATAR: {
                         int dist = Utils.movementDistance(borderbehavior, width, height, p.getX(), p.getY(), avatarX, avatarY);
                         if (dist <= 1) {
-                            Maps cm = screen.context.getCombatMap(p.getEmulatingCreature(), this, p.getX(), p.getY(), avatarX, avatarY);
-                            Creature attacker = Exodus.creatures.getInstance(p.getEmulatingCreature().getTile(), Exodus.standardAtlas);
-                            attacker.currentX = p.getX();
-                            attacker.currentY = p.getY();
-                            attacker.currentPos = screen.getMapPixelCoords(p.getX(), p.getY());
-                            screen.attackAt(cm, attacker);
+                            Maps cm = screen.context.getCombatMap(cr, this, p.getX(), p.getY(), avatarX, avatarY);
+                            cr.currentX = p.getX();
+                            cr.currentY = p.getY();
+                            cr.currentPos = screen.getMapPixelCoords(p.getX(), p.getY());
+                            screen.attackAt(cm, cr);
                             p.setRemovedFromMap(true);
                             continue;
                         }
-                        int mask = getValidMovesMask(screen.context, p.getX(), p.getY(), p.getEmulatingCreature(), avatarX, avatarY);
+                        int mask = getValidMovesMask(screen.context, p.getX(), p.getY(), cr, avatarX, avatarY);
                         dir = Utils.getPath(borderbehavior, width, height, avatarX, avatarY, mask, true, p.getX(), p.getY());
                     }
                     break;
                     case FOLLOW_AVATAR: {
-                        int mask = getValidMovesMask(screen.context, p.getX(), p.getY(), p.getEmulatingCreature(), avatarX, avatarY);
+                        int mask = getValidMovesMask(screen.context, p.getX(), p.getY(), cr, avatarX, avatarY);
                         dir = Utils.getPath(borderbehavior, width, height, avatarX, avatarY, mask, true, p.getX(), p.getY());
                     }
                     break;
@@ -466,7 +460,7 @@ public class BaseMap implements Constants {
                         if (p.isTalking()) {
                             continue;
                         }
-                        dir = Direction.getRandomValidDirection(getValidMovesMask(screen.context, p.getX(), p.getY(), p.getEmulatingCreature(), avatarX, avatarY));
+                        dir = Direction.getRandomValidDirection(getValidMovesMask(screen.context, p.getX(), p.getY(), cr, avatarX, avatarY));
                     }
                     break;
                     default:
@@ -504,12 +498,12 @@ public class BaseMap implements Constants {
             Creature cr = i.next();
 
             int dist = Utils.movementDistance(borderbehavior, width, height, cr.currentX, cr.currentY, avatarX, avatarY);
-            if (dist > MAX_CREATURE_DISTANCE && cr.getTile() != CreatureType.whirlpool) {
+            if (dist > MAX_CREATURE_DISTANCE && !"whirlpool".equals(cr.getTile())) {
                 i.remove();
                 continue;
             }
 
-            if (cr.getTile() == CreatureType.pirate_ship) {
+            if ("pirate".equals(cr.getTile())) {
                 int relDirMask = Utils.getRelativeDirection(borderbehavior, width, height, avatarX, avatarY, cr.currentX, cr.currentY);
                 if (avatarX == cr.currentX) {
                     relDirMask = Direction.removeFromMask(relDirMask, Direction.EAST, Direction.WEST);
@@ -541,7 +535,7 @@ public class BaseMap implements Constants {
             } else if (dist <= 1) {
 
                 if (cr.getWontattack()) {
-                    if (cr.getTile() == CreatureType.whirlpool) {
+                    if ("whirlpool".equals(cr.getTile())) {
                         Sounds.play(Sound.WAVE);
                         Exodus.hud.add("A huge swirling Whirlpool engulfs you and your ship dragging both to a watery grave!");
                         Exodus.hud.add("As the water enters your lungs you pass into Darkness!");
@@ -551,11 +545,6 @@ public class BaseMap implements Constants {
                         GameScreen.mainAvatar = GameScreen.avatarAnim;
                         screen.loadNextMap(Maps.AMBROSIA, 32, 54);
                         break;
-                    } else if (cr.getTile() == CreatureType.twister) {
-                        if (screen.context.getTransport() == Transport.SHIP) {
-                            screen.context.damageShip(10, 30);
-                        }
-                        continue;
                     }
                 } else {
                     Maps cm = screen.context.getCombatMap(cr, this, cr.currentX, cr.currentY, avatarX, avatarY);
@@ -576,7 +565,7 @@ public class BaseMap implements Constants {
                 continue;
             }
 
-            if (cr.getTile() == CreatureType.pirate_ship) {
+            if ("pirate".equals(cr.getTile())) {
                 if (cr.sailDir != dir) {
                     cr.sailDir = dir;
                     continue;
@@ -674,117 +663,135 @@ public class BaseMap implements Constants {
     }
 
     private int addToMask(Context context, Direction dir, int mask, Tile tile, int x, int y, Creature cr, int avatarX, int avatarY) {
-        if (tile != null) {
-
-            TileRule rule = tile.getRule();
-            boolean canmove = false;
-            if (rule != null) {
-                if (cr != null) {
-                    if (cr.getSails() && rule.has(TileAttrib.sailable)) {
-                        canmove = true;
-                    } else if (cr.getSails() && !rule.has(TileAttrib.unwalkable)) {
-                        canmove = false;
-                    } else if (cr.getSwims() && rule.has(TileAttrib.swimmable)) {
-                        canmove = true;
-                    } else if (cr.getSwims() && !rule.has(TileAttrib.unwalkable)) {
-                        canmove = false;
-                    } else if (cr.getFlies() && !rule.has(TileAttrib.unflyable)) {
-                        canmove = true;
-                    } else if (rule.has(TileAttrib.creatureunwalkable)) {
-                        canmove = false;
-                    } else if (cr.getIncorporeal() || !rule.has(TileAttrib.unwalkable)) {
-                        canmove = true;
-                    }
-                } else {
-                    Transport tc = context.getTransport();
-                    if (tc == Transport.SHIP && this.type != MapType.combat) {
-                        if (rule.has(TileAttrib.sailable)) {
-                            canmove = true;
-                            if (rule.has(TileAttrib.snake)) {
-                                canmove = false;
-                            }
-                        } else {
-                            canmove = false;
-                        }
-                    } else if (tc == Transport.HORSE && this.type != MapType.combat) {
-                        if (!rule.has(TileAttrib.creatureunwalkable) && !rule.has(TileAttrib.unwalkable)) {
-                            canmove = true;
-                        } else {
-                            canmove = false;
-                        }
-                    } else {
-                        if (rule.has(TileAttrib.dispelable)) {
-                            canmove = true;
-                            for (PartyMember pm : context.getParty().getMembers()) {
-                                if (pm.getPlayer().marks[3] == 0) {
-                                    canmove = false;
-                                }
-                            }
-                        } else if (!rule.has(TileAttrib.unwalkable) || rule == TileRule.ship || rule.has(TileAttrib.chest) || rule == TileRule.horse) {
-                            canmove = true;
-                        }
-                        for (Drawable dr : this.objects) {
-                            if (dr.getTile() != null && dr.getTile().getRule() == TileRule.ship && dr.getCx() == x && dr.getCy() == y) {
-                                canmove = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-            } else {
-                canmove = false;
-            }
-
-            //NPCs cannot go thru the secret doors or walk where the avatar is
-            if (cr != null) {
-                if ((tile.getIndex() == 73 && !cr.getIncorporeal()) || (avatarX == x && avatarY == y && !cr.getCanMoveOntoAvatar())) {
-                    canmove = false;
-                }
-            }
-
-            //see if another person is there
-            if (people != null) {
-                for (Person p : people) {
-                    if (p == null || p.isRemovedFromMap()) {
-                        continue;
-                    }
-                    if (p.getX() == x && p.getY() == y && !p.getEmulatingCreature().getIsWalkableOver()) {
-                        canmove = false;
-                        break;
-                    }
-                }
-            }
-
-            for (Creature cre : creatures) {
-                if (cre.currentX == x && cre.currentY == y) {
-                    canmove = false;
-                    break;
-                }
-            }
-
-            if (combatPlayers != null) {
-                for (PartyMember p : combatPlayers) {
-                    if (p.combatCr == null || p.fled) {
-                        continue;
-                    }
-                    if (p.combatCr.currentX == x && p.combatCr.currentY == y) {
-                        canmove = false;
-                        break;
-                    }
-                }
-            }
-
-            if (rule == null || canmove || isDoorOpen(x, y)) {
-                mask = Direction.addToMask(dir, mask);
-            }
-        } else {
-            //if the tile is not on the map then it is OOB, 
-            //so add this direction anyway so that monster flee operations work.
+        if (tile == null) {
+            // If the tile is not on the map then it is OOB, so add this direction
+            // anyway for monster flee operations.
             if (cr != null && cr.getDamageStatus() == CreatureStatus.FLEEING) {
-                mask = Direction.addToMask(dir, mask);
+                return Direction.addToMask(dir, mask);
             }
+            return mask;
+        }
+
+        TileRule rule = tile.getRule();
+        boolean canmove = false;
+        if (rule != null) {
+            canmove = cr != null
+                    ? canCreatureMoveOn(rule, cr)
+                    : canAvatarMoveOn(context, rule, x, y);
+        }
+
+        if (cr != null && isBlockedForCreature(tile, cr, x, y, avatarX, avatarY)) {
+            canmove = false;
+        }
+
+        if (hasBlockingPersonAt(x, y) || hasBlockingCreatureAt(x, y) || hasBlockingCombatPlayerAt(x, y)) {
+            canmove = false;
+        }
+
+        if (rule == null || canmove || isDoorOpen(x, y)) {
+            mask = Direction.addToMask(dir, mask);
         }
         return mask;
+    }
+
+    private boolean canCreatureMoveOn(TileRule rule, Creature cr) {
+        if (cr.getSails()) {
+            return rule.has(TileAttrib.sailable);
+        }
+        if (cr.getSwims()) {
+            return rule.has(TileAttrib.swimmable);
+        }
+        if (cr.getFlies()) {
+            return !rule.has(TileAttrib.unflyable);
+        }
+        if (type == MapType.combat && rule == TileRule.ship) {
+            return true;
+        }
+        if (rule.has(TileAttrib.creatureunwalkable)) {
+            return false;
+        }
+        return cr.getIncorporeal() || !rule.has(TileAttrib.unwalkable);
+    }
+
+    private boolean canAvatarMoveOn(Context context, TileRule rule, int x, int y) {
+        Transport transport = context.getTransport();
+        if (transport == Transport.SHIP && type != MapType.combat) {
+            return rule.has(TileAttrib.sailable) && !rule.has(TileAttrib.snake);
+        }
+        if (transport == Transport.HORSE && type != MapType.combat) {
+            return !rule.has(TileAttrib.creatureunwalkable) && !rule.has(TileAttrib.unwalkable);
+        }
+        if (rule.has(TileAttrib.dispelable)) {
+            return partyHasMarkOfForce(context);
+        }
+        return !rule.has(TileAttrib.unwalkable)
+                || rule == TileRule.ship
+                || rule.has(TileAttrib.chest)
+                || rule == TileRule.horse
+                || hasShipObjectAt(x, y);
+    }
+
+    private boolean partyHasMarkOfForce(Context context) {
+        for (PartyMember pm : context.getParty().getMembers()) {
+            if (pm.getPlayer().marks[3] == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isBlockedForCreature(Tile tile, Creature cr, int x, int y, int avatarX, int avatarY) {
+        return (tile.getIndex() == 73 && !cr.getIncorporeal())
+                || (avatarX == x && avatarY == y && !cr.getCanMoveOntoAvatar());
+    }
+
+    private boolean hasBlockingPersonAt(int x, int y) {
+        if (people == null) {
+            return false;
+        }
+        for (Person p : people) {
+            if (p == null || p.isRemovedFromMap()) {
+                continue;
+            }
+            Creature other = Exodus.creatures.getInstance(p.getEmulatingCreature(), Exodus.standardAtlas);
+            if (p.getX() == x && p.getY() == y && !other.getIsWalkableOver()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasBlockingCreatureAt(int x, int y) {
+        for (Creature cre : creatures) {
+            if (cre.currentX == x && cre.currentY == y) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasBlockingCombatPlayerAt(int x, int y) {
+        if (combatPlayers == null) {
+            return false;
+        }
+        for (PartyMember p : combatPlayers) {
+            if (p.combatCr == null || p.fled) {
+                continue;
+            }
+            if (p.combatCr.currentX == x && p.combatCr.currentY == y) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasShipObjectAt(int x, int y) {
+        for (Drawable dr : objects) {
+            if (dr.getTile() != null && dr.getTile().getRule() == TileRule.ship && dr.getCx() == x && dr.getCy() == y) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public DoorStatus getDoor(int x, int y) {
@@ -951,7 +958,7 @@ public class BaseMap implements Constants {
             for (int x = 0; x < getWidth(); x++) {
                 Tile tile = getTile(x, y);
                 if (tile != null) {
-                    if (tile.getName().equals("ship")) {
+                    if (tile.getName().equals("frigate")) {
                         addObject(tile, x, y);
                     } else if (tile.getName().equals("chest")) {
                         addObject(tile, x, y);
@@ -964,15 +971,15 @@ public class BaseMap implements Constants {
 
     public Drawable addObject(Tile tile, int x, int y) {
         Drawable dr = new Drawable(this, x, y, tile, Exodus.standardAtlas);
-        Vector3 v = new Vector3(x * tilePixelWidth, getHeight() * tilePixelHeight - y * tilePixelHeight - tilePixelHeight, 0);
+        Vector3 v = new Vector3(x * SCALED_DIM, getHeight() * SCALED_DIM - y * SCALED_DIM - SCALED_DIM, 0);
         dr.setX(v.x);
         dr.setY(v.y);
         switch (tile.getName()) {
-            case "ship":
+            case "frigate":
                 setTile(Exodus.baseTileSet.getTileByName("water"), x, y);
                 break;
             case "chest":
-                String t = (this.id == Maps.SOSARIA.getId() ? "grass" : "brick_floor");
+                String t = (this.id == Maps.SOSARIA.getId() ? "grass" : "floor");
                 setTile(Exodus.baseTileSet.getTileByName(t), x, y);
                 break;
         }

@@ -358,7 +358,7 @@ public class SpellUtil implements Constants {
         for (Creature cr : combatScreen.combatMap.getCreatures()) {
 
             Utils.dealDamage(caster, cr, Utils.getRandomBetween(minDamage, maxDamage));
-            Tile tile = Exodus.baseTileSet.getTileByName("hit_flash");
+            Tile tile = Exodus.baseTileSet.getTileByName("fire");
             Drawable d = new Drawable(combatScreen.combatMap, cr.currentX, cr.currentY, tile, Exodus.standardAtlas);
             d.setX(cr.currentPos.x);
             d.setY(cr.currentPos.y);
@@ -407,7 +407,7 @@ public class SpellUtil implements Constants {
             }
 
             if (cr.getUndead() && turn) {
-                Tile tile = Exodus.baseTileSet.getTileByName("hit_flash");
+                Tile tile = Exodus.baseTileSet.getTileByName("fire");
                 Drawable d = new Drawable(combatScreen.combatMap, cr.currentX, cr.currentY, tile, Exodus.standardAtlas);
                 d.setX(cr.currentPos.x);
                 d.setY(cr.currentPos.y);
@@ -459,9 +459,9 @@ public class SpellUtil implements Constants {
                 turn = true;
             }
 
-            if (turn && (cr.getTile() == CreatureType.troll || cr.getTile() == CreatureType.orc || cr.getTile() == CreatureType.gremlin)) {
+            if (turn && "orc".equals(cr.getTile())) {
 
-                Tile tile = Exodus.baseTileSet.getTileByName("hit_flash");
+                Tile tile = Exodus.baseTileSet.getTileByName("fire");
                 Drawable d = new Drawable(combatScreen.combatMap, cr.currentX, cr.currentY, tile, Exodus.standardAtlas);
                 d.setX(cr.currentPos.x);
                 d.setY(cr.currentPos.y);
@@ -479,7 +479,7 @@ public class SpellUtil implements Constants {
             }
 
         }
-        
+
         seq.addAction(Actions.run(new Runnable() {
             @Override
             public void run() {
@@ -620,7 +620,7 @@ public class SpellUtil implements Constants {
 
                 Utils.dealDamage(caster, cr, 255);
 
-                Tile tile = Exodus.baseTileSet.getTileByName("hit_flash");
+                Tile tile = Exodus.baseTileSet.getTileByName("fire");
                 Drawable d = new Drawable(screen.context.getCurrentMap(), cr.currentX, cr.currentY, tile, Exodus.standardAtlas);
                 d.setX(cr.currentPos.x);
                 d.setY(cr.currentPos.y);
@@ -675,14 +675,14 @@ public class SpellUtil implements Constants {
             }
 
         }
-        
+
         seq.addAction(Actions.run(new Runnable() {
             @Override
             public void run() {
                 combatScreen.finishPlayerTurn();
             }
         }));
-        
+
         combatScreen.getStage().addAction(seq);
 
     }
@@ -726,7 +726,7 @@ public class SpellUtil implements Constants {
                 combatScreen.finishPlayerTurn();
             }
         }));
-        
+
         combatScreen.getStage().addAction(seq);
 
     }

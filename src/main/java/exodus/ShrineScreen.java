@@ -3,7 +3,6 @@ package exodus;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.delay;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
@@ -43,12 +42,12 @@ public class ShrineScreen extends BaseScreen {
         this.returnScreen = returnScreen;
         this.party = party;
 
-        renderer = new OrthogonalTiledMapRenderer(tmap, 1f);
+        renderer = new OrthogonalTiledMapRenderer(tmap, 2f);
 
         MapProperties prop = tmap.getProperties();
-        mapPixelHeight = prop.get("height", Integer.class) * tilePixelWidth;
+        mapPixelHeight = prop.get("height", Integer.class) * SCALED_DIM;
 
-        camera = new OrthographicCamera(11 * tilePixelWidth, 11 * tilePixelHeight);
+        camera = new OrthographicCamera(11 * SCALED_DIM, 11 * SCALED_DIM);
 
         mapViewPort = new ScreenViewport(camera);
 
@@ -101,15 +100,16 @@ public class ShrineScreen extends BaseScreen {
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        camera.position.set(newMapPixelCoords.x + 5 * tilePixelWidth, newMapPixelCoords.y, 0);
+        this.camera.position.x = newMapPixelCoords.x + SCALED_DIM * 5;
+        this.camera.position.y = newMapPixelCoords.y + SCALED_DIM * 0;
 
         camera.update();
 
-        renderer.setView(camera.combined,
-                camera.position.x - tilePixelWidth * 10, //this is voodoo
-                camera.position.y - tilePixelHeight * 10,
-                Exodus.MAP_WIDTH,
-                Exodus.MAP_HEIGHT);
+        this.renderer.setView(camera.combined,
+                camera.position.x - SCALED_DIM * 15,
+                camera.position.y - SCALED_DIM * 10,
+                VIEWPORT_DIM,
+                VIEWPORT_DIM);
 
         renderer.render();
 
@@ -257,7 +257,7 @@ public class ShrineScreen extends BaseScreen {
 
     @Override
     public Vector3 getMapPixelCoords(int x, int y) {
-        Vector3 v = new Vector3(x * tilePixelWidth, mapPixelHeight - y * tilePixelHeight - tilePixelHeight, 0);
+        Vector3 v = new Vector3(x * SCALED_DIM, mapPixelHeight - SCALED_DIM - y * SCALED_DIM, 0);
         return v;
     }
 

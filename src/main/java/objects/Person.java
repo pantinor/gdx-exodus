@@ -26,7 +26,7 @@ public class Person implements Constants {
     private String conversation;
     private boolean isTalking = false;
     private Vendor vendor;
-    private Creature emulatingCreature;
+    private String emulatingCreature;
     private boolean removedFromMap;
 
     public int getId() {
@@ -174,12 +174,12 @@ public class Person implements Constants {
         this.vendor = v;
     }
 
-    public Creature getEmulatingCreature() {
+    public String getEmulatingCreature() {
         return emulatingCreature;
     }
 
-    public void setEmulatingCreature(Creature emulatingCreature) {
-        this.emulatingCreature = emulatingCreature;
+    public void setEmulatingCreature(String type) {
+        this.emulatingCreature = type;
     }
 
     public TextureRegion getTextureRegion() {

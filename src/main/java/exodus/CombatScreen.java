@@ -6,18 +6,14 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.forever;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.removeActor;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
-
 import java.util.Iterator;
 import java.util.List;
-
 import objects.BaseMap;
 import objects.Creature;
 import objects.CreatureSet;
 import objects.ProjectileActor;
 import objects.Tile;
-
 import util.Utils;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
@@ -31,7 +27,6 @@ import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
@@ -59,13 +54,13 @@ public class CombatScreen extends BaseScreen {
     public static int AREA_CREATURES = 16;
     public static int AREA_PLAYERS = 8;
 
-    private CreatureType[] crSlots;
+    private String[] crSlots;
 
     private CursorActor cursor;
 
     public Maps contextMap;
     public BaseMap combatMap;
-    private CreatureType crType;
+    private String crType;
     private CreatureSet creatureSet;
 
     public Party party;
@@ -79,8 +74,7 @@ public class CombatScreen extends BaseScreen {
 
     private boolean wounded;
 
-    public CombatScreen(BaseScreen returnScreen, Context context, Maps contextMap,
-            BaseMap combatMap, TiledMap tmap, CreatureType cr, CreatureSet cs, TextureAtlas a1) {
+    public CombatScreen(BaseScreen returnScreen, Context context, Maps contextMap, BaseMap combatMap, TiledMap tmap, String crType, CreatureSet crSet) {
 
         scType = ScreenType.COMBAT;
 
@@ -89,19 +83,19 @@ public class CombatScreen extends BaseScreen {
         this.combatMap = combatMap;
         this.combatMap.clearCreatures();
 
-        this.crType = cr;
+        this.crType = crType;
 
         this.context = context;
         this.party = context.getParty();
-        this.creatureSet = cs;
+        this.creatureSet = crSet;
 
         this.tmap = tmap;
-        renderer = new OrthogonalTiledMapRenderer(tmap, 1f);
+        renderer = new OrthogonalTiledMapRenderer(tmap, 2f);
 
         MapProperties prop = tmap.getProperties();
-        mapPixelHeight = prop.get("height", Integer.class) * tilePixelHeight;
+        mapPixelHeight = prop.get("height", Integer.class) * SCALED_DIM;
 
-        camera = new OrthographicCamera(11 * tilePixelWidth, 11 * tilePixelHeight);
+        camera = new OrthographicCamera(11 * SCALED_DIM, 11 * SCALED_DIM);
 
         mapViewPort = new ScreenViewport(camera);
 
@@ -116,11 +110,9 @@ public class CombatScreen extends BaseScreen {
 
         sip = new SecondaryInputProcessor(this, stage);
 
-        crSlots = new CreatureType[AREA_CREATURES];
+        crSlots = new String[AREA_CREATURES];
 
-        if (crType != null) {
-            fillCreatureTable(crType);
-        }
+        fillCreatureTable();
 
         MapLayer mLayer = tmap.getLayers().get("Monster Positions");
         Iterator<MapObject> iter = mLayer.getObjects().iterator();
@@ -134,7 +126,7 @@ public class CombatScreen extends BaseScreen {
                 continue;
             }
 
-            Creature c = creatureSet.getInstance(crSlots[index], a1);
+            Creature c = creatureSet.getInstance(crSlots[index], Exodus.standardAtlas);
 
             c.currentX = startX;
             c.currentY = startY;
@@ -156,7 +148,7 @@ public class CombatScreen extends BaseScreen {
             }
 
             String t = party.getMember(index).getPlayer().profession.getTile();
-            Creature c = creatureSet.getInstance(CreatureType.get(t), a1);
+            Creature c = creatureSet.getInstance(t, Exodus.standardAtlas);
             c.currentX = startX;
             c.currentY = startY;
             c.currentPos = getMapPixelCoords(startX, startY);
@@ -189,21 +181,20 @@ public class CombatScreen extends BaseScreen {
         batch.dispose();
     }
 
-    private void fillCreatureTable(CreatureType ct) {
+    private void fillCreatureTable() {
 
-        if (ct == null) {
-            return;
+        String baseType = this.crType;
+
+        if ("pirate".equals(baseType)) {
+            baseType = "thief";
         }
 
-        int numCreatures = getNumberOfCreatures(ct);
+        Creature cr = Exodus.creatures.getInstance(baseType, Exodus.standardAtlas);
 
-        CreatureType baseType = ct;
-        if (baseType == CreatureType.pirate_ship) {
-            baseType = CreatureType.rogue;
-        }
+        int numCreatures = getNumberOfCreatures(cr);
 
         for (int i = 0; i < numCreatures; i++) {
-            CreatureType current = baseType;
+            String current = baseType;
 
             /* find a free spot in the creature table */
             int j = 0;
@@ -211,15 +202,12 @@ public class CombatScreen extends BaseScreen {
                 j = rand.nextInt(AREA_CREATURES);
             } while (crSlots[j] != null);
 
-            /* see if creature is a leader or leader's leader */
-            if (baseType.getCreature().getLeader() != 0) {
-                if (CreatureType.get(baseType.getCreature().getLeader()) != baseType.getCreature().getTile() && i != (numCreatures - 1)) {
-                    if (rand.nextInt(32) == 0) { // leader's leader
-                        CreatureType t1 = CreatureType.get(baseType.getCreature().getLeader());
-                        CreatureType t2 = (t1.getCreature().getLeader() == 0 ? t1 : CreatureType.get(t1.getCreature().getLeader()));
-                        current = t2;
-                    } else if (rand.nextInt(8) == 0) { // leader
-                        current = CreatureType.get(baseType.getCreature().getLeader());
+            /* see if creature is a leader */
+            if (cr.getLeader() != 0) {
+                Creature leader = Exodus.creatures.getInstance(cr.getLeader(), Exodus.standardAtlas);
+                if (leader.getId() != cr.getId() && i != (numCreatures - 1)) {
+                    if (rand.nextInt(8) == 0) { // leader
+                        current = leader.getTile();
                     }
                 }
             }
@@ -230,17 +218,17 @@ public class CombatScreen extends BaseScreen {
 
     }
 
-    private int getNumberOfCreatures(CreatureType ct) {
+    private int getNumberOfCreatures(Creature cr) {
         int ncreatures = 0;
 
-        if (ct.getCreature().getTile() == CreatureType.guard) {
+        if ("guard".equals(cr.getTile())) {
             ncreatures = party.getMembers().size() * 2;
         } else {
             ncreatures = rand.nextInt(8) + 1;
 
             if (ncreatures == 1) {
-                if (ct.getCreature().getEncounterSize() > 0) {
-                    ncreatures = rand.nextInt(ct.getCreature().getEncounterSize()) + ct.getCreature().getEncounterSize() + 1;
+                if (cr.getEncounterSize() > 0) {
+                    ncreatures = rand.nextInt(cr.getEncounterSize()) + cr.getEncounterSize() + 1;
                 } else {
                     ncreatures = 8;
                 }
@@ -255,13 +243,13 @@ public class CombatScreen extends BaseScreen {
     }
 
     @Override
-    public Vector3 getMapPixelCoords(int x, int y) {
-        Vector3 v = new Vector3(x * tilePixelWidth, mapPixelHeight - y * tilePixelHeight - tilePixelHeight, 0);
+    public final Vector3 getMapPixelCoords(int x, int y) {
+        Vector3 v = new Vector3(x * SCALED_DIM, mapPixelHeight - SCALED_DIM - y * SCALED_DIM, 0);
         return v;
     }
 
     @Override
-    public Vector3 getCurrentMapCoords() {
+    public final Vector3 getCurrentMapCoords() {
         return null;
     }
 
@@ -272,15 +260,16 @@ public class CombatScreen extends BaseScreen {
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        camera.position.set(newMapPixelCoords.x + 5 * tilePixelWidth, newMapPixelCoords.y, 0);
+        this.camera.position.x = newMapPixelCoords.x + SCALED_DIM * 5;
+        this.camera.position.y = newMapPixelCoords.y + SCALED_DIM * 0;
 
         camera.update();
 
-        renderer.setView(camera.combined,
-                camera.position.x - tilePixelWidth * 10, //this is voodoo
-                camera.position.y - tilePixelHeight * 10,
-                Exodus.MAP_WIDTH,
-                Exodus.MAP_HEIGHT);
+        this.renderer.setView(camera.combined,
+                camera.position.x - SCALED_DIM * 15,
+                camera.position.y - SCALED_DIM * 10,
+                VIEWPORT_DIM,
+                VIEWPORT_DIM);
 
         renderer.render();
 
@@ -289,7 +278,7 @@ public class CombatScreen extends BaseScreen {
             if (cr.currentPos == null || !cr.getVisible()) {
                 continue;
             }
-            renderer.getBatch().draw(cr.getAnim().getKeyFrame(time, true), cr.currentPos.x, cr.currentPos.y);
+            renderer.getBatch().draw(cr.getAnim().getKeyFrame(time, true), cr.currentPos.x, cr.currentPos.y, SCALED_DIM, SCALED_DIM);
             renderer.getBatch().draw(cr.getHealthBar(), cr.currentPos.x, cr.currentPos.y - 4);
         }
 
@@ -299,9 +288,9 @@ public class CombatScreen extends BaseScreen {
             }
 
             if (p.getPlayer().status != StatusType.DEAD) {
-                renderer.getBatch().draw(p.combatCr.getAnim().getKeyFrame(time, true), p.combatCr.currentPos.x, p.combatCr.currentPos.y);
+                renderer.getBatch().draw(p.combatCr.getAnim().getKeyFrame(time, true), p.combatCr.currentPos.x, p.combatCr.currentPos.y, SCALED_DIM, SCALED_DIM);
             } else {
-                renderer.getBatch().draw(Exodus.corpse, p.combatCr.currentPos.x, p.combatCr.currentPos.y);
+                renderer.getBatch().draw(Exodus.corpse, p.combatCr.currentPos.x, p.combatCr.currentPos.y, SCALED_DIM, SCALED_DIM);
             }
         }
 
@@ -626,7 +615,13 @@ public class CombatScreen extends BaseScreen {
         }
     }
 
+    private boolean ended = false;
+
     public void end() {
+        if (ended) {
+            return;
+        }
+        ended = true;
 
         if (returnScreen != null) {
             boolean isWon = combatMap.getCreatures().isEmpty();
@@ -1006,13 +1001,13 @@ public class CombatScreen extends BaseScreen {
     }
 
     private Texture getCursorTexture() {
-        Pixmap pixmap = new Pixmap(tilePixelHeight, tilePixelHeight, Format.RGBA8888);
+        Pixmap pixmap = new Pixmap(SCALED_DIM, SCALED_DIM, Format.RGBA8888);
         pixmap.setColor(Color.YELLOW);
         int w = 4;
-        pixmap.fillRectangle(0, 0, w, tilePixelHeight);
-        pixmap.fillRectangle(tilePixelHeight - w, 0, w, tilePixelHeight);
-        pixmap.fillRectangle(w, 0, tilePixelHeight - 2 * w, w);
-        pixmap.fillRectangle(w, tilePixelHeight - w, tilePixelHeight - 2 * w, w);
+        pixmap.fillRectangle(0, 0, w, SCALED_DIM);
+        pixmap.fillRectangle(SCALED_DIM - w, 0, w, SCALED_DIM);
+        pixmap.fillRectangle(w, 0, SCALED_DIM - 2 * w, w);
+        pixmap.fillRectangle(w, SCALED_DIM - w, SCALED_DIM - 2 * w, w);
         return new Texture(pixmap);
     }
 

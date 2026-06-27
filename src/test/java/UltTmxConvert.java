@@ -3,22 +3,13 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import java.io.File;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-
 import objects.BaseMap;
-import objects.MapSet;
 import objects.Person;
 import objects.Tile;
-import objects.TileSet;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData.Region;
 import java.io.FileInputStream;
@@ -27,9 +18,7 @@ import exodus.Constants;
 import exodus.Constants.DungeonTile;
 import exodus.Constants.MapType;
 import exodus.Constants.Maps;
-import exodus.Constants.ObjectMovementBehavior;
 import exodus.Exodus;
-import java.util.ArrayList;
 
 public class UltTmxConvert implements ApplicationListener {
 
@@ -48,7 +37,7 @@ public class UltTmxConvert implements ApplicationListener {
             FileHandle f = Gdx.files.classpath("assets/graphics/latest-atlas.txt");
             TextureAtlasData atlas = new TextureAtlasData(f, f.parent(), false);
             int png_grid_width = 24;
-            Tile[] mapTileIds = new Tile[png_grid_width * Constants.tilePixelWidth + 1];
+            Tile[] mapTileIds = new Tile[png_grid_width * Constants.TILE_DIM + 1];
             for (Region r : atlas.getRegions()) {
                 int x = r.left / r.width;
                 int y = r.top / r.height;
@@ -138,7 +127,7 @@ public class UltTmxConvert implements ApplicationListener {
                     }
 
                     formatter = new Formatter(map.getFname(), "latest.png", map.getWidth(), map.getHeight(),
-                            Constants.tilePixelWidth, Constants.tilePixelWidth, csv, texts);
+                            Constants.TILE_DIM, Constants.TILE_DIM, csv, texts);
 
                     String tmxFName = String.format("tmx/map_%s_%s.tmx", map.getId(), map.getFname().replace(".ult", ""));
                     FileUtils.writeStringToFile(new File(tmxFName), formatter.toDungeonString());

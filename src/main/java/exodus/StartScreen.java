@@ -25,7 +25,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import static exodus.Constants.PARTY_SAV_BASE_FILENAME;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import objects.SaveGame;
@@ -33,10 +32,6 @@ import objects.Tile;
 import org.apache.commons.io.IOUtils;
 import util.UltimaTiledMapLoader;
 
-/**
- *
- * @author Paul
- */
 public class StartScreen implements Screen, Constants {
 
     float time = 0;
@@ -61,11 +56,10 @@ public class StartScreen implements Screen, Constants {
 
         exodusFont = new BitmapFont(Gdx.files.classpath("assets/fonts/exodus.fnt"));
 
-        UltimaTiledMapLoader loader = new UltimaTiledMapLoader(Maps.SOSARIA, Exodus.standardAtlas, 19, 6, tilePixelWidth, tilePixelHeight);
-        splashMap = loader.load(intromap, 19, 6, Exodus.baseTileSet, tilePixelWidth);
-        splashRenderer = new OrthogonalTiledMapRenderer(splashMap);
-        camera = new OrthographicCamera(19 * tilePixelWidth, 8 * tilePixelHeight);
-        camera.position.set(tilePixelWidth * 10, tilePixelHeight * 8, 0);
+        UltimaTiledMapLoader loader = new UltimaTiledMapLoader(Maps.SOSARIA, Exodus.standardAtlas, 19, 6, TILE_DIM, TILE_DIM);
+        splashMap = loader.load(intromap, 19, 6, Exodus.baseTileSet, SCALED_DIM);
+        splashRenderer = new OrthogonalTiledMapRenderer(splashMap, 2f);
+        camera = new OrthographicCamera(5 * SCALED_DIM, 5 * SCALED_DIM);
         viewPort = new ScreenViewport(camera);
 
         batch = new SpriteBatch();
@@ -164,7 +158,9 @@ public class StartScreen implements Screen, Constants {
 
         camera.update();
 
-        splashRenderer.setView(camera.combined, 0, 0, 19 * tilePixelWidth, 8 * tilePixelHeight);
+        camera.position.set(SCALED_DIM * 10, SCALED_DIM * 8, 0);
+
+        splashRenderer.setView(camera.combined, 0, 0, 19 * SCALED_DIM, 8 * SCALED_DIM);
         splashRenderer.render();
 
         batch.begin();

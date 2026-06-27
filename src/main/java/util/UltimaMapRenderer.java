@@ -20,15 +20,12 @@ import static com.badlogic.gdx.graphics.g2d.Batch.Y1;
 import static com.badlogic.gdx.graphics.g2d.Batch.Y2;
 import static com.badlogic.gdx.graphics.g2d.Batch.Y3;
 import static com.badlogic.gdx.graphics.g2d.Batch.Y4;
-
 import java.util.List;
-
 import objects.BaseMap;
 import objects.BaseMap.DoorStatus;
 import objects.Creature;
 import objects.Person;
 import exodus.Constants;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -64,7 +61,7 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
         if (atlas != null) {
 
             door = atlas.findRegion("door");
-            brick_floor = atlas.findRegion("brick_floor");
+            brick_floor = atlas.findRegion("floor");
             locked_door = atlas.findRegion("locked_door");
 
             door.getTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
@@ -225,13 +222,7 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
                     continue;
                 }
                 float color = getColor(layer, cr.currentX, cr.currentY);
-                if (cr.getTile() == CreatureType.pirate_ship) {
-                    TextureRegion tr = cr.getAnim().getKeyFrames()[cr.sailDir.getVal() - 1];
-                    draw(tr, cr.currentPos.x, cr.currentPos.y, color);
-                } else {
-                    draw(cr.getAnim().getKeyFrame(stateTime, true), cr.currentPos.x, cr.currentPos.y, color);
-                }
-
+                draw(cr.getAnim().getKeyFrame(stateTime, true), cr.currentPos.x, cr.currentPos.y, color);
             }
         }
 
@@ -241,7 +232,7 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
         }
 
         if (context.getCurrentMap().getMoongates() != null) {
-            int mapPixelHeight = layer.getHeight() * tilePixelHeight;
+            int mapPixelHeight = layer.getHeight() * SCALED_DIM;
 
             for (Moongate g : context.getCurrentMap().getMoongates()) {
                 TextureRegion texture = g.getCurrentTexture();
@@ -251,8 +242,8 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
                 }
 
                 float color = getColor(layer, g.getX(), g.getY());
-                float px = g.getX() * tilePixelWidth;
-                float py = mapPixelHeight - g.getY() * tilePixelHeight - tilePixelHeight;
+                float px = g.getX() * SCALED_DIM;
+                float py = mapPixelHeight - g.getY() * SCALED_DIM - SCALED_DIM;
 
                 draw(texture, px, py, color);
             }
@@ -262,6 +253,11 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
     public float getColor(TiledMapTileLayer layer, int col, int row) {
 
         Color batchColor = this.batch.getColor();
+
+        if (true) {
+            return Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, 1);
+        }
+
         int layerWidth = layer.getWidth();
         int layerHeight = layer.getHeight();
 

@@ -55,13 +55,12 @@ public class Exodus extends Game {
     
     public static Skin skin;
 
-    public static boolean playMusic = true;
+    public static boolean playMusic = false;
     public static float musicVolume = 0.1f;
     public static Music music;
 
     public static MapSet maps;
     public static TileSet baseTileSet;
-    public static TileSet u4TileSet;
     public static WeaponSet weapons;
     public static ArmorSet armors;
     public static CreatureSet creatures;
@@ -158,9 +157,9 @@ public class Exodus extends Game {
 
             standardAtlas = new TextureAtlas(Gdx.files.classpath("assets/graphics/latest-atlas.txt"));
 
-            hitTile = standardAtlas.findRegion("hit_flash");
-            magicHitTile = standardAtlas.findRegion("magic_flash");
-            missTile = standardAtlas.findRegion("miss_flash");
+            hitTile = standardAtlas.findRegion("fire");
+            magicHitTile = standardAtlas.findRegion("magic");
+            missTile = standardAtlas.findRegion("blank");
             corpse = standardAtlas.findRegion("corpse");
 
             TextureAtlas tmp = new TextureAtlas(Gdx.files.classpath("assets/graphics/explosion-atlas.txt"));
@@ -178,13 +177,10 @@ public class Exodus extends Game {
             baseTileSet = (TileSet) Utils.loadXml("assets/xml/tileset-base.xml", TileSet.class);
             baseTileSet.setMaps();
             
-            u4TileSet = (TileSet) Utils.loadXml("assets/xml/u4-tileset-base.xml", TileSet.class);
-            u4TileSet.setMaps();
-
             maps = (MapSet) Utils.loadXml("assets/xml/maps.xml", MapSet.class);
             maps.init(baseTileSet);
-            maps.init(MapType.combat, u4TileSet);//set combat maps with the u4 tile set
-            maps.init(MapType.shrine, u4TileSet);//set combat maps with the u4 tile set
+            maps.init(MapType.combat, baseTileSet);
+            maps.init(MapType.shrine, baseTileSet);
             
             vendorClassSet = (VendorClassSet) Utils.loadXml("assets/xml/vendor.xml", VendorClassSet.class);
             vendorClassSet.init();

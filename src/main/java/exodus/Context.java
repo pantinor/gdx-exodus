@@ -277,7 +277,7 @@ public class Context implements Constants {
                 } else {
                     pm.applyEffect(trapType);
                 }
-                
+
             } else {
                 Sounds.play(Sound.EVADE);
                 Exodus.hud.add("Evaded!");
@@ -301,24 +301,24 @@ public class Context implements Constants {
         this.lastShip = lastShip;
     }
 
-    public Maps getCombatMap(Creature c, BaseMap bm, int creatureX, int creatureY, int avatarX, int avatarY) {
+    public Maps getCombatMap(Creature cr, BaseMap bm, int creatureX, int creatureY, int avatarX, int avatarY) {
 
         Maps cm = bm.getTile(creatureX, creatureY).getCombatMap();
         TileRule ptr = bm.getTile(avatarX, avatarY).getRule();
 
-        if (c.getSwims() && !ptr.has(TileAttrib.unwalkable)) {
-            cm = Maps.SHORE_CON;
-        } else if (c.getSails() && !ptr.has(TileAttrib.unwalkable)) {
-            cm = Maps.SHORSHIP_CON;
+        if (cr.getSwims() && !ptr.has(TileAttrib.unwalkable)) {
+            cm = Maps.CONFLICT_SHORE;
+        } else if (cr.getSails() && !ptr.has(TileAttrib.unwalkable)) {
+            cm = Maps.CONFLICT_SHIP_TOP;
         }
 
         if (transportContext == Transport.SHIP) {
-            if (c.getSwims()) {
-                cm = Maps.SHIPSEA_CON;
-            } else if (c.getSails()) {
-                cm = Maps.SHIPSHIP_CON;
+            if (cr.getSwims()) {
+                cm = Maps.CONFLICT_SHIP;
+            } else if (cr.getSails()) {
+                cm = Maps.CONFLICT_BOTH_SHIPS;
             } else {
-                cm = Maps.SHIPSHOR_CON;
+                cm = Maps.CONFLICT_SHIP_BOTTOM;
             }
         }
 

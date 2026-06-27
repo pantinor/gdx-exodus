@@ -1,9 +1,7 @@
 package vendor;
 
 import com.badlogic.gdx.math.Vector3;
-
 import objects.Creature;
-import exodus.Constants.CreatureType;
 import exodus.Context;
 import exodus.Exodus;
 import exodus.GameScreen;
@@ -36,7 +34,7 @@ public class HorseService extends BaseVendor {
                 member.getPlayer().adjustGold(-currentSelectedItem.getPrice());
                 displayToScreen("Here, a better breed thou shalt not find ever!");
                 if (screen != null) {
-                    Creature cr = Exodus.creatures.getInstance(CreatureType.horse, Exodus.standardAtlas);
+                    Creature cr = Exodus.creatures.getInstance("horse", Exodus.standardAtlas);
                     Vector3 v = screen.getCurrentMapCoords();
                     cr.currentX = (int) v.x;
                     cr.currentY = (int) v.y;

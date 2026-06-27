@@ -183,24 +183,14 @@
         <label name="FOUNTAIN_CURE" x="7" y="7" z="0" />
     </map>
     
-    <map id="33" type="combat" fname="brick.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
-    <map id="34" type="combat" fname="bridge.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
-    <map id="35" type="combat" fname="brush.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
-    <map id="37" type="combat" fname="dng0.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   <!-- Walls -->
-    <map id="38" type="combat" fname="dng1.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   <!-- Up ladder -->
-    <map id="39" type="combat" fname="dng2.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   <!-- Down ladder -->
-    <map id="40" type="combat" fname="dng3.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   <!-- Up-down ladder -->
-    <map id="42" type="combat" fname="dng5.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   <!-- Doorway -->
-    <map id="43" type="combat" fname="dng6.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   <!-- Secret Door -->
-    <map id="44" type="combat" fname="dungeon.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   <!-- Dungeon -->
-    <map id="45" type="combat" fname="forest.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
-    <map id="46" type="combat" fname="grass.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
-    <map id="47" type="combat" fname="hill.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
-    <map id="49" type="combat" fname="marsh.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
-    <map id="50" type="combat" fname="shipsea.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
-    <map id="51" type="combat" fname="shipship.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
-    <map id="52" type="combat" fname="shipshor.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
-    <map id="53" type="combat" fname="shore.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
-    <map id="54" type="combat" fname="shorship.con" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
-    
+    <map id="33" type="combat" fname="CNFLCT_A.ULT" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
+    <map id="34" type="combat" fname="CNFLCT_B.ULT" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
+    <map id="35" type="combat" fname="CNFLCT_C.ULT" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />
+    <map id="36" type="combat" fname="CNFLCT_F.ULT" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />  
+    <map id="37" type="combat" fname="CNFLCT_G.ULT" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />  
+    <map id="38" type="combat" fname="CNFLCT_M.ULT" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />  
+    <map id="39" type="combat" fname="CNFLCT_Q.ULT" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />  
+    <map id="40" type="combat" fname="CNFLCT_R.ULT" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   
+    <map id="41" type="combat" fname="CNFLCT_S.ULT" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   
+     
 </maps>

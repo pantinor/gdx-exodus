@@ -159,8 +159,8 @@ public class SaveGame implements Constants {
 
         //set initial start
         if (partyX == 0 && partyY == 0) {
-            partyX = 182;
-            partyY = 73;
+            partyX = 45;
+            partyY = 19;
         }
 
         dis.close();

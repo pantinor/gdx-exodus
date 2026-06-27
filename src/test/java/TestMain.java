@@ -11,9 +11,9 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import exodus.CombatScreen;
 import exodus.Constants;
 import exodus.Constants.ArmorType;
-import exodus.Constants.CreatureType;
 import exodus.Constants.Maps;
 import exodus.Constants.Profession;
+import static exodus.Constants.TILE_DIM;
 import exodus.Constants.WeaponType;
 import exodus.Context;
 import exodus.Exodus;
@@ -84,10 +84,10 @@ public class TestMain extends Game {
             sg.players[3].weapon = WeaponType.EXOTIC;
             sg.players[3].armor = ArmorType.EXOTIC;
 
-            Maps m = Maps.GRASS_CON;
+            Maps m = Maps.CONFLICT_SHIP_TOP;
 
-            TiledMap tmap = new UltimaTiledMapLoader(m, Exodus.standardAtlas, m.getMap().getWidth(), m.getMap().getHeight(), 32, 32).load();
-            CombatScreen sc = new CombatScreen(null, context, Maps.SOSARIA, m.getMap(), tmap, CreatureType.gazer, Exodus.creatures, Exodus.standardAtlas);
+            TiledMap tmap = new UltimaTiledMapLoader(m, Exodus.standardAtlas, m.getMap().getWidth(), m.getMap().getHeight(), TILE_DIM, TILE_DIM).load();
+            CombatScreen sc = new CombatScreen(null, context, Maps.SOSARIA, m.getMap(), tmap, "pirate", Exodus.creatures);
 
             setScreen(sc);
 

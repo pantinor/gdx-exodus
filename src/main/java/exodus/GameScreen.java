@@ -1,7 +1,6 @@
 package exodus;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
-
 import objects.BaseMap;
 import objects.Creature;
 import objects.Drawable;
@@ -9,10 +8,8 @@ import objects.Moongate;
 import objects.Portal;
 import objects.SaveGame;
 import objects.Tile;
-
 import util.UltimaMapRenderer;
 import util.UltimaTiledMapLoader;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
@@ -44,8 +41,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import static exodus.Constants.tilePixelHeight;
-import static exodus.Constants.tilePixelWidth;
+import static exodus.Constants.TILE_DIM;
 import exodus.Exodus.ExplosionDrawable;
 import exodus.Party.PartyMember;
 import java.util.Iterator;
@@ -114,105 +110,92 @@ public class GameScreen extends BaseScreen {
         projectilesStage.addAction(Actions.forever(seq2));
 
         //add 2 whirlpools manually, they do not spawn automatically
-        Creature wp = Exodus.creatures.getInstance(CreatureType.whirlpool, Exodus.standardAtlas);
-        wp.currentX = 200;
-        wp.currentY = 53;
+        Creature wp = Exodus.creatures.getInstance("whirlpool", Exodus.standardAtlas);
+        wp.currentX = 50;
+        wp.currentY = 13;
         Maps.SOSARIA.getMap().addCreature(wp);
 
-        wp = Exodus.creatures.getInstance(CreatureType.whirlpool, Exodus.standardAtlas);
-        wp.currentX = 69;
-        wp.currentY = 194;
+        wp = Exodus.creatures.getInstance("whirlpool", Exodus.standardAtlas);
+        wp.currentX = 17;
+        wp.currentY = 48;
         Maps.SOSARIA.getMap().addCreature(wp);
 
         addButtons();
 
     }
 
-    private void initTransportAnimations() {
-
-        Array<AtlasRegion> avatar = Exodus.standardAtlas.findRegions("avatar");
-        Array<AtlasRegion> corps = Exodus.standardAtlas.findRegions("corpse");
-        Array<AtlasRegion> horse = Exodus.standardAtlas.findRegions("horse");
-        Array<AtlasRegion> ship = Exodus.standardAtlas.findRegions("ship");
-
-        avatarAnim = new Animation<>(1f, avatar);
-        shipAnim = new Animation<>(1f, ship);
-
-        AtlasRegion[] tmp = new AtlasRegion[4];
-        for (int i = 0; i < 4; i++) {
-            tmp[i] = corps.get(0);
-        }
-        corpseAnim = new Animation<>(1f, tmp);
-
-        AtlasRegion[] tmp3 = new AtlasRegion[4];
-        AtlasRegion ar = new AtlasRegion(horse.get(0));
-        ar.flip(true, false);
-        tmp3[0] = horse.get(0);
-        tmp3[1] = horse.get(0);
-        tmp3[2] = ar;
-        tmp3[3] = horse.get(0);
-        horseAnim = new Animation<>(1f, tmp3);
-
+    @Override
+    public Vector3 getMapPixelCoords(int x, int y) {
+        Vector3 v = new Vector3(x * SCALED_DIM, mapPixelHeight - SCALED_DIM - y * SCALED_DIM, 0);
+        return v;
     }
 
-    public class GameTimer implements Runnable {
-
-        public boolean active = true;
-
-        @Override
-        public void run() {
-            if (active) {
-
-                updateMoons(true);
-
-                if (System.currentTimeMillis() - context.getLastCommandTime() > 20 * 1000) {
-                    keyUp(Keys.SPACE);
-                }
-            }
-        }
+    @Override
+    public Vector3 getCurrentMapCoords() {
+        Vector3 v = camera.unproject(new Vector3(SCALED_DIM * 13, SCALED_DIM * 13, 0), SCALED_DIM * 2, SCALED_DIM * 2, VIEWPORT_DIM, VIEWPORT_DIM);
+        float x = Math.round(v.x / SCALED_DIM) - 6;
+        float y = Math.round((mapPixelHeight - v.y) / SCALED_DIM) - 3;
+        v.set(x, y, 0);
+        return v;
     }
 
-    public class ExplosionsTimer implements Runnable {
+    @Override
+    public void render(float delta) {
 
-        public boolean active = false;
+        time += delta;
 
-        @Override
-        public void run() {
-            if (active) {
-                Vector3 ac = getCurrentMapCoords();
-                int dx = Utils.getRandomBetween((int) ac.x - 9, (int) ac.x + 9);
-                int dy = Utils.getRandomBetween((int) ac.y - 9, (int) ac.y + 9);
-                if (dx < 12) {
-                    return;
-                } else if (dx > 52) {
-                    return;
-                }
-                if (dy < 12) {
-                    return;
-                } else if (dy > 52) {
-                    return;
-                }
-                Actor d = new ExplosionDrawable();
-                Vector3 v = getMapPixelCoords(dx, dy);
-                d.setX(v.x);
-                d.setY(v.y);
+        Gdx.gl.glClearColor(0, 0, 0, 0);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-                SequenceAction seq = Actions.action(SequenceAction.class);
-                seq.addAction(Actions.run(new AddActorAction(projectilesStage, d)));
-                if (Math.abs(ac.x - dx) < 2 && Math.abs(ac.y - dy) < 2) {
-                    seq.addAction(Actions.run(new PlaySoundAction(Sound.BOOM)));
-                    try {
-                        context.getParty().applyEffect(TileEffect.FIRE);
-                    } catch (PartyDeathException ex) {
-                        partyDeath();
-                    }
-                }
-                seq.addAction(Actions.delay(2f));
-                seq.addAction(Actions.removeActor(d));
-
-                projectilesStage.addAction(seq);
-            }
+        if (renderer == null) {
+            return;
         }
+
+        this.camera.position.x = newMapPixelCoords.x + SCALED_DIM * 5;
+        this.camera.position.y = newMapPixelCoords.y + SCALED_DIM * 0;
+
+        camera.update();
+
+        this.renderer.setView(camera.combined,
+                camera.position.x - SCALED_DIM * 15,
+                camera.position.y - SCALED_DIM * 10,
+                VIEWPORT_DIM,
+                VIEWPORT_DIM);
+
+        renderer.render();
+
+        batch.begin();
+
+        batch.draw(Exodus.backGround, 0, 0);
+
+        batch.draw(mainAvatar.getKeyFrame(time, true), SCALED_DIM * 11, SCALED_DIM * 12, SCALED_DIM, SCALED_DIM);
+
+        //Vector3 v = getCurrentMapCoords();
+        //Exodus.font.draw(batch, String.format("%s, %s\n", (int) v.x, (int) v.y), 10, Exodus.SCREEN_HEIGHT - 10);
+        Exodus.hud.render(batch, context.getParty());
+
+        Exodus.font.setColor(Color.WHITE);
+        if (showZstats > 0) {
+            context.getParty().renderZstats(showZstats, Exodus.font, batch, Exodus.SCREEN_HEIGHT);
+        }
+
+        if (context.getCurrentMap().getId() == Maps.SOSARIA.getId()) {
+            batch.draw(moonAtlas.findRegion("phase_" + trammelphase), 360, Exodus.SCREEN_HEIGHT - 25, 25, 25);
+            batch.draw(moonAtlas.findRegion("phase_" + feluccaphase), 380, Exodus.SCREEN_HEIGHT - 25, 25, 25);
+            Exodus.font.draw(batch, "Wind " + context.getWindDirection().toString(), 415, Exodus.SCREEN_HEIGHT - 7);
+        }
+
+        if (context.getAura().getType() != AuraType.NONE) {
+            Exodus.font.draw(batch, context.getAura().getType().toString(), 200, Exodus.SCREEN_HEIGHT - 32);
+        }
+        batch.end();
+
+        projectilesStage.act();
+        projectilesStage.draw();
+
+        stage.act();
+        stage.draw();
+
     }
 
     @Override
@@ -301,7 +284,7 @@ public class GameScreen extends BaseScreen {
             for (int i = 0; i < 8; i++) {
                 if (sg.monster_save_tileids[i] != 0 && sg.monster_save_x[i] != 0 && sg.monster_save_y[i] != 0) {
                     Tile t = Exodus.baseTileSet.getTileByIndex(sg.monster_save_tileids[i] & 0xff);
-                    Creature cr = Exodus.creatures.getInstance(CreatureType.get(t.getName()), Exodus.standardAtlas);
+                    Creature cr = Exodus.creatures.getInstance(t.getName(), Exodus.standardAtlas);
                     cr.currentX = sg.monster_save_x[i] & 0xff;
                     cr.currentY = sg.monster_save_y[i] & 0xff;
                     cr.currentPos = getMapPixelCoords(cr.currentX, cr.currentY);
@@ -358,7 +341,7 @@ public class GameScreen extends BaseScreen {
 
         } else if (baseMap.getType() == MapType.shrine) {
 
-            map = new UltimaTiledMapLoader(m, Exodus.standardAtlas, baseMap.getWidth(), baseMap.getHeight(), tilePixelWidth, tilePixelHeight).load();
+            map = new UltimaTiledMapLoader(m, Exodus.standardAtlas, baseMap.getWidth(), baseMap.getHeight(), TILE_DIM, TILE_DIM).load();
             context.setCurrentTiledMap(map);
             ShrineScreen sc = new ShrineScreen(m, this, context.getParty(), map, Exodus.standardAtlas, Exodus.standardAtlas);
             Exodus.mainGame.setScreen(sc);
@@ -367,18 +350,18 @@ public class GameScreen extends BaseScreen {
 
             context.setCurrentMap(baseMap);
 
-            map = new UltimaTiledMapLoader(m, Exodus.standardAtlas, m.getMap().getWidth(), m.getMap().getHeight(), tilePixelWidth, tilePixelHeight).load();
+            map = new UltimaTiledMapLoader(m, Exodus.standardAtlas, m.getMap().getWidth(), m.getMap().getHeight(), TILE_DIM, TILE_DIM).load();
             context.setCurrentTiledMap(map);
 
             if (renderer != null) {
                 renderer.dispose();
             }
-            renderer = new UltimaMapRenderer(context, Exodus.standardAtlas, baseMap, map, 1f);
+            renderer = new UltimaMapRenderer(context, Exodus.standardAtlas, baseMap, map, 2f);
 
             mapBatch = renderer.getBatch();
 
             MapProperties prop = map.getProperties();
-            mapPixelHeight = prop.get("height", Integer.class) * tilePixelHeight;
+            mapPixelHeight = prop.get("height", Integer.class) * SCALED_DIM;
 
             baseMap.initObjects(this, Exodus.standardAtlas, Exodus.standardAtlas);
 
@@ -408,15 +391,11 @@ public class GameScreen extends BaseScreen {
     }
 
     public void attackAt(Maps combat, Creature cr) {
-
         Maps contextMap = Maps.get(context.getCurrentMap().getId());
         BaseMap combatMap = combat.getMap();
-
-        TiledMap tmap = new UltimaTiledMapLoader(combat, Exodus.standardAtlas, combat.getMap().getWidth(), combat.getMap().getHeight(), tilePixelWidth, tilePixelHeight).load();
-
-        CombatScreen sc = new CombatScreen(this, context, contextMap, combatMap, tmap, cr.getTile(), Exodus.creatures, Exodus.standardAtlas);
+        TiledMap tmap = new UltimaTiledMapLoader(combat, Exodus.standardAtlas, combat.getMap().getWidth(), combat.getMap().getHeight(), TILE_DIM, TILE_DIM).load();
+        CombatScreen sc = new CombatScreen(this, context, contextMap, combatMap, tmap, cr.getTile(), Exodus.creatures);
         Exodus.mainGame.setScreen(sc);
-
         currentEncounter = cr;
     }
 
@@ -427,107 +406,39 @@ public class GameScreen extends BaseScreen {
 
         if (currentEncounter != null) {
 
-            Tile tile = context.getCurrentMap().getTile(currentEncounter.currentX, currentEncounter.currentY);
+            int x = currentEncounter.currentX;
+            int y = currentEncounter.currentY;
+
+            Tile tile = context.getCurrentMap().getTile(x, y);
+            TileRule r = tile != null ? tile.getRule() : null;
+
+            context.getCurrentMap().removeCreature(currentEncounter);
 
             if (isWon) {
 
                 log("Victory!");
 
-                TileRule r = tile.getRule();
-
-                /* add a chest, if the creature leaves one */
                 if (!currentEncounter.getNochest() && (r == null || !r.has(TileAttrib.unwalkable))) {
-                    Tile ct = Exodus.baseTileSet.getTileByName("chest");
-                    context.getCurrentMap().addObject(ct, currentEncounter.currentX, currentEncounter.currentY);
-                } else if (currentEncounter.getTile() == CreatureType.pirate_ship) {
-                    /* add a ship if you just defeated a pirate ship */
-                    Tile st = Exodus.baseTileSet.getTileByName("ship");
-                    context.getCurrentMap().addObject(st, currentEncounter.currentX, currentEncounter.currentY);
+                    Tile chest = Exodus.baseTileSet.getTileByName("chest");
+                    context.getCurrentMap().addObject(chest, x, y);
+                } else if ("pirate".equals(currentEncounter.getTile())) {
+                    Tile st = Exodus.baseTileSet.getTileByName("frigate");
+                    context.getCurrentMap().addObject(st, x, y);
                 }
+
             } else if (context.getParty().didAnyoneFlee()) {
                 log("Battle is lost!");
             } else if (!context.getParty().isAnyoneAlive()) {
                 partyDeath();
             }
 
-            context.getCurrentMap().removeCreature(currentEncounter);
-
             currentEncounter = null;
-
         }
     }
 
     @Override
     public void partyDeath() {
         Exodus.mainGame.setScreen(Exodus.startScreen);
-    }
-
-    @Override
-    public Vector3 getMapPixelCoords(int x, int y) {
-        Vector3 v = new Vector3(x * tilePixelWidth, mapPixelHeight - y * tilePixelHeight - tilePixelHeight, 0);
-        return v;
-    }
-
-    @Override
-    public Vector3 getCurrentMapCoords() {
-        Vector3 v = camera.unproject(new Vector3(tilePixelWidth * 12, tilePixelHeight * 12, 0), 32, 64, Exodus.MAP_WIDTH, Exodus.MAP_HEIGHT);
-        return new Vector3(Math.round(v.x / tilePixelWidth) - 6, (mapPixelHeight - Math.round(v.y) - tilePixelHeight) / tilePixelHeight, 0);
-    }
-
-    @Override
-    public void render(float delta) {
-
-        time += delta;
-
-        Gdx.gl.glClearColor(0, 0, 0, 0);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        if (renderer == null) {
-            return;
-        }
-
-        camera.position.set(newMapPixelCoords.x + 5 * tilePixelWidth, newMapPixelCoords.y, 0);
-
-        camera.update();
-
-        renderer.setView(camera.combined,
-                camera.position.x - tilePixelWidth * 15, //this is voodoo
-                camera.position.y - tilePixelHeight * 10,
-                Exodus.MAP_WIDTH,
-                Exodus.MAP_HEIGHT);
-
-        renderer.render();
-
-        batch.begin();
-
-        batch.draw(Exodus.backGround, 0, 0);
-
-        batch.draw(mainAvatar.getKeyFrames()[avatarDirection], tilePixelWidth * 11, tilePixelHeight * 12);
-
-        Exodus.hud.render(batch, context.getParty());
-
-        Exodus.font.setColor(Color.WHITE);
-        if (showZstats > 0) {
-            context.getParty().renderZstats(showZstats, Exodus.font, batch, Exodus.SCREEN_HEIGHT);
-        }
-
-        if (context.getCurrentMap().getId() == Maps.SOSARIA.getId()) {
-            batch.draw(moonAtlas.findRegion("phase_" + trammelphase), 360, Exodus.SCREEN_HEIGHT - 25, 25, 25);
-            batch.draw(moonAtlas.findRegion("phase_" + feluccaphase), 380, Exodus.SCREEN_HEIGHT - 25, 25, 25);
-            Exodus.font.draw(batch, "Wind " + context.getWindDirection().toString(), 415, Exodus.SCREEN_HEIGHT - 7);
-        }
-
-        if (context.getAura().getType() != AuraType.NONE) {
-            Exodus.font.draw(batch, context.getAura().getType().toString(), 200, Exodus.SCREEN_HEIGHT - 32);
-        }
-        batch.end();
-
-        projectilesStage.act();
-        projectilesStage.draw();
-
-        stage.act();
-        stage.draw();
-
     }
 
     @Override
@@ -542,7 +453,6 @@ public class GameScreen extends BaseScreen {
         context.setLastCommandTime(System.currentTimeMillis());
 
         Vector3 v = getCurrentMapCoords();
-        Tile ct = context.getCurrentMap().getTile(v);
 
         if (keycode == Keys.UP) {
             if (context.getTransport() == Transport.SHIP && avatarDirection + 1 != Direction.NORTH.getVal()) {
@@ -553,11 +463,11 @@ public class GameScreen extends BaseScreen {
             if (!preMove(v, Direction.NORTH)) {
                 return false;
             }
-            if (newMapPixelCoords.y + tilePixelHeight >= context.getCurrentMap().getHeight() * tilePixelHeight) {
+            if (newMapPixelCoords.y + SCALED_DIM >= context.getCurrentMap().getHeight() * SCALED_DIM) {
                 newMapPixelCoords.y = 0;
                 postMove(Direction.NORTH, (int) v.x, context.getCurrentMap().getHeight() - 1);
             } else {
-                newMapPixelCoords.y = newMapPixelCoords.y + tilePixelHeight;
+                newMapPixelCoords.y = newMapPixelCoords.y + SCALED_DIM;
                 postMove(Direction.NORTH, (int) v.x, (int) v.y - 1);
             }
             avatarDirection = Direction.NORTH.getVal() - 1;
@@ -570,11 +480,11 @@ public class GameScreen extends BaseScreen {
             if (!preMove(v, Direction.EAST)) {
                 return false;
             }
-            if (newMapPixelCoords.x + tilePixelWidth >= context.getCurrentMap().getWidth() * tilePixelWidth) {
+            if (newMapPixelCoords.x + SCALED_DIM >= context.getCurrentMap().getWidth() * SCALED_DIM) {
                 newMapPixelCoords.x = 0;
                 postMove(Direction.EAST, 0, (int) v.y);
             } else {
-                newMapPixelCoords.x = newMapPixelCoords.x + tilePixelWidth;
+                newMapPixelCoords.x = newMapPixelCoords.x + SCALED_DIM;
                 postMove(Direction.EAST, (int) v.x + 1, (int) v.y);
             }
             avatarDirection = Direction.EAST.getVal() - 1;
@@ -587,11 +497,11 @@ public class GameScreen extends BaseScreen {
             if (!preMove(v, Direction.WEST)) {
                 return false;
             }
-            if (newMapPixelCoords.x - tilePixelWidth < 0) {
-                newMapPixelCoords.x = (context.getCurrentMap().getWidth() - 1) * tilePixelWidth;
+            if (newMapPixelCoords.x - SCALED_DIM < 0) {
+                newMapPixelCoords.x = (context.getCurrentMap().getWidth() - 1) * SCALED_DIM;
                 postMove(Direction.WEST, context.getCurrentMap().getWidth() - 1, (int) v.y);
             } else {
-                newMapPixelCoords.x = newMapPixelCoords.x - tilePixelWidth;
+                newMapPixelCoords.x = newMapPixelCoords.x - SCALED_DIM;
                 postMove(Direction.WEST, (int) v.x - 1, (int) v.y);
             }
             avatarDirection = Direction.WEST.getVal() - 1;
@@ -604,11 +514,11 @@ public class GameScreen extends BaseScreen {
             if (!preMove(v, Direction.SOUTH)) {
                 return false;
             }
-            if (newMapPixelCoords.y - tilePixelHeight < 0) {
-                newMapPixelCoords.y = (context.getCurrentMap().getHeight() - 1) * tilePixelHeight;
+            if (newMapPixelCoords.y - SCALED_DIM < 0) {
+                newMapPixelCoords.y = (context.getCurrentMap().getHeight() - 1) * SCALED_DIM;
                 postMove(Direction.SOUTH, (int) v.x, 0);
             } else {
-                newMapPixelCoords.y = newMapPixelCoords.y - tilePixelHeight;
+                newMapPixelCoords.y = newMapPixelCoords.y - SCALED_DIM;
                 postMove(Direction.SOUTH, (int) v.x, (int) v.y + 1);
             }
             avatarDirection = Direction.SOUTH.getVal() - 1;
@@ -671,7 +581,7 @@ public class GameScreen extends BaseScreen {
                 Drawable ship = context.getCurrentMap().addObject(st, (int) v.x, (int) v.y);
                 context.setLastShip(ship);
             } else if (context.getTransport() == Transport.HORSE) {
-                Creature cr = Exodus.creatures.getInstance(CreatureType.horse, Exodus.standardAtlas);
+                Creature cr = Exodus.creatures.getInstance("horse", Exodus.standardAtlas);
                 cr.currentX = (int) v.x;
                 cr.currentY = (int) v.y;
                 context.getCurrentMap().addCreature(cr);
@@ -682,7 +592,7 @@ public class GameScreen extends BaseScreen {
 
         } else if (keycode == Keys.M) {
             log("Modify Order:");
-            log("exhange #:");
+            log("exchange #:");
             NewOrderInputAdapter noia = new NewOrderInputAdapter(this);
             Gdx.input.setInputProcessor(noia);
             return false;
@@ -746,8 +656,8 @@ public class GameScreen extends BaseScreen {
         if (context.getCurrentMap().getId() == Maps.AMBROSIA.getId()) {
             Portal p = Maps.AMBROSIA.getMap().getPortal(nx, ny, 0);
             if (p != null && p.getName().equals("WHIRLPOOL")) {
-                int dx = Utils.getRandomBetween(192, 212);
-                int dy = Utils.getRandomBetween(0, 32);
+                int dx = Utils.getRandomBetween(48, 53);
+                int dy = Utils.getRandomBetween(0, 8);
                 Sounds.play(Sound.WAVE);
                 loadNextMap(Maps.SOSARIA, dx, dy);
                 return false;
@@ -827,7 +737,7 @@ public class GameScreen extends BaseScreen {
         }
         TextureRegion texture = Exodus.standardAtlas.findRegion(name);
         TiledMapTileLayer layer = (TiledMapTileLayer) context.getCurrentTiledMap().getLayers().get("Map Layer");
-        Cell cell = layer.getCell(x, context.getCurrentMap().getWidth() - 1 - y);
+        Cell cell = layer.getCell(x, context.getCurrentMap().getHeight() - 1 - y);
         TiledMapTile tmt = new StaticTiledMapTile(texture);
         tmt.setId(y * context.getCurrentMap().getWidth() + x);
         if (cell == null) {
@@ -880,9 +790,20 @@ public class GameScreen extends BaseScreen {
             dx = currentX + dx;
             dy = currentY + dy;
 
+            BaseMap map = context.getCurrentMap();
+            if (map.getBorderbehavior() == MapBorderBehavior.wrap) {
+                dx = (dx + map.getWidth()) % map.getWidth();
+                dy = (dy + map.getHeight()) % map.getHeight();
+            }
+
             /* make sure we can spawn the creature there */
             if (creature != null) {
                 Tile tile = context.getCurrentMap().getTile(dx, dy);
+                if (tile == null || tile.getRule() == null) {
+                    tries++;
+                    continue;
+                }
+
                 TileRule rule = tile.getRule();
                 if ((creature.getSails() && rule.has(TileAttrib.sailable))
                         || (creature.getSwims() && rule.has(TileAttrib.swimmable))
@@ -892,7 +813,12 @@ public class GameScreen extends BaseScreen {
                     tries++;
                 }
             } else {
-                ok = true;
+                Tile tile = context.getCurrentMap().getTile(dx, dy);
+                if (tile != null && tile.getRule() != null) {
+                    ok = true;
+                } else {
+                    tries++;
+                }
             }
         }
 
@@ -900,9 +826,7 @@ public class GameScreen extends BaseScreen {
             return false;
         }
 
-        if (creature != null) {
-
-        } else {
+        if (creature == null) {
             Tile tile = context.getCurrentMap().getTile(dx, dy);
             creature = getRandomCreatureForTile(tile);
         }
@@ -920,7 +844,6 @@ public class GameScreen extends BaseScreen {
 
     private Creature getRandomCreatureForTile(Tile tile) {
 
-        int era = 0;
         int randId = 0;
 
         if (tile == null || tile.getRule() == null) {
@@ -933,38 +856,30 @@ public class GameScreen extends BaseScreen {
         }
 
         if (tile.getRule().has(TileAttrib.sailable)) {
-            randId = CreatureType.pirate_ship.getValue();
-            randId += rand.nextInt(6);
-            Creature cr = Exodus.creatures.getInstance(CreatureType.get(randId), Exodus.standardAtlas);
+            Creature cr = Exodus.creatures.getInstance("pirate", Exodus.standardAtlas);
             return cr;
         } else if (tile.getRule().has(TileAttrib.swimmable)) {
-            randId = CreatureType.nixie.getValue();
-            randId += rand.nextInt(5);//whirlpool will not be spawned
-            Creature cr = Exodus.creatures.getInstance(CreatureType.get(randId), Exodus.standardAtlas);
+            randId = 21;
+            randId += rand.nextInt(2);
+            Creature cr = Exodus.creatures.getInstance(randId, Exodus.standardAtlas);
             return cr;
         }
 
-        randId = CreatureType.orc.getValue();
+        randId = 10;
         int avgPtyHlth = this.context.getParty().getAverageMaxHealth();
-
         if (avgPtyHlth > 700) {
-            era = 0x1111; //15
-            randId += era & rand.nextInt(16);
+            randId += rand.nextInt(10);
         } else if (avgPtyHlth > 500) {
-            era = 0x1111; //15
-            randId += era & rand.nextInt(16) & rand.nextInt(16);
+            randId += rand.nextInt(8);
         } else if (avgPtyHlth > 400) {
-            era = 0x0111; //7
-            randId += era & rand.nextInt(16);
+            randId += rand.nextInt(6);
         } else if (avgPtyHlth > 300) {
-            era = 0x0111; //7
-            randId += era & rand.nextInt(16) & rand.nextInt(16);
+            randId += rand.nextInt(4);
         } else {
-            era = 0x0011; //3
-            randId += era & rand.nextInt(16);
+            randId += rand.nextInt(2);
         }
 
-        Creature cr = Exodus.creatures.getInstance(CreatureType.get(randId), Exodus.standardAtlas);
+        Creature cr = Exodus.creatures.getInstance(randId, Exodus.standardAtlas);
 
         return cr;
     }
@@ -1000,9 +915,9 @@ public class GameScreen extends BaseScreen {
 
             //for the town of dawn to only show at new moons
             if (trammelphase == 0 && feluccaphase == 0 && trammelSubphase == 1) {
-                replaceTile("town", 148, 212);
+                replaceTile("towne", 37, 53);
             } else if (trammelphase == 0 && feluccaphase == 1 && trammelSubphase == 16) {
-                replaceTile("grass", 148, 212);
+                replaceTile("grass", 37, 53);
             }
 
             if (showmoongates) {
@@ -1032,26 +947,26 @@ public class GameScreen extends BaseScreen {
     }
 
     private Vector3 getDestinationForMoongate(Moongate m) {
-        Vector3 dest = new Vector3(m.getX(), m.getY(), 0);
-        int destGate = m.getPhase();
+        if (feluccaphase == m.getPhase()) {
+            return null;
+        }
+
+        int destGate = -1;
 
         if (feluccaphase == m.getD1()) {
             destGate = m.getD1();
-        }
-        if (feluccaphase == m.getD2()) {
+        } else if (feluccaphase == m.getD2()) {
             destGate = m.getD2();
-        }
-        if (feluccaphase == m.getD3()) {
+        } else if (feluccaphase == m.getD3()) {
             destGate = m.getD3();
         }
 
-        for (Moongate dm : context.getCurrentMap().getMoongates()) {
-            if (dm.getPhase() == destGate) {
-                dest = new Vector3(dm.getX(), dm.getY(), 0);
-            }
+        if (destGate < 0) {
+            return null;
         }
 
-        return dest;
+        Moongate dm = context.getCurrentMap().getMoongate(destGate);
+        return dm == null ? null : new Vector3(dm.getX(), dm.getY(), 0);
     }
 
     public void board(int x, int y) {
@@ -1078,7 +993,7 @@ public class GameScreen extends BaseScreen {
         }
 
         Creature horse = context.getCurrentMap().getCreatureAt(x, y);
-        if (horse != null && (horse.getTile() == CreatureType.horse)) {
+        if (horse != null && ("horse".equals(horse.getTile()))) {
             log("Mount Horse!");
             context.getCurrentMap().removeCreature(horse);
             mainAvatar = horseAnim;
@@ -1165,7 +1080,7 @@ public class GameScreen extends BaseScreen {
             //check tile if chest in a city
             Tile tile = context.getCurrentMap().getTile(x, y);
             if (tile.getRule() == TileRule.chest) {
-                replaceTile("brick_floor", x, y);
+                replaceTile("floor", x, y);
                 found = true;
             }
         }
@@ -1290,22 +1205,19 @@ public class GameScreen extends BaseScreen {
         }
     }
 
-    private void checkHullIntegrity(BaseMap bm, int x, int y) {
+    private void checkHullIntegrity(BaseMap map, int x, int y) {
 
         boolean killAll = false;
         if (context.getTransport() == Transport.SHIP && context.getParty().getSaveGame().shiphull <= 0) {
             log("Thy ship sinks!");
             killAll = true;
-        } else if (context.getTransport() == Transport.FOOT
-                && bm.getTile(x, y).getRule() != null
-                && bm.getTile(x, y).getRule().has(TileAttrib.sailable)) {
-            //log("Trapped at sea without thy ship, thou dost drown!");
-            //killAll = true;
+        } else if (context.getTransport() == Transport.FOOT && map.getTile(x, y).getIndex() == 0) {
+            log("Trapped at sea without thy ship, thou dost drown!");
+            killAll = true;
         }
 
         if (killAll) {
-            //context.getParty().killAll();
-            //context.getParty().setTransport(Exodus.baseTileSet.getTileByIndex(0x1f));
+            context.getParty().killAll();
             mainAvatar = avatarAnim;
             partyDeath();
         }
@@ -1319,6 +1231,75 @@ public class GameScreen extends BaseScreen {
     @Override
     public boolean scrolled(float amountX, float amountY) {
         return false;
+    }
+
+    public class GameTimer implements Runnable {
+
+        public boolean active = true;
+
+        @Override
+        public void run() {
+            if (active) {
+                updateMoons(true);
+                if (System.currentTimeMillis() - context.getLastCommandTime() > 20 * 1000) {
+                    keyUp(Keys.SPACE);
+                }
+            }
+        }
+    }
+
+    public class ExplosionsTimer implements Runnable {
+
+        public boolean active = false;
+
+        @Override
+        public void run() {
+            if (active) {
+                Vector3 ac = getCurrentMapCoords();
+                int dx = Utils.getRandomBetween((int) ac.x - 9, (int) ac.x + 9);
+                int dy = Utils.getRandomBetween((int) ac.y - 9, (int) ac.y + 9);
+                if (dx < 12) {
+                    return;
+                } else if (dx > 52) {
+                    return;
+                }
+                if (dy < 12) {
+                    return;
+                } else if (dy > 52) {
+                    return;
+                }
+                Actor d = new ExplosionDrawable();
+                Vector3 v = getMapPixelCoords(dx, dy);
+                d.setX(v.x);
+                d.setY(v.y);
+
+                SequenceAction seq = Actions.action(SequenceAction.class);
+                seq.addAction(Actions.run(new AddActorAction(projectilesStage, d)));
+                if (Math.abs(ac.x - dx) < 2 && Math.abs(ac.y - dy) < 2) {
+                    seq.addAction(Actions.run(new PlaySoundAction(Sound.BOOM)));
+                    try {
+                        context.getParty().applyEffect(TileEffect.FIRE);
+                    } catch (PartyDeathException ex) {
+                        partyDeath();
+                    }
+                }
+                seq.addAction(Actions.delay(2f));
+                seq.addAction(Actions.removeActor(d));
+
+                projectilesStage.addAction(seq);
+            }
+        }
+    }
+
+    private void initTransportAnimations() {
+        Array<AtlasRegion> avatar = Exodus.standardAtlas.findRegions("ranger");
+        Array<AtlasRegion> corps = Exodus.standardAtlas.findRegions("corpse");
+        Array<AtlasRegion> horse = Exodus.standardAtlas.findRegions("horse");
+        Array<AtlasRegion> ship = Exodus.standardAtlas.findRegions("frigate");
+        avatarAnim = new Animation<>(1f, avatar);
+        shipAnim = new Animation<>(1f, ship);
+        corpseAnim = new Animation<>(1f, corps);
+        horseAnim = new Animation<>(1f, horse);
     }
 
 }

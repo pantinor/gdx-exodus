@@ -4,16 +4,12 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import objects.BaseMap;
 import objects.Creature;
 import objects.Portal;
-
 import org.apache.commons.io.IOUtils;
-
 import util.DungeonTileModelInstance;
 import util.Utils;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
@@ -731,9 +727,9 @@ public class DungeonScreen extends BaseScreen {
         }
         Maps contextMap = Maps.get(dngMap.getId());
         DungeonTile tile = dungeonTiles[currentLevel][x][y];
-        TiledMap tmap = new UltimaTiledMapLoader(tile.getCombatMap(), Exodus.standardAtlas, 11, 11, tilePixelWidth, tilePixelHeight).load();
+        TiledMap tmap = new UltimaTiledMapLoader(tile.getCombatMap(), Exodus.standardAtlas, 11, 11, TILE_DIM, TILE_DIM).load();
         context.setCurrentTiledMap(tmap);
-        CombatScreen sc = new CombatScreen(this, context, contextMap, tile.getCombatMap().getMap(), tmap, cr.getTile(), Exodus.creatures, Exodus.standardAtlas);
+        CombatScreen sc = new CombatScreen(this, context, contextMap, tile.getCombatMap().getMap(), tmap, cr.getTile(), Exodus.creatures);
         Exodus.mainGame.setScreen(sc);
         currentEncounter = cr;
     }
@@ -1299,24 +1295,10 @@ public class DungeonScreen extends BaseScreen {
             return false;
         }
 
-        //Make a Weighted Random Choice with level as a factor
-        int total = 0;
-        for (CreatureType ct : CreatureType.values()) {
-            total += ct.getSpawnLevel() <= currentLevel + 1 ? ct.getSpawnWeight() * ct.getSpawnLevel() : 0;
+        Creature creature = Exodus.creatures.getRandomDungeonInstance(currentLevel + 1, Exodus.standardAtlas, rand);
+        if (creature == null) {
+            return false;
         }
-
-        int thresh = rand.nextInt(total);
-        CreatureType monster = null;
-
-        for (CreatureType ct : CreatureType.values()) {
-            thresh -= ct.getSpawnLevel() <= currentLevel + 1 ? ct.getSpawnWeight() * ct.getSpawnLevel() : 0;
-            if (thresh < 0) {
-                monster = ct;
-                break;
-            }
-        }
-
-        Creature creature = Exodus.creatures.getInstance(monster, Exodus.standardAtlas);
         creature.currentX = dx;
         creature.currentY = dy;
         creature.currentLevel = currentLevel;

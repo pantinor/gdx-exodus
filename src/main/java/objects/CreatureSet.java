@@ -1,20 +1,16 @@
 package objects;
 
+import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Random;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import exodus.Constants.CreatureType;
-import util.Utils;
-
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.utils.Array;
-import java.util.Collections;
 
 @XmlRootElement(name = "creatures")
 public class CreatureSet {
@@ -31,50 +27,58 @@ public class CreatureSet {
     }
 
     public void init() {
-
-        for (Creature cr : creatures) {
-            CreatureType ct = CreatureType.get(cr.getId());
-            if (ct != null) {
-                ct.setCreature(cr);
-            } else {
-                System.err.printf("CreatureSet.init: Could not find creature type with id %d\n", cr.getId());
-            }
-        }
-        
-        Collections.sort(creatures);
     }
 
-    public Creature getInstance(CreatureType type, TextureAtlas atlas1) {
+    public Creature getInstance(int id, TextureAtlas atlas) {
         for (Creature cr : creatures) {
-            //System.err.printf("%s %s %s\n", type, cr.getTile(), cr.getName());
-            if (cr.getTile() == type || cr.getName().toLowerCase().equals(type.toString())) {
+            if (id == cr.getId()) {
+                return getInstance(cr.getTile(), atlas);
+            }
+        }
+        throw new IllegalArgumentException("Creature ID not found " + id);
+    }
 
+    public Creature getRandomDungeonInstance(int dungeonLevel, TextureAtlas atlas, Random rand) {
+        List<Creature> eligible = new ArrayList<>();
+        for (Creature cr : creatures) {
+            if (cr.getLevel() > 0 && cr.getLevel() <= dungeonLevel && !cr.getSails() && !cr.getSwims() && !cr.getGood() && !cr.getWontattack()) {
+                eligible.add(cr);
+            }
+        }
+
+        if (eligible.isEmpty()) {
+            return null;
+        }
+
+        Creature cr = eligible.get(rand.nextInt(eligible.size()));
+        return getInstance(cr.getTile(), atlas);
+    }
+
+    public Creature getInstance(String type, TextureAtlas atlas) {
+
+        for (Creature cr : creatures) {
+            if (type.equals(cr.getTile())) {
                 Creature newCr = new Creature(cr);
 
-                Array<AtlasRegion> tr = atlas1.findRegions(cr.getTile().toString());
-                int frameRate = Utils.getRandomBetween(1, 3);
-                newCr.setAnim(new Animation(frameRate, tr));
-                
-                int fr = Utils.getRandomBetween(0, tr.size);
-                TextureRegion reg = tr.get(fr);
-                Decal d = Decal.newDecal(reg, true);
-                d.setScale(.018f);
-                newCr.setDecal(d);
-                
-                if (type == CreatureType.twister) {
-                    newCr.setAnim(new Animation(.2f, tr));
+                Array<AtlasRegion> regions = atlas.findRegions(type);
+
+                if (regions == null || regions.size == 0) {
+                    System.err.println("No atlas regions found for " + cr.getTile());
+                    return null;
                 }
-                
-                if (type == CreatureType.whirlpool) {
-                    newCr.setAnim(new Animation(.3f, tr));
-                }
+
+                float frameDuration = "whirlpool".equals(type) ? 0.3f : 0.2f;
+                newCr.setAnim(new Animation<TextureRegion>(frameDuration, regions));
+
+                TextureRegion region = regions.get(0);
+                Decal decal = Decal.newDecal(region, true);
+                decal.setScale(0.018f);
+
+                newCr.setDecal(decal);
 
                 return newCr;
             }
         }
-
-        System.err.println(type + " not found.");
-
-        return null;
+        throw new IllegalArgumentException("Creature Type not found " + type);
     }
 }

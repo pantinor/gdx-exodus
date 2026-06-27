@@ -26,8 +26,10 @@ public interface Constants {
         MAIN, COMBAT, DUNGEON, SHRINE, CODEX, RANDOMDNG, TMXDUNGEON;
     }
 
-    public static int tilePixelWidth = 32;
-    public static int tilePixelHeight = 32;
+    public static final int TILE_DIM = 16;
+    public static final int SCALED_DIM = TILE_DIM * 2;
+    public static final int VIEWPORT_DIM = SCALED_DIM * 21;
+    
     public static final String PARTY_SAV_BASE_FILENAME = "party.sav";
     public static final int STATS_NONE = 0;
     public static final int STATS_PLAYER1 = 1;
@@ -64,25 +66,15 @@ public interface Constants {
         DOOM(18, "Dungeon of Doom"),
         SNAKE(19, "Dungeon of the Snake"),
         TIME(20, "Dungeon of Time"),
-        BRICK_CON(33, ""),
-        BRIDGE_CON(34, ""),
-        BRUSH_CON(35, ""),
-        DNG0_CON(37, ""),
-        DNG1_CON(38, ""),
-        DNG2_CON(39, ""),
-        DNG3_CON(40, ""),
-        DNG5_CON(42, ""),
-        DNG6_CON(43, ""),
-        DUNGEON_CON(44, ""),
-        FOREST_CON(45, ""),
-        GRASS_CON(46, ""),
-        HILL_CON(47, ""),
-        MARSH_CON(49, ""),
-        SHIPSEA_CON(50, ""),
-        SHIPSHIP_CON(51, ""),
-        SHIPSHOR_CON(52, ""),
-        SHORE_CON(53, ""),
-        SHORSHIP_CON(54, ""),
+        CONFLICT_SHIP_TOP(33, ""),
+        CONFLICT_GRASS_BRUSH(34, ""),
+        CONFLICT_BRICK_FLOOR(35, ""),
+        CONFLICT_GRASS_FOREST(36, ""),
+        CONFLICT_GRASS(37, ""),
+        CONFLICT_SHORE(38, ""),
+        CONFLICT_SHIP(39, ""),
+        CONFLICT_SHIP_BOTTOM(41, ""),
+        CONFLICT_BOTH_SHIPS(40, ""),
         SHRINE_OF_WISDOM(55, "Shrine of Wisdom"),
         SHRINE_OF_DEXTERITY(56, "Shrine of Dexterity"),
         SHRINE_OF_INTELLIGENCE(57, "Shrine of Intelligence"),
@@ -410,16 +402,16 @@ public interface Constants {
 
     public enum DungeonTile {
 
-        NOTHING((byte) 0x00, "Nothing", "brick_floor", true),
-        FLOOR((byte) 0x00, "Floor", "brick_floor", true),
+        NOTHING((byte) 0x00, "Nothing", "floor", true),
+        FLOOR((byte) 0x00, "Floor", "floor", true),
         WATER((byte) 0x00, "Water", "water", true),
         CEILING((byte) 0x00, "Ceiling", "none", false),
-        LADDER_UP((byte) 0x10, "Ladder Up", "up_ladder", true, Maps.DNG1_CON),
-        LADDER_DOWN((byte) 0x20, "Ladder Down", "down_ladder", true, Maps.DNG2_CON),
-        LADDER_UP_DOWN((byte) 0x30, "Ladder Up & Down", "down_ladder", true, Maps.DNG3_CON),
+        LADDER_UP((byte) 0x10, "Ladder Up", "up_ladder", true),
+        LADDER_DOWN((byte) 0x20, "Ladder Down", "down_ladder", true),
+        LADDER_UP_DOWN((byte) 0x30, "Ladder Up & Down", "down_ladder", true),
         CEILING_HOLE((byte) 0x00, "Ceiling Hole", "solid", false),
         FLOOR_HOLE((byte) 0x00, "Floor Hole", "solid", false),
-        ORB((byte) 0x00, "Magic Orb", "magic_flash", true),
+        ORB((byte) 0x00, "Magic Orb", "magic", true),
         LIGHT((byte) 0, "Light", "miss_flash", true),
         MOONGATE((byte) 0, "Moongate", "moongate", true),
         ALTAR((byte) 0, "Altar", "altar", true),
@@ -429,9 +421,9 @@ public interface Constants {
         MARK_KINGS((byte) 0x00, "Mark of Kings", "whirlpool", true),
         MARK_FORCE((byte) 0x00, "Mark of Force", "whirlpool", true),
         MARK_FIRE((byte) 0x00, "Mark of Fire", "whirlpool", true),
-        WIND_TRAP((byte) 0x03, "Winds/Darknes Trap", "magic_flash", true),
+        WIND_TRAP((byte) 0x03, "Winds/Darknes Trap", "magic", true),
         GREMLINS((byte) 0x06, "Gremlins", "jester", true),
-        PIT_TRAP((byte) 0x04, "Pit Trap", "hit_flash", true),
+        PIT_TRAP((byte) 0x04, "Pit Trap", "fire", true),
         FOUNTAIN_PLAIN((byte) 0x00, "Plain Fountain", "Z", true),
         FOUNTAIN_HEAL((byte) 0x02, "Healing Fountain", "H", true),
         FOUNTAIN_ACID((byte) 0x00, "Acid Fountain", "A", true),
@@ -440,9 +432,9 @@ public interface Constants {
         FIELD_POISON((byte) 0x00, "Poison Field", "poison_field", false),
         FIELD_ENERGY((byte) 0x00, "Energy Field", "energy_field", false),
         FIELD_FIRE((byte) 0x00, "Fire Field", "fire_field", false),
-        DOOR((byte) 0xC0, "Door", "door", true, Maps.DNG5_CON),
-        LOCKED_DOOR((byte) 0, "Locked Door", "locked_door", false, Maps.DNG5_CON),
-        SECRET_DOOR((byte) 0xA0, "Secret Door", "secret_door", false, Maps.DNG6_CON),
+        DOOR((byte) 0xC0, "Door", "door", true),
+        LOCKED_DOOR((byte) 0, "Locked Door", "locked_door", false),
+        SECRET_DOOR((byte) 0xA0, "Secret Door", "secret_door", false),
         TIME_LORD((byte) 0x01, "Time Lord", "lord_british", false),
         MISTY_WRITINGS((byte) 0x08, "Misty Writings", "shrine", true),
         WALL((byte) 0x80, "Wall ", "brick_wall", false);
@@ -450,21 +442,13 @@ public interface Constants {
         private byte value;
         private String type;
         private String tileName;
-        private Maps combatMap = Maps.DNG0_CON;
+        private Maps combatMap = Maps.CONFLICT_BRICK_FLOOR;
         private boolean creatureWalkable;
 
         private DungeonTile(byte value, String type, String tileName, boolean cw) {
             this.value = value;
             this.type = type;
             this.tileName = tileName;
-            this.creatureWalkable = cw;
-        }
-
-        private DungeonTile(byte value, String type, String tileName, boolean cw, Maps combatMap) {
-            this.value = value;
-            this.type = type;
-            this.tileName = tileName;
-            this.combatMap = combatMap;
             this.creatureWalkable = cw;
         }
 
@@ -590,16 +574,16 @@ public interface Constants {
     public enum Profession {
 
         BARBARIAN("fighter", 0x001),
-        DRUID("shepherd", 0x002),
-        ALCHEMIST("tinker", 0x004),
+        DRUID("cleric", 0x002),
+        ALCHEMIST("wizard", 0x004),
         RANGER("ranger", 0x008),
         FIGHTER("fighter", 0x010),
-        WIZARD("mage", 0x020),
-        THIEF("rogue", 0x0040),
-        LARK("jester", 0x080),
-        ILLUSIONIST("mage", 0x100),
+        WIZARD("wizard", 0x020),
+        THIEF("thief", 0x0040),
+        LARK("thief", 0x080),
+        ILLUSIONIST("wizard", 0x100),
         CLERIC("cleric", 0x200),
-        PALADIN("paladin", 0x400);
+        PALADIN("fighter", 0x400);
 
         private final String tile;
         private final int val;
@@ -896,120 +880,6 @@ public interface Constants {
         NEGATE,
         PROTECTION,
         QUICKNESS;
-    }
-
-    public enum CreatureType {
-
-        horse(0),
-        horse2(1),
-        mage(2),
-        bard(3),
-        fighter(4),
-        druid(5),
-        tinker(6),
-        paladin(7),
-        ranger(8),
-        shepherd(9),
-        guard(10),
-        merchant(11),
-        bard_singing(12),
-        jester(13),
-        beggar(14),
-        child(15),
-        bull(16),
-        lord_british(17),
-        pirate_ship(18),
-        nixie(19),
-        giant_squid(20),
-        sea_serpent(21),
-        sea_horse(22),
-        twister(23),
-        whirlpool(24),
-        rat(25,         5,      1),
-        bat(26,         5,      1),
-        spider(27,      5,      1),
-        ghost(28,       5,      2),
-        slime(29,       5,      1),
-        troll(30,       5,      2),
-        gremlin(31,     5,      3),
-        mimic(32,       5,      4),
-        insect_swarm(34),
-        gazer(35,       5,      4),
-        phantom(36,     5,      3),
-        orc(37,         5,      1),
-        skeleton(38,    5,      1),
-        rogue(39),
-        brigand(40),
-        ettin(41,       5,      3),
-        headless(42,    5,      2),
-        cyclops(43,     5,      4),
-        wisp(44,        5,      4),
-        evil_mage(45,   5,      4),
-        liche(46,       5,      5),
-        lava_lizard(47),
-        zorn(48,        5,      7),
-        daemon(49,      5,      5),
-        hydra(50,       5,      6),
-        dragon(51,      5,      7),
-        balron(52,      5,      8),
-        grass(60),
-        chest(61),
-        brick_floor(62),
-        cleric(63);
-
-        private final int intValue;
-        private final int dungeonSpawnWeight;
-        private int dungeonSpawnLevel;
-        private Creature creature;
-
-        private CreatureType(int value) {
-            intValue = value;
-            dungeonSpawnWeight = 0;
-        }
-
-        private CreatureType(int value, int dsw, int dsl) {
-            intValue = value;
-            dungeonSpawnWeight = dsw;
-            dungeonSpawnLevel = dsl;
-        }
-
-        public int getValue() {
-            return intValue;
-        }
-
-        public int getSpawnWeight() {
-            return dungeonSpawnWeight;
-        }
-
-        public int getSpawnLevel() {
-            return dungeonSpawnLevel;
-        }
-
-        public static CreatureType get(int v) {
-            for (CreatureType x : values()) {
-                if (x.getValue() == v) {
-                    return x;
-                }
-            }
-            return null;
-        }
-
-        public static CreatureType get(String v) {
-            for (CreatureType x : values()) {
-                if (x.toString().equals(v)) {
-                    return x;
-                }
-            }
-            return null;
-        }
-
-        public Creature getCreature() {
-            return creature;
-        }
-
-        public void setCreature(Creature creature) {
-            this.creature = creature;
-        }
     }
 
     public enum AttackResult {

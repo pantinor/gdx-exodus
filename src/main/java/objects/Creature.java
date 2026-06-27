@@ -4,12 +4,8 @@ import com.badlogic.gdx.graphics.Color;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
 import org.apache.commons.lang3.StringUtils;
-
 import exodus.Constants;
-
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
@@ -41,6 +37,7 @@ public class Creature implements Constants, Comparable {
 
     private boolean incorporeal;
     private int leader;
+    private int level;
     private boolean leavestile;
     private boolean nochest;
     private boolean poisons;
@@ -56,7 +53,7 @@ public class Creature implements Constants, Comparable {
     private boolean undead;
     private boolean wontattack;
     
-    private CreatureType tile;
+    private String tile;
     private Animation<TextureRegion> anim;
     private Decal decal;
     private TextureRegion healthBar;
@@ -93,6 +90,7 @@ public class Creature implements Constants, Comparable {
 
         this.incorporeal = clone.incorporeal;
         this.leader = clone.leader;
+        this.level = clone.level;
         this.leavestile = clone.leavestile;
         this.name = clone.name;
         this.nochest = clone.nochest;
@@ -189,6 +187,11 @@ public class Creature implements Constants, Comparable {
     }
 
     @XmlAttribute
+    public int getLevel() {
+        return level;
+    }
+
+    @XmlAttribute
     public boolean getLeavestile() {
         return leavestile;
     }
@@ -254,8 +257,7 @@ public class Creature implements Constants, Comparable {
     }
 
     @XmlAttribute(name = "tile")
-    @XmlJavaTypeAdapter(CreatureTypeAdapter.class)
-    public CreatureType getTile() {
+    public String getTile() {
         return tile;
     }
 
@@ -329,6 +331,10 @@ public class Creature implements Constants, Comparable {
         this.leader = leader;
     }
 
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
     public void setLeavestile(boolean leavestile) {
         this.leavestile = leavestile;
     }
@@ -381,7 +387,7 @@ public class Creature implements Constants, Comparable {
         this.teleports = teleports;
     }
 
-    public void setTile(CreatureType tile) {
+    public void setTile(String tile) {
         this.tile = tile;
     }
 

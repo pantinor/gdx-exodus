@@ -1,24 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package util;
 
-import com.badlogic.gdx.assets.loaders.FileHandleResolver;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FileTextureData;
-import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -48,18 +36,12 @@ import javax.xml.bind.Unmarshaller;
 import objects.BaseMap;
 import objects.Creature;
 import objects.Drawable;
-import objects.Moongate;
 import objects.Person;
-import objects.Portal;
 import objects.ProjectileActor;
 import objects.Tile;
 import objects.TileSet;
 import org.apache.commons.io.IOUtils;
 
-/**
- *
- * @author Paul
- */
 public class Utils implements Constants {
 
     public static Random rand = new XORShiftRandom();
@@ -68,7 +50,6 @@ public class Utils implements Constants {
         return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
     }
 
-    //This gives you a random number in between low (inclusive) and high (exclusive)
     public static int getRandomBetween(int low, int high) {
         return rand.nextInt(high - low) + low;
     }
@@ -114,97 +95,88 @@ public class Utils implements Constants {
             return;
         }
 
-        if (fname.endsWith("tmx")) {
-            setTilesFromTMX(map, Maps.get(map.getId()), fname, ts);
-        } else {
+        InputStream is = Utils.class.getResourceAsStream("/assets/data/" + fname);
+        byte[] bytes = IOUtils.toByteArray(is);
 
-            InputStream is = Utils.class.getResourceAsStream("/assets/data/" + fname);
-            byte[] bytes = IOUtils.toByteArray(is);
+        Tile[] tiles = new Tile[map.getWidth() * map.getHeight()];
 
-            Tile[] tiles = new Tile[map.getWidth() * map.getHeight()];
+        if (map.getType() == MapType.world || map.getType() == MapType.city) {
 
-            if (map.getType() == MapType.world || map.getType() == MapType.city) {
-
-                int pos = 0;
-                for (int y = 0; y < map.getHeight(); y++) {
-                    for (int x = 0; x < map.getWidth(); x++) {
-                        int index = (bytes[pos] & 0xff) / 4;
-                        pos++;
-                        Tile tile = ts.getTileByIndex(index);
-                        if (tile == null) {
-                            System.out.println("Tile index cannot be found: " + index + " using index 37 for black space.");
-                            tile = ts.getTileByIndex(37);
-                        }
-
-                        tiles[x + y * map.getWidth()] = tile;
+            int pos = 0;
+            for (int y = 0; y < map.getHeight(); y++) {
+                for (int x = 0; x < map.getWidth(); x++) {
+                    int index = (bytes[pos] & 0xff) / 4;
+                    pos++;
+                    Tile tile = ts.getTileByIndex(index);
+                    if (tile == null) {
+                        tile = ts.getTileByIndex(36);
                     }
-                }
 
-                //doors
-                for (int y = 0; y < map.getHeight(); y++) {
-                    for (int x = 0; x < map.getWidth(); x++) {
-                        Tile tile = tiles[x + y * map.getWidth()];
-                        Tile left = x > 0 ? tiles[(x - 1) + y * map.getWidth()] : null;
-                        Tile right = x < map.getWidth() - 1 ? tiles[(x + 1) + y * map.getWidth()] : null;
-                        if (tile.getIndex() == 46 && (left != null && left.getRule() != TileRule.signs) && (right != null && right.getRule() != TileRule.signs)) {
-                            tiles[x + y * map.getWidth()] = ts.getTileByName("locked_door");
-                        }
-                    }
+                    tiles[x + y * map.getWidth()] = tile;
                 }
+            }
 
-                //ambrosia doors
-                if (map.getId() == Maps.AMBROSIA.getId()) {
-                    tiles[34 + 5 * map.getWidth()] = ts.getTileByName("locked_door");
-                    tiles[35 + 5 * map.getWidth()] = ts.getTileByName("locked_door");
-                    tiles[36 + 5 * map.getWidth()] = ts.getTileByName("locked_door");
-                }
-
-                if (map.getType() == MapType.city) {
-                    setPeople(map, tiles, bytes, ts);
-                }
-
-                if (map.getType() == MapType.world) {
-                    //set a moongate tile to grass here
-                    tiles[15 + 29 * map.getWidth()] = ts.getTileByIndex(1);
-                }
-
-            } else if (map.getType() == MapType.combat) {
-
-                int pos = 0x40;
-                for (int y = 0; y < map.getHeight(); y++) {
-                    for (int x = 0; x < map.getWidth(); x++) {
-                        int index = bytes[pos] & 0xff;
-                        pos++;
-                        Tile tile = ts.getTileByIndex(index);
-                        if (tile == null) {
-                            //System.err.printf("%S Combat Tile index cannot be found: %d using index 127 for black space (%d, %d)\n", map, index, x, y);
-                            tile = ts.getTileByIndex(127);
-                        }
-                        tiles[x + y * map.getWidth()] = tile;
-                    }
-                }
-            } else if (map.getType() == MapType.shrine) {
-                int pos = 0;
-                for (int y = 0; y < map.getHeight(); y++) {
-                    for (int x = 0; x < map.getWidth(); x++) {
-                        int index = bytes[pos] & 0xff;
-                        pos++;
-                        Tile tile = ts.getTileByIndex(index);
-                        if (tile == null) {
-                            System.out.println("Tile index cannot be found: " + index + " using index 127 for black space.");
-                            tile = ts.getTileByIndex(127);
-                        }
-                        if (tile.getIndex() == 31) { //avatar position
-                            tile = ts.getTileByIndex(4);
-                        }
-                        tiles[x + y * map.getWidth()] = tile;
+            //doors
+            for (int y = 0; y < map.getHeight(); y++) {
+                for (int x = 0; x < map.getWidth(); x++) {
+                    Tile tile = tiles[x + y * map.getWidth()];
+                    Tile left = x > 0 ? tiles[(x - 1) + y * map.getWidth()] : null;
+                    Tile right = x < map.getWidth() - 1 ? tiles[(x + 1) + y * map.getWidth()] : null;
+                    if (tile.getIndex() == 46 && (left != null && left.getRule() != TileRule.signs) && (right != null && right.getRule() != TileRule.signs)) {
+                        tiles[x + y * map.getWidth()] = ts.getTileByName("locked_door");
                     }
                 }
             }
 
-            map.setTiles(tiles);
+            //ambrosia doors
+            if (map.getId() == Maps.AMBROSIA.getId()) {
+                tiles[34 + 5 * map.getWidth()] = ts.getTileByName("locked_door");
+                tiles[35 + 5 * map.getWidth()] = ts.getTileByName("locked_door");
+                tiles[36 + 5 * map.getWidth()] = ts.getTileByName("locked_door");
+            }
 
+            if (map.getType() == MapType.city) {
+                setPeople(map, tiles, bytes, ts);
+            }
+
+            if (map.getType() == MapType.world) {
+                //set a moongate tile to grass here
+                tiles[15 + 29 * map.getWidth()] = ts.getTileByIndex(1);
+            }
+
+        } else if (map.getType() == MapType.combat) {
+
+            int pos = 0x00;
+            for (int y = 0; y < map.getHeight(); y++) {
+                for (int x = 0; x < map.getWidth(); x++) {
+                    int index = bytes[pos] & 0xff;
+                    pos++;
+                    Tile tile = ts.getTileByIndex(index);
+                    if (tile == null) {
+                        tile = ts.getTileByIndex(36);
+                    }
+                    tiles[x + y * map.getWidth()] = tile;
+                }
+            }
+        } else if (map.getType() == MapType.shrine) {
+            int pos = 0;
+            for (int y = 0; y < map.getHeight(); y++) {
+                for (int x = 0; x < map.getWidth(); x++) {
+                    int index = bytes[pos] & 0xff;
+                    pos++;
+                    Tile tile = ts.getTileByIndex(index);
+                    if (tile == null) {
+                        tile = ts.getTileByIndex(36);
+                    }
+                    if (tile.getIndex() == 63) { //avatar position
+                        tile = ts.getTileByIndex(4);
+                    }
+                    tiles[x + y * map.getWidth()] = tile;
+                }
+            }
         }
+
+        map.setTiles(tiles);
 
     }
 
@@ -217,8 +189,7 @@ public class Utils implements Constants {
             pos++;
             Tile tile = ts.getTileByIndex(index);
             if (tile == null) {
-                System.out.println("Tile index cannot be found: " + index + " using index 37 for black space.");
-                tile = ts.getTileByIndex(37);
+                tile = ts.getTileByIndex(36);
             }
             Person p = new Person();
             p.setTile(tile);
@@ -266,8 +237,7 @@ public class Utils implements Constants {
             pos++;
             Tile tile = ts.getTileByIndex(index);
             if (tile == null) {
-                System.out.println("Tile index cannot be found: " + index + " using index 37 for black space.");
-                tile = ts.getTileByIndex(37);
+                tile = ts.getTileByIndex(36);
             }
             int dx = people.get(x).getX();
             int dy = people.get(x).getY();
@@ -308,95 +278,17 @@ public class Utils implements Constants {
                 }
             }
         }
-        
+
         Iterator<Person> iter = people.iterator();
         while (iter.hasNext()) {
             Person p = iter.next();
-            CreatureType ct = CreatureType.get(p.getTile().getName());
-            if (ct == null) {
+            String type = p.getTile().getName();
+            if (type == null) {
                 iter.remove();//remove null person objects
             }
         }
-        
+
         map.setPeople(people);
-    }
-
-    public static void setTilesFromTMX(BaseMap map, Maps id, String tmxFile, TileSet ts) {
-
-        Tile[] tiles = new Tile[map.getWidth() * map.getHeight()];
-
-        FileHandleResolver resolver = new Constants.ClasspathResolver();
-        TmxMapLoader loader = new TmxMapLoader(resolver);
-        TiledMap tm = loader.load("assets/tmx/" + tmxFile);
-
-        TiledMapTileLayer ml = (TiledMapTileLayer) tm.getLayers().get(map.getId() + "-map");
-        if (ml != null) {
-            FileHandle f = resolver.resolve("assets/graphics/latest-atlas.txt");
-            TextureAtlas.TextureAtlasData atlas = new TextureAtlas.TextureAtlasData(f, f.parent(), false);
-            int png_grid_width = 24;
-            Tile[] mapTileIds = new Tile[png_grid_width * Constants.tilePixelWidth + 1];
-            for (TextureAtlas.TextureAtlasData.Region r : atlas.getRegions()) {
-                int x = r.left / r.width;
-                int y = r.top / r.height;
-                int i = x + (y * png_grid_width) + 1;
-                mapTileIds[i] = ts.getTileByName(r.name);
-                if (mapTileIds[i] == null) {
-                    //System.out.printf("no tile found: %s %d\n",r.name,i);
-                }
-            }
-
-            for (int y = 0; y < map.getHeight(); y++) {
-                for (int x = 0; x < map.getWidth(); x++) {
-                    StaticTiledMapTile tr = (StaticTiledMapTile) ml.getCell(x, map.getWidth() - 1 - y).getTile();
-                    Tile tile = mapTileIds[tr.getId()];
-                    if (tile == null) {
-                        System.out.printf("no tile found: %d %d %d\n", x, y, tr.getId());
-                    }
-                    tiles[x + (y * map.getWidth())] = tile;
-                }
-            }
-        }
-
-        map.setTiles(tiles);
-
-        MapLayer objectsLayer = tm.getLayers().get("portals");
-        if (objectsLayer != null) {
-            Iterator<MapObject> iter = objectsLayer.getObjects().iterator();
-            while (iter.hasNext()) {
-                MapObject obj = iter.next();
-                Portal p = map.getPortal(Maps.valueOf(obj.getName()).getId());
-                Iterator<String> keys = obj.getProperties().getKeys();
-                while (keys.hasNext()) {
-                    String key = keys.next();
-                    String value = obj.getProperties().get(key).toString();
-                    if (key.equals("x")) {
-                        p.setX(Integer.valueOf(value));
-                    } else if (key.equals("y")) {
-                        p.setY(Integer.valueOf(value));
-                    }
-                }
-            }
-        }
-
-        objectsLayer = tm.getLayers().get("moongates");
-        if (objectsLayer != null) {
-            Iterator<MapObject> iter = objectsLayer.getObjects().iterator();
-            while (iter.hasNext()) {
-                MapObject obj = iter.next();
-                Moongate m = map.getMoongate(obj.getName());
-                Iterator<String> keys = obj.getProperties().getKeys();
-                while (keys.hasNext()) {
-                    String key = keys.next();
-                    String value = obj.getProperties().get(key).toString();
-                    if (key.equals("x")) {
-                        m.setX(Integer.valueOf(value));
-                    } else if (key.equals("y")) {
-                        m.setY(Integer.valueOf(value));
-                    }
-                }
-            }
-        }
-
     }
 
     public static Direction getPath(MapBorderBehavior borderbehavior, int width, int height, int toX, int toY, int validMovesMask, boolean towards, int fromX, int fromY) {
@@ -722,7 +614,7 @@ public class Utils implements Constants {
 
     public static boolean damageCreature(Creature cr, int damage, boolean byplayer) {
 
-        if (cr.getTile() != CreatureType.lord_british) {
+        if (!"lord_british".equals(cr.getTile())) {
             cr.setHP(Utils.adjustValueMin(cr.getHP(), -damage, 0));
         }
 
@@ -875,14 +767,14 @@ public class Utils implements Constants {
 
                 //scr.replaceTile(av.leaveTileName, av.x, av.y);
                 scr.finishPlayerTurn();
-                        
+
                 return true;
             }
         }, fadeOut(.2f), removeActor(p)));
 
         stage.addActor(p);
     }
-    
+
     private static AttackVector castSpellAttack(BaseMap combatMap, PartyMember attacker, Direction dir, int x, int y, int minDamage, int maxDamage, Spell spell) {
 
         List<AttackVector> path = Utils.getDirectionalActionPath(combatMap, dir.getMask(), x, y, 1, 11, true, true, false);
@@ -902,7 +794,7 @@ public class Utils implements Constants {
 
         return target;
     }
-    
+
     private static AttackResult castAt(BaseMap combatMap, AttackVector target, PartyMember attacker, int minDamage, int maxDamage, Spell spell) {
 
         AttackResult res = AttackResult.NONE;
@@ -917,26 +809,26 @@ public class Utils implements Constants {
         if (creature == null) {
             return res;
         }
-                
+
         if (spell == Spell.FULGAR) {
             if ("fire".equals(creature.getResists())) {
                 Sounds.play(Sound.EVADE);
                 Exodus.hud.add("Resisted!\n");
                 return AttackResult.MISS;
             }
-        } 
+        }
 
         Sounds.play(Sound.NPC_STRUCK);
-        
+
         int attackDamage = ((minDamage >= 0) && (minDamage < maxDamage))
                 ? rand.nextInt((maxDamage + 1) - minDamage) + minDamage
                 : maxDamage;
-        
+
         dealDamage(attacker, creature, attackDamage);
 
         return AttackResult.HIT;
     }
-    
+
     private static AttackResult attackAt(BaseMap combatMap, AttackVector target, PartyMember attacker, int range, int distance) {
         AttackResult res = AttackResult.NONE;
         Creature creature = null;

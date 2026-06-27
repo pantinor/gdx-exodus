@@ -101,136 +101,78 @@ public class UltimaTiledMapLoader implements Constants {
     }
 
     private void loadCombatPositions(TiledMap map) throws Exception {
-        InputStream is = UltimaTiledMapLoader.class.getResourceAsStream("/assets/data/" + gameMap.getMap().getFname());
-        byte[] bytes = IOUtils.toByteArray(is);
+        try (InputStream is = UltimaTiledMapLoader.class.getResourceAsStream("/assets/data/" + gameMap.getMap().getFname())) {
 
-//		0x0 	16 	start_x for monsters 0-15
-//		0x10 	16 	start_y for monsters 0-15
-//		0x20 	8 	start_x for party members 0-7
-//		0x28 	8 	start_y for party members 0-7 
-        MapLayer mlayer = new MapLayer();
-        mlayer.setName("Monster Positions");
-
-        Position[] monPos = new Position[16];
-        for (int i = 0; i < 16; i++) {
-            monPos[i] = new Position(i, (int) bytes[i], 0);
-        }
-        for (int i = 0; i < 16; i++) {
-            monPos[i].startY = (int) bytes[i + 16];
-        }
-        for (int i = 0; i < 16; i++) {
-            MapObject object = new MapObject();
-            object.getProperties().put("index", monPos[i].index);
-            object.getProperties().put("startX", monPos[i].startX);
-            object.getProperties().put("startY", monPos[i].startY);
-            mlayer.getObjects().add(object);
-        }
-
-        map.getLayers().add(mlayer);
-
-        MapLayer player = new MapLayer();
-        player.setName("Player Positions");
-
-        Position[] playerPos = new Position[4];
-        for (int i = 0; i < 4; i++) {
-            playerPos[i] = new Position(i, (int) bytes[i + 32], 0);
-        }
-        for (int i = 0; i < 4; i++) {
-            playerPos[i].startY = (int) bytes[i + 40];
-        }
-        for (int i = 0; i < 4; i++) {
-            MapObject object = new MapObject();
-            object.getProperties().put("index", playerPos[i].index);
-            object.getProperties().put("startX", playerPos[i].startX);
-            object.getProperties().put("startY", playerPos[i].startY);
-            player.getObjects().add(object);
-        }
-        map.getLayers().add(player);
-
-    }
-
-    class Position {
-
-        int index;
-        int startX;
-        int startY;
-
-        private Position(int index, int startX, int startY) {
-            this.index = index;
-            this.startX = startX;
-            this.startY = startY;
-        }
-    }
-
-    /**
-     * For splash screen.
-     *
-     * @param startX
-     * @param startY
-     * @param endX
-     * @param endY
-     * @return
-     */
-    public TiledMap load(int startX, int startY, int endX, int endY) {
-
-        TiledMap map = new TiledMap();
-
-        MapProperties mapProperties = map.getProperties();
-        mapProperties.put("name", gameMap.toString());
-        mapProperties.put("id", gameMap.getId());
-        mapProperties.put("orientation", "orthogonal");
-        mapProperties.put("width", mapWidth);
-        mapProperties.put("height", mapHeight);
-        mapProperties.put("tilewidth", tileWidth);
-        mapProperties.put("tileheight", tileHeight);
-        mapProperties.put("backgroundcolor", "#000000");
-
-        TiledMapTileLayer layer = new TiledMapTileLayer(mapWidth, mapHeight, tileWidth, tileHeight);
-        layer.setName("Map Layer");
-        layer.setVisible(true);
-
-        int dx = 0, dy = 0;
-        for (int y = startY; y < endY; y++) {
-            for (int x = startX; x < endX; x++) {
-                Tile ct = gameMap.getMap().getTile(x, y);
-                Cell cell = new Cell();
-
-                Array<TextureAtlas.AtlasRegion> tileRegions = atlas.findRegions(ct.getName());
-                Array<StaticTiledMapTile> ar = new Array<>();
-                for (TextureAtlas.AtlasRegion r : tileRegions) {
-                    ar.add(new StaticTiledMapTile(r));
-                }
-                if (ar.size == 0) {
-                    System.out.println(ct.getName());
-                }
-
-                TiledMapTile tmt = null;
-                if (tileRegions.size > 1) {
-                    tmt = new AnimatedTiledMapTile(.7f, ar);
-                } else {
-                    tmt = ar.first();
-                }
-
-                tmt.setId(dy * mapWidth + dx);
-                cell.setTile(tmt);
-                layer.setCell(dx, mapHeight - 1 - dy, cell);
-                dx++;
+            if (is == null) {
+                throw new IllegalArgumentException("Could not find conflict map file: " + gameMap.getMap().getFname());
             }
-            dx = 0;
-            dy++;
+
+            byte[] bytes = IOUtils.toByteArray(is);
+
+            /*
+         * .ULT conflict map format:
+         *
+         * 0x00 - 0x78   121 bytes: 11x11 map tiles
+         * 0x79 - 0x7F     7 bytes: unknown
+         * 0x80 - 0x87     8 bytes: monster start X, monsters 1-8
+         * 0x88 - 0x8F     8 bytes: monster start Y, monsters 1-8
+         * 0x90 - 0x97     8 bytes: unused in file
+         * 0x98 - 0x9F     8 bytes: unused in file
+         * 0xA0 - 0xA3     4 bytes: PC start X, PCs 1-4
+         * 0xA4 - 0xA7     4 bytes: PC start Y, PCs 1-4
+         * 0xA8 - 0xAB     4 bytes: unused in file
+         * 0xAC - 0xAF     4 bytes: unused in file
+             */
+            final int MONSTER_COUNT = 8;
+            final int PLAYER_COUNT = 4;
+
+            final int MONSTER_X_OFFSET = 0x80;
+            final int MONSTER_Y_OFFSET = 0x88;
+            final int PLAYER_X_OFFSET = 0xA0;
+            final int PLAYER_Y_OFFSET = 0xA4;
+
+            final int REQUIRED_LENGTH = 0xB0;
+            if (bytes.length < REQUIRED_LENGTH) {
+                throw new IllegalArgumentException(
+                        "Invalid conflict map file " + gameMap.getMap().getFname()
+                        + ": expected at least " + REQUIRED_LENGTH
+                        + " bytes, found " + bytes.length);
+            }
+
+            MapLayer monsterLayer = new MapLayer();
+            monsterLayer.setName("Monster Positions");
+
+            for (int i = 0; i < MONSTER_COUNT; i++) {
+                MapObject object = new MapObject();
+                object.getProperties().put("index", i);
+                object.getProperties().put("startX", bytes[MONSTER_X_OFFSET + i] & 0xFF);
+                object.getProperties().put("startY", bytes[MONSTER_Y_OFFSET + i] & 0xFF);
+                monsterLayer.getObjects().add(object);
+            }
+
+            map.getLayers().add(monsterLayer);
+
+            MapLayer playerLayer = new MapLayer();
+            playerLayer.setName("Player Positions");
+
+            for (int i = 0; i < PLAYER_COUNT; i++) {
+                MapObject object = new MapObject();
+                object.getProperties().put("index", i);
+                object.getProperties().put("startX", bytes[PLAYER_X_OFFSET + i] & 0xFF);
+                object.getProperties().put("startY", bytes[PLAYER_Y_OFFSET + i] & 0xFF);
+                playerLayer.getObjects().add(object);
+            }
+
+            map.getLayers().add(playerLayer);
         }
-
-        map.getLayers().add(layer);
-
-        return map;
     }
 
     //for u3 intro map
     public TiledMap load(int[] bytes, int width, int height, TileSet ts, int tileDim) {
-        
+
         this.mapWidth = width;
         this.mapHeight = height;
-        
+
         Tile[] tiles = new Tile[width * height];
         int pos = 0;
         for (int y = 0; y < height; y++) {
