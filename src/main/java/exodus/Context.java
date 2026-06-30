@@ -239,9 +239,8 @@ public class Context implements Constants {
         return slow;
     }
 
-    public void damageShip(int minDamage, int maxDamage) {
+    public void damageShip(int damage) {
         if (transportContext == Transport.SHIP) {
-            int damage = minDamage >= 0 && minDamage < maxDamage ? rand.nextInt(maxDamage + 1 - minDamage) + minDamage : maxDamage;
             party.adjustShipHull(-damage);
         }
     }
@@ -313,10 +312,10 @@ public class Context implements Constants {
         }
 
         if (transportContext == Transport.SHIP) {
-            if (cr.getSwims()) {
-                cm = Maps.CONFLICT_SHIP;
-            } else if (cr.getSails()) {
+            if (cr.getSails() || "pirate".equals(cr.getTile())) {
                 cm = Maps.CONFLICT_BOTH_SHIPS;
+            } else if (cr.getSwims()) {
+                cm = Maps.CONFLICT_SHIP;
             } else {
                 cm = Maps.CONFLICT_SHIP_BOTTOM;
             }

@@ -100,13 +100,55 @@ horse
   orig: 16, 16
   offset: 0, 0
   index: 0
+horse
+  rotate: false
+  xy: 80, 16
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 1
+horse
+  rotate: false
+  xy: 80, 16
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 2
+horse
+  rotate: false
+  xy: 80, 16
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 3
+frigate
+  rotate: false
+  xy: 0, 128
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
+frigate
+  rotate: false
+  xy: 16, 128
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 1
 frigate
   rotate: false
   xy: 32, 128
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 0
+  index: 2
+frigate
+  rotate: false
+  xy: 48, 128
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 3
 whirlpool
   rotate: false
   xy: 192, 128
@@ -452,11 +494,32 @@ balron
   index: 3
 exodus
   rotate: false
-  xy: 192, 336
+  xy: 128, 144
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
+exodus
+  rotate: false
+  xy: 144, 144
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 1
+exodus
+  rotate: false
+  xy: 160, 144
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 2
+exodus
+  rotate: false
+  xy: 176, 144
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 3
 energy_field
   rotate: false
   xy: 128, 320
@@ -704,14 +767,14 @@ T
   index: 0
 snake1
   rotate: false
-  xy: 208, 336
+  xy: 208, 144
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 snake2
   rotate: false
-  xy: 224, 336
+  xy: 224, 144
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -743,7 +806,35 @@ ranger
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
+  index: 0
+ranger
+  rotate: false
+  xy: 240, 16
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
   index: 1
+ranger
+  rotate: false
+  xy: 240, 16
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 2
+ranger
+  rotate: false
+  xy: 240, 16
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 3
+corpse
+  rotate: false
+  xy: 128, 48
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
 corpse
   rotate: false
   xy: 128, 48
@@ -751,6 +842,20 @@ corpse
   orig: 16, 16
   offset: 0, 0
   index: 1
+corpse
+  rotate: false
+  xy: 128, 48
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 2
+corpse
+  rotate: false
+  xy: 128, 48
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 3
 door
   rotate: false
   xy: 176, 48

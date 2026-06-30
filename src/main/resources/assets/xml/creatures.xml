@@ -16,7 +16,7 @@
     <!-- Land enemies -->
     <creature id="10" encounterSize="12" name="Orc" tile="orc" basehp="30" exp="3" level="1" weakAgainst="repond" />
     <creature id="11" encounterSize="12" name="Skeleton" tile="skeleton" basehp="50" exp="4" level="1" undead="true" weakAgainst="pontori" />
-    <creature id="12" encounterSize="10" name="Thief" tile="thief" exp="5" level="3" steals="equipment" />
+    <creature id="12" encounterSize="10" name="Thief" tile="thief" basehp="80" exp="5" level="3" steals="equipment" />
     <creature id="13" encounterSize="8" name="Giant" tile="giant" basehp="80" exp="6" level="3" />
     <creature id="14" encounterSize="6" name="Daemon" tile="daemon" basehp="135" exp="8" level="5" ranged="true" rangedhittile="magic" rangedmisstile="magic" />
     <creature id="15" encounterSize="4" name="Fighter" tile="fighter" basehp="96" exp="8" />
@@ -26,11 +26,11 @@
     <creature id="19" encounterSize="1" name="Balron" tile="balron" basehp="180" exp="20" level="9" ranged="true" rangedhittile="fire" rangedmisstile="fire" poisons="true" />
 
     <!-- Sea enemies -->
-    <creature id="20" encounterSize="1" name="Pirate" tile="pirate" basehp="144" exp="5" nesExp="8" level="5" sails="true" />
-    <creature id="21" encounterSize="4" name="Serpent" tile="serpent" basehp="195" exp="15" level="5" ranged="true" rangedhittile="fire" rangedmisstile="fire" swims="true" nochest="true" />
-    <creature id="22" encounterSize="4" name="Man-O-War" tile="squid" basehp="145" exp="20" level="9" ranged="true" rangedhittile="magic" rangedmisstile="magic" poisons="true" swims="true" nochest="true" />
+    <creature id="20" encounterSize="1" name="Pirate" tile="pirate" basehp="144" exp="5" nesExp="8" level="1" sails="true" />
+    <creature id="21" encounterSize="4" name="Serpent" tile="serpent" basehp="195" exp="15" level="1" ranged="true" rangedhittile="fire" rangedmisstile="fire" swims="true" nochest="true" />
+    <creature id="22" encounterSize="4" name="Man-O-War" tile="squid" basehp="145" exp="20" level="1" ranged="true" rangedhittile="magic" rangedmisstile="magic" poisons="true" swims="true" nochest="true" />
 
-    <creature id="50" name="Whirlpool" tile="whirlpool" good="true" wontattack="true" />
+    <creature id="50" name="Whirlpool" tile="whirlpool" good="true" wontattack="true" swims="true"/>
 
 </creatures>
 

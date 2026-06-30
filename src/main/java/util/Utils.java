@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FileTextureData;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -23,14 +22,12 @@ import exodus.Exodus;
 import exodus.Party.PartyMember;
 import exodus.Sound;
 import exodus.Sounds;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-import javax.imageio.ImageIO;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import objects.BaseMap;
@@ -282,8 +279,7 @@ public class Utils implements Constants {
         Iterator<Person> iter = people.iterator();
         while (iter.hasNext()) {
             Person p = iter.next();
-            String type = p.getTile().getName();
-            if (type == null) {
+            if (p.getId() == 0 && p.getX() == 0 && p.getY() == 0 && p.getTile().getName().equals("water")) {
                 iter.remove();//remove null person objects
             }
         }
@@ -306,10 +302,6 @@ public class Utils implements Constants {
         }
     }
 
-    /**
-     * Finds the movement distance (not using diagonals) from point a to point b
-     * on a map, taking into account map boundaries and such.
-     */
     public static int movementDistance(MapBorderBehavior borderbehavior, int width, int height, int fromX, int fromY, int toX, int toY) {
         int dirmask = 0;;
         int dist = 0;
@@ -355,13 +347,6 @@ public class Utils implements Constants {
         return dist;
     }
 
-    /**
-     * Returns a mask of directions that indicate where one point is relative to
-     * another. For instance, if the object at (x, y) is northeast of (c.x,
-     * c.y), then this function returns (MASK_DIR(DIR_NORTH) |
-     * MASK_DIR(DIR_EAST)) This function also takes into account map boundaries
-     * and adjusts itself accordingly.
-     */
     public static int getRelativeDirection(MapBorderBehavior borderbehavior, int width, int height, int toX, int toY, int fromX, int fromY) {
         int dx = 0, dy = 0;
         int dirmask = 0;
@@ -512,9 +497,11 @@ public class Utils implements Constants {
                 switch (p.res) {
                     case HIT:
                         p.resultTexture = Exodus.hitTile;
-                        map.removeCreature(av.impactedCreature);
+                        if (av.impactedCreature != null && !"whirlpool".equals(av.impactedCreature.getTile())) {
+                            map.removeCreature(av.impactedCreature);
+                        }
                         if (av.impactedDrawable != null && av.impactedDrawable.getShipHull() <= 0) {
-                            av.impactedDrawable.remove();
+                            map.removeObject(av.impactedDrawable);
                         }
                         break;
                     case MISS:
@@ -537,17 +524,16 @@ public class Utils implements Constants {
 
         AttackResult res = AttackResult.NONE;
 
-        //check for ship
-        Drawable ship = null;
+        Drawable emptyShip = null;
         for (Drawable d : objects) {
-            if (d.getTile().getName().equals("ship") && d.getCx() == target.x && d.getCy() == target.y) {
-                ship = d;
+            if (d.getTile().getName().equals("frigate") && d.getCx() == target.x && d.getCy() == target.y) {
+                emptyShip = d;
             }
         }
 
-        if (ship != null) {
-            ship.damageShip(-1, 10);
-            target.impactedDrawable = ship;
+        if (emptyShip != null) {
+            emptyShip.damageShip(10);
+            target.impactedDrawable = emptyShip;
             return AttackResult.HIT;
         }
 
@@ -561,11 +547,11 @@ public class Utils implements Constants {
                 }
             }
 
-            if (creature == null) {
+            if (creature == null || "whirlpool".equals(creature.getTile())) {
                 return res;
             }
 
-            if (rand.nextInt(4) == 0) {
+            if (rand.nextInt(3) == 0) {
                 res = AttackResult.HIT;
                 target.impactedCreature = creature;
             } else {
@@ -575,12 +561,20 @@ public class Utils implements Constants {
         } else if (target.x == avatarX && target.y == avatarY) {
 
             if (context.getTransport() == Transport.SHIP) {
-                context.damageShip(-1, 10);
+                if (rand.nextInt(3) == 0) {
+                    context.damageShip(10);
+                    res = AttackResult.HIT;
+                } else {
+                    res = AttackResult.MISS;
+                }
             } else {
-                //context.getParty().damageParty(10, 25);
+                if (rand.nextInt(3) == 0) {
+                    context.getParty().damageParty(10, 25);
+                    res = AttackResult.HIT;
+                } else {
+                    res = AttackResult.MISS;
+                }
             }
-
-            res = AttackResult.HIT;
         }
 
         return res;
@@ -858,41 +852,6 @@ public class Utils implements Constants {
         return res;
     }
 
-    //was used for TMX type dungeon maps
-    public static Texture peerGem(TiledMapTileLayer layer, String[] ids, TextureAtlas atlas, int cx, int cy) throws Exception {
-        FileTextureData d = (FileTextureData) (atlas.getRegions().first().getTexture().getTextureData());
-        InputStream is = Utils.class.getResourceAsStream("/assets/graphics/" + d.getFileHandle().file().getName());
-        BufferedImage sheet = ImageIO.read(is);
-        BufferedImage canvas = new BufferedImage(32 * layer.getWidth(), 32 * layer.getHeight(), BufferedImage.TYPE_INT_ARGB);
-
-        for (int y = 0; y < layer.getHeight(); y++) {
-            for (int x = 0; x < layer.getWidth(); x++) {
-                String val = ids[layer.getCell(x, layer.getHeight() - y - 1).getTile().getId()];
-                DungeonTile tile = DungeonTile.getTileByName(val);
-                if (tile == null) {
-                    val = "brick_floor";
-                }
-                if (x == cx && y == cy) {
-                    val = "avatar";
-                }
-                TextureAtlas.AtlasRegion ar = (TextureAtlas.AtlasRegion) atlas.findRegion(val);
-                BufferedImage sub = sheet.getSubimage(ar.getRegionX(), ar.getRegionY(), 32, 32);
-                canvas.getGraphics().drawImage(sub, x * 32, y * 32, 32, 32, null);
-            }
-        }
-
-        java.awt.Image tmp = canvas.getScaledInstance(20 * 32, 20 * 32, Image.SCALE_AREA_AVERAGING);
-        BufferedImage scaledCanvas = new BufferedImage(20 * 32, 20 * 32, BufferedImage.TYPE_INT_ARGB);
-        scaledCanvas.getGraphics().drawImage(tmp, 0, 0, null);
-
-        Pixmap p = Utils.createPixmap(scaledCanvas.getWidth(), scaledCanvas.getHeight(), scaledCanvas, 0, 0);
-
-        Texture t = new Texture(p);
-        p.dispose();
-
-        return t;
-    }
-
     //used for telescope viewing or in towns
     public static Texture peerGem(Maps map, TextureAtlas atlas) throws Exception {
 
@@ -901,116 +860,159 @@ public class Utils implements Constants {
         if (map.getMap().getType() == MapType.city) {
             FileTextureData d = (FileTextureData) (atlas.getRegions().first().getTexture().getTextureData());
             InputStream is = Utils.class.getResourceAsStream("/assets/graphics/" + d.getFileHandle().file().getName());
-            BufferedImage sheet = ImageIO.read(is);
-            BufferedImage canvas = new BufferedImage(64 * 32, 64 * 32, BufferedImage.TYPE_INT_ARGB);
+            byte[] bytes = IOUtils.toByteArray(is);
+            Pixmap sheet = new Pixmap(bytes, 0, bytes.length);
 
-            for (int y = 0; y < 64; y++) {
-                for (int x = 0; x < 64; x++) {
+            int peerGemTiles = 64; // 64x64 tiles in peer view
+            int dstTileSize = 10;  // each tile drawn as 10x10
+            int peerGemSize = peerGemTiles * dstTileSize; // 640x640 canvas
+
+            int offsetX = (Exodus.SCREEN_WIDTH - peerGemSize) / 2;
+            int offsetY = (Exodus.SCREEN_HEIGHT - peerGemSize) / 2;
+
+            Pixmap p = new Pixmap(Exodus.SCREEN_WIDTH, Exodus.SCREEN_HEIGHT, Pixmap.Format.RGBA8888);
+            p.setFilter(Pixmap.Filter.BiLinear);
+            p.setColor(Color.BLACK);
+            p.fill();
+
+            for (int y = 0; y < peerGemTiles; y++) {
+                for (int x = 0; x < peerGemTiles; x++) {
                     Tile ct = map.getMap().getTile(x, y);
                     TextureAtlas.AtlasRegion ar = (TextureAtlas.AtlasRegion) atlas.findRegion(ct.getName());
-                    BufferedImage sub = sheet.getSubimage(ar.getRegionX(), ar.getRegionY(), 32, 32);
-                    canvas.getGraphics().drawImage(sub, x * 32, y * 32, 32, 32, null);
+
+                    p.drawPixmap(
+                            sheet,
+                            ar.getRegionX(),
+                            ar.getRegionY(),
+                            TILE_DIM,
+                            TILE_DIM,
+                            offsetX + x * dstTileSize,
+                            offsetY + y * dstTileSize,
+                            dstTileSize,
+                            dstTileSize);
 
                     Person cr = map.getMap().getPersonAt(x, y);
                     if (cr != null) {
-                        canvas.getGraphics().fillRect(x * 32, y * 32, 32, 32);
+                        p.setColor(Color.WHITE);
+                        p.fillRectangle(
+                                offsetX + x * dstTileSize,
+                                offsetY + y * dstTileSize,
+                                dstTileSize,
+                                dstTileSize);
                     }
 
                     Drawable obj = map.getMap().getObjectAt(x, y);
                     if (obj != null) {
-                        canvas.getGraphics().fillRect(x * 32, y * 32, 32, 32);
+                        p.setColor(Color.WHITE);
+                        p.fillRectangle(
+                                offsetX + x * dstTileSize,
+                                offsetY + y * dstTileSize,
+                                dstTileSize,
+                                dstTileSize);
                     }
                 }
             }
 
-            java.awt.Image tmp = canvas.getScaledInstance(20 * 32, 20 * 32, Image.SCALE_AREA_AVERAGING);
-            BufferedImage scaledCanvas = new BufferedImage(20 * 32, 20 * 32, BufferedImage.TYPE_INT_ARGB);
-            scaledCanvas.getGraphics().drawImage(tmp, 0, 0, null);
-
-            Pixmap p = createPixmap(
-                    Exodus.SCREEN_WIDTH,
-                    Exodus.SCREEN_HEIGHT,
-                    scaledCanvas,
-                    (Exodus.SCREEN_WIDTH - scaledCanvas.getWidth()) / 2,
-                    (Exodus.SCREEN_HEIGHT - scaledCanvas.getHeight()) / 2);
-
             t = new Texture(p);
             p.dispose();
+            sheet.dispose();
 
         } else if (map.getMap().getType() == MapType.dungeon) {
             //NO OP not needed since I added the minimap already on the HUD
         }
 
         return t;
-
     }
 
     //used for view gem on the world map only
     public static Texture peerGem(BaseMap worldMap, int avatarX, int avatarY, TextureAtlas atlas) throws Exception {
         FileTextureData d = (FileTextureData) (atlas.getRegions().first().getTexture().getTextureData());
         InputStream is = Utils.class.getResourceAsStream("/assets/graphics/" + d.getFileHandle().file().getName());
-        BufferedImage sheet = ImageIO.read(is);
-        BufferedImage canvas = new BufferedImage(32 * 64, 32 * 64, BufferedImage.TYPE_INT_ARGB);
+        byte[] bytes = IOUtils.toByteArray(is);
+        Pixmap sheet = new Pixmap(bytes, 0, bytes.length);
 
-        int startX = avatarX - 32;
-        int startY = avatarY - 32;
-        int endX = avatarX + 32;
-        int endY = avatarY + 32;
+        int peerGemTiles = 32; //32x32 tiles in peer view
+        int peerGemSize = 512; //image canvas will be 512x512 pixels wide
+        int dstTileSize = peerGemSize / peerGemTiles;
+
+        int mapWidth = worldMap.getWidth();
+        int mapHeight = worldMap.getHeight();
+
+        int offsetX = (Exodus.SCREEN_WIDTH - peerGemSize) / 2;
+        int offsetY = (Exodus.SCREEN_HEIGHT - peerGemSize) / 2;
+
+        Pixmap p = new Pixmap(Exodus.SCREEN_WIDTH, Exodus.SCREEN_HEIGHT, Pixmap.Format.RGBA8888);
+        p.setFilter(Pixmap.Filter.BiLinear);
+        p.setColor(Color.BLACK);
+        p.fill();
+
+        int startX = avatarX - TILE_DIM;
+        int startY = avatarY - TILE_DIM;
+        int endX = avatarX + TILE_DIM;
+        int endY = avatarY + TILE_DIM;
+
         int indexX = 0;
         int indexY = 0;
+
         for (int y = startY; y < endY; y++) {
             for (int x = startX; x < endX; x++) {
-                int cx = x;
-                if (x < 0) {
-                    cx = 256 + x;
-                } else if (x >= 256) {
-                    cx = x - 256;
-                }
-                int cy = y;
-                if (y < 0) {
-                    cy = 256 + y;
-                } else if (y >= 256) {
-                    cy = y - 256;
-                }
+                int cx = ((x % mapWidth) + mapWidth) % mapWidth;
+                int cy = ((y % mapHeight) + mapHeight) % mapHeight;
+
                 Tile ct = worldMap.getTile(cx, cy);
                 TextureAtlas.AtlasRegion ar = (TextureAtlas.AtlasRegion) atlas.findRegion(ct.getName());
-                BufferedImage sub = sheet.getSubimage(ar.getRegionX(), ar.getRegionY(), 32, 32);
-                canvas.getGraphics().drawImage(sub, indexX * 32, indexY * 32, 32, 32, null);
+
+                p.drawPixmap(
+                        sheet,
+                        ar.getRegionX(),
+                        ar.getRegionY(),
+                        TILE_DIM,
+                        TILE_DIM,
+                        offsetX + indexX * dstTileSize,
+                        offsetY + indexY * dstTileSize,
+                        dstTileSize,
+                        dstTileSize);
 
                 Creature cr = worldMap.getCreatureAt(cx, cy);
                 if (cr != null) {
-                    canvas.getGraphics().fillRect(indexX * 32, indexY * 32, 32, 32);
+                    p.setColor(Color.WHITE);
+                    p.fillRectangle(
+                            offsetX + indexX * dstTileSize,
+                            offsetY + indexY * dstTileSize,
+                            dstTileSize,
+                            dstTileSize);
                 }
 
                 Drawable obj = worldMap.getObjectAt(cx, cy);
                 if (obj != null) {
-                    canvas.getGraphics().fillRect(indexX * 32, indexY * 32, 32, 32);
+                    p.setColor(Color.WHITE);
+                    p.fillRectangle(
+                            offsetX + indexX * dstTileSize,
+                            offsetY + indexY * dstTileSize,
+                            dstTileSize,
+                            dstTileSize);
                 }
 
                 indexX++;
             }
+
             indexX = 0;
             indexY++;
         }
 
         //add avatar in the middle
-        canvas.getGraphics().fillRect((32 * 64) / 2, (32 * 64) / 2, 32, 32);
-
-        java.awt.Image tmp = canvas.getScaledInstance(20 * 32, 20 * 32, Image.SCALE_AREA_AVERAGING);
-        BufferedImage scaledCanvas = new BufferedImage(20 * 32, 20 * 32, BufferedImage.TYPE_INT_ARGB);
-        scaledCanvas.getGraphics().drawImage(tmp, 0, 0, null);
-
-        Pixmap p = createPixmap(
-                Exodus.SCREEN_WIDTH,
-                Exodus.SCREEN_HEIGHT,
-                scaledCanvas,
-                (Exodus.SCREEN_WIDTH - scaledCanvas.getWidth()) / 2,
-                (Exodus.SCREEN_HEIGHT - scaledCanvas.getHeight()) / 2);
+        p.setColor(Color.WHITE);
+        p.fillRectangle(
+                offsetX + (peerGemTiles / 2) * dstTileSize,
+                offsetY + (peerGemTiles / 2) * dstTileSize,
+                dstTileSize,
+                dstTileSize);
 
         Texture t = new Texture(p);
         p.dispose();
-        return t;
+        sheet.dispose();
 
+        return t;
     }
 
     public static Pixmap createPixmap(int width, int height, BufferedImage image, int sx, int sy) {

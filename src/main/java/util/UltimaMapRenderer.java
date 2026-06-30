@@ -255,7 +255,7 @@ public class UltimaMapRenderer extends BatchTiledMapRenderer implements Constant
         Color batchColor = this.batch.getColor();
 
         if (true) {
-            return Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, 1);
+            //return Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, 1);
         }
 
         int layerWidth = layer.getWidth();

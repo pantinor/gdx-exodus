@@ -20,7 +20,7 @@ public class Drawable extends Actor {
 
     //drawable is used for ships
     private int shipHull = 50;
-    
+
     public Drawable(BaseMap map, int cx, int cy, Tile tile, TextureAtlas atlas) {
         super();
         this.cx = cx;
@@ -50,11 +50,11 @@ public class Drawable extends Actor {
 
         batch.draw(texture, getX(), getY(), 32, 32);
     }
-    
+
     public TextureRegion getTexture() {
         return this.texture;
     }
-    
+
     public int getShipHull() {
         return shipHull;
     }
@@ -63,10 +63,8 @@ public class Drawable extends Actor {
         this.shipHull = shipHull;
     }
 
-    public int damageShip(int minDamage, int maxDamage) {
-        int damage = ((minDamage >= 0) && (minDamage < maxDamage)) ? new Random().nextInt((maxDamage + 1) - minDamage) + minDamage : maxDamage;
-        int newStr = Utils.adjustValue(-damage, 0, 50, 0);
-        this.shipHull = newStr;
+    public int damageShip(int damage) {
+        this.shipHull = this.shipHull - damage;
         return this.shipHull;
     }
 

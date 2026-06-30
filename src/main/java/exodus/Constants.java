@@ -66,6 +66,7 @@ public interface Constants {
         DOOM(18, "Dungeon of Doom"),
         SNAKE(19, "Dungeon of the Snake"),
         TIME(20, "Dungeon of Time"),
+        //
         CONFLICT_SHIP_TOP(33, ""),
         CONFLICT_GRASS_BRUSH(34, ""),
         CONFLICT_BRICK_FLOOR(35, ""),
@@ -73,12 +74,13 @@ public interface Constants {
         CONFLICT_GRASS(37, ""),
         CONFLICT_SHORE(38, ""),
         CONFLICT_SHIP(39, ""),
-        CONFLICT_SHIP_BOTTOM(41, ""),
-        CONFLICT_BOTH_SHIPS(40, ""),
+        CONFLICT_SHIP_BOTTOM(40, ""),
+        CONFLICT_BOTH_SHIPS(41, ""),
+        //
         SHRINE_OF_WISDOM(55, "Shrine of Wisdom"),
         SHRINE_OF_DEXTERITY(56, "Shrine of Dexterity"),
         SHRINE_OF_INTELLIGENCE(57, "Shrine of Intelligence"),
-        SHRINE_OF_STRENGTH(58, "Shrine of Sterngth"),;
+        SHRINE_OF_STRENGTH(58, "Shrine of Strength"),;
 
         private int id;
         private String label;

@@ -75,7 +75,7 @@ public class GameScreen extends BaseScreen {
     public GameTimer gameTimer = new GameTimer();
     public ExplosionsTimer explosionsTimer = new ExplosionsTimer();
 
-    private static final float FOV_RADIUS = 5f;
+    private static final float FOV_RADIUS = 6f;
 
     public GameScreen() {
 
@@ -125,7 +125,7 @@ public class GameScreen extends BaseScreen {
     }
 
     @Override
-    public Vector3 getMapPixelCoords(int x, int y) {
+    public final Vector3 getMapPixelCoords(int x, int y) {
         Vector3 v = new Vector3(x * SCALED_DIM, mapPixelHeight - SCALED_DIM - y * SCALED_DIM, 0);
         return v;
     }
@@ -168,7 +168,7 @@ public class GameScreen extends BaseScreen {
 
         batch.draw(Exodus.backGround, 0, 0);
 
-        batch.draw(mainAvatar.getKeyFrame(time, true), SCALED_DIM * 11, SCALED_DIM * 12, SCALED_DIM, SCALED_DIM);
+        batch.draw(mainAvatar.getKeyFrames()[avatarDirection], SCALED_DIM * 11, SCALED_DIM * 12, SCALED_DIM, SCALED_DIM);
 
         //Vector3 v = getCurrentMapCoords();
         //Exodus.font.draw(batch, String.format("%s, %s\n", (int) v.x, (int) v.y), 10, Exodus.SCREEN_HEIGHT - 10);
@@ -188,6 +188,12 @@ public class GameScreen extends BaseScreen {
         if (context.getAura().getType() != AuraType.NONE) {
             Exodus.font.draw(batch, context.getAura().getType().toString(), 200, Exodus.SCREEN_HEIGHT - 32);
         }
+
+        if (context.getTransport() == Transport.SHIP) {
+            int hull = context.getParty().getSaveGame().shiphull;
+            Exodus.font.draw(batch, "Hull: " + hull, 500, Exodus.SCREEN_HEIGHT - 7);
+        }
+
         batch.end();
 
         projectilesStage.act();
@@ -216,39 +222,39 @@ public class GameScreen extends BaseScreen {
             Party party = new Party(sg);
             context.setParty(party);
 
-//            for (PartyMember pm : party.getMembers()) {
-//                pm.getPlayer().torches = 5;
-//                pm.getPlayer().keys = 50;
-//                pm.getPlayer().gems = 50;
-//                
-//                pm.getPlayer().weapons[1] = 10;
-//                pm.getPlayer().weapons[2] = 5;
-//                pm.getPlayer().weapons[3] = 5;
-//
-//                pm.getPlayer().armors[3] = 5;
-//                pm.getPlayer().armors[4] = 5;
-//                pm.getPlayer().armors[5] = 5;
-//
-//
-//                pm.getPlayer().marks[0] = 1;
-//                pm.getPlayer().marks[1] = 1;
-//                pm.getPlayer().marks[2] = 1;
-//                pm.getPlayer().marks[3] = 1;
-//
-//                pm.getPlayer().cards[0] = 1;
-//                pm.getPlayer().cards[1] = 1;
-//                pm.getPlayer().cards[2] = 1;
-//                pm.getPlayer().cards[3] = 1;
-//                pm.getPlayer().weapon = WeaponType.EXOTIC;
-//                pm.getPlayer().armor = ArmorType.EXOTIC;
-//
-//                pm.getPlayer().health = 500;
-//                pm.getPlayer().exp = 350;
-//                pm.getPlayer().intell = 75;
-//                pm.getPlayer().wis = 75;
-//                pm.getPlayer().mana = 75;
-//                break;
-//            }
+            for (PartyMember pm : party.getMembers()) {
+                pm.getPlayer().torches = 5;
+                pm.getPlayer().keys = 50;
+                pm.getPlayer().gems = 50;
+
+                pm.getPlayer().weapons[1] = 10;
+                pm.getPlayer().weapons[2] = 5;
+                pm.getPlayer().weapons[3] = 5;
+
+                pm.getPlayer().armors[3] = 5;
+                pm.getPlayer().armors[4] = 5;
+                pm.getPlayer().armors[5] = 5;
+
+                pm.getPlayer().marks[0] = 1;
+                pm.getPlayer().marks[1] = 1;
+                pm.getPlayer().marks[2] = 1;
+                pm.getPlayer().marks[3] = 1;
+
+                pm.getPlayer().cards[0] = 1;
+                pm.getPlayer().cards[1] = 1;
+                pm.getPlayer().cards[2] = 1;
+                pm.getPlayer().cards[3] = 1;
+                pm.getPlayer().weapon = WeaponType.EXOTIC;
+                pm.getPlayer().armor = ArmorType.EXOTIC;
+
+                pm.getPlayer().health = 500;
+                pm.getPlayer().exp = 350;
+                pm.getPlayer().intell = 75;
+                pm.getPlayer().wis = 75;
+                pm.getPlayer().mana = 75;
+                break;
+            }
+
             //load the surface world first
             loadNextMap(Maps.SOSARIA, sg.partyX, sg.partyY);
             //loadNextMap(Maps.SOSARIA, 40, 212);
@@ -455,6 +461,7 @@ public class GameScreen extends BaseScreen {
         Vector3 v = getCurrentMapCoords();
 
         if (keycode == Keys.UP) {
+            //ships must first face the direction before moving in that direction.
             if (context.getTransport() == Transport.SHIP && avatarDirection + 1 != Direction.NORTH.getVal()) {
                 avatarDirection = Direction.NORTH.getVal() - 1;
                 finishTurn((int) v.x, (int) v.y);
@@ -577,7 +584,7 @@ public class GameScreen extends BaseScreen {
         } else if (keycode == Keys.X) {
 
             if (context.getTransport() == Transport.SHIP) {
-                Tile st = Exodus.baseTileSet.getTileByName("ship");
+                Tile st = Exodus.baseTileSet.getTileByName("frigate");
                 Drawable ship = context.getCurrentMap().addObject(st, (int) v.x, (int) v.y);
                 context.setLastShip(ship);
             } else if (context.getTransport() == Transport.HORSE) {
@@ -717,7 +724,7 @@ public class GameScreen extends BaseScreen {
             }
 
             if (checkRandomCreatures()) {
-                spawnCreature(null, currentX, currentY);
+                spawnCreature(currentX, currentY);
             }
 
             boolean quick = context.getAura().getType() == AuraType.QUICKNESS;
@@ -758,128 +765,96 @@ public class GameScreen extends BaseScreen {
         if (context.getCurrentMap().getCreatures().size() >= MAX_CREATURES_ON_MAP) {
             return false;
         }
-        return rand.nextInt(32) == 0;
+        return rand.nextInt(16) == 0;
     }
 
-    private boolean spawnCreature(Creature creature, int currentX, int currentY) {
+    private boolean spawnCreature(int currentX, int currentY) {
 
-        int dx = 0;
-        int dy = 0;
-        int tmp = 0;
+        final int width = context.getCurrentMap().getWidth();
+        final int height = context.getCurrentMap().getHeight();
+        final boolean wrap = context.getCurrentMap().getBorderbehavior() == MapBorderBehavior.wrap;
 
-        boolean ok = false;
-        int tries = 0;
-        int MAX_TRIES = 10;
+        final int spawnDistance = 15;
+        final int maxTries = 10;
 
-        while (!ok && (tries < MAX_TRIES)) {
-            dx = 15;
-            dy = rand.nextInt(15);
+        for (int tries = 0; tries < maxTries; tries++) {
 
-            if (rand.nextInt(100) > 50) {
-                dx = -dx;
+            int offset = rand.nextInt(spawnDistance * 2 + 1) - spawnDistance;
+            int dx;
+            int dy;
+
+            switch (rand.nextInt(4)) {
+                case 0:
+                    dx = currentX + spawnDistance;
+                    dy = currentY + offset;
+                    break;
+                case 1:
+                    dx = currentX - spawnDistance;
+                    dy = currentY + offset;
+                    break;
+                case 2:
+                    dx = currentX + offset;
+                    dy = currentY + spawnDistance;
+                    break;
+                default:
+                    dx = currentX + offset;
+                    dy = currentY - spawnDistance;
+                    break;
             }
-            if (rand.nextInt(100) > 50) {
-                dy = -dy;
-            }
-            if (rand.nextInt(100) > 50) {
-                tmp = dx;
-                dx = dy;
-                dy = tmp;
+
+            if (wrap) {
+                dx = wrapCoord(dx, width);
+                dy = wrapCoord(dy, height);
             }
 
-            dx = currentX + dx;
-            dy = currentY + dy;
-
-            BaseMap map = context.getCurrentMap();
-            if (map.getBorderbehavior() == MapBorderBehavior.wrap) {
-                dx = (dx + map.getWidth()) % map.getWidth();
-                dy = (dy + map.getHeight()) % map.getHeight();
-            }
-
-            /* make sure we can spawn the creature there */
-            if (creature != null) {
-                Tile tile = context.getCurrentMap().getTile(dx, dy);
-                if (tile == null || tile.getRule() == null) {
-                    tries++;
-                    continue;
-                }
-
-                TileRule rule = tile.getRule();
-                if ((creature.getSails() && rule.has(TileAttrib.sailable))
-                        || (creature.getSwims() && rule.has(TileAttrib.swimmable))
-                        || (creature.getFlies() && !rule.has(TileAttrib.unflyable))) {
-                    ok = true;
-                } else {
-                    tries++;
-                }
-            } else {
-                Tile tile = context.getCurrentMap().getTile(dx, dy);
-                if (tile != null && tile.getRule() != null) {
-                    ok = true;
-                } else {
-                    tries++;
-                }
-            }
-        }
-
-        if (!ok) {
-            return false;
-        }
-
-        if (creature == null) {
             Tile tile = context.getCurrentMap().getTile(dx, dy);
-            creature = getRandomCreatureForTile(tile);
+            if (tile == null || tile.getRule() == null) {
+                continue;
+            }
+
+            Creature spawn = getRandomCreatureForTile(tile);
+            if (spawn == null) {
+                continue;
+            }
+
+            spawn.currentX = dx;
+            spawn.currentY = dy;
+            context.getCurrentMap().addCreature(spawn);
+            return true;
         }
 
-        if (creature != null) {
-            creature.currentX = dx;
-            creature.currentY = dy;
-            context.getCurrentMap().addCreature(creature);
-        } else {
-            return false;
-        }
+        return false;
+    }
 
-        return true;
+    private int wrapCoord(int value, int size) {
+        return ((value % size) + size) % size;
     }
 
     private Creature getRandomCreatureForTile(Tile tile) {
-
-        int randId = 0;
-
-        if (tile == null || tile.getRule() == null) {
-            System.err.println("randomForTile: Tile or rule is null");
-            return null;
-        }
 
         if (tile.getRule().has(TileAttrib.creatureunwalkable)) {
             return null;
         }
 
-        if (tile.getRule().has(TileAttrib.sailable)) {
-            Creature cr = Exodus.creatures.getInstance("pirate", Exodus.standardAtlas);
-            return cr;
-        } else if (tile.getRule().has(TileAttrib.swimmable)) {
-            randId = 21;
-            randId += rand.nextInt(2);
-            Creature cr = Exodus.creatures.getInstance(randId, Exodus.standardAtlas);
+        if (tile.getRule().has(TileAttrib.swimmable)) {
+            Creature cr = Exodus.creatures.getInstance(Utils.getRandomBetween(20, 22), Exodus.standardAtlas);
             return cr;
         }
 
-        randId = 10;
+        Creature cr = null;
+
         int avgPtyHlth = this.context.getParty().getAverageMaxHealth();
         if (avgPtyHlth > 700) {
-            randId += rand.nextInt(10);
+            cr = Exodus.creatures.getInstance(Utils.getRandomBetween(10, 17), Exodus.standardAtlas);
         } else if (avgPtyHlth > 500) {
-            randId += rand.nextInt(8);
+            cr = Exodus.creatures.getInstance(Utils.getRandomBetween(10, 16), Exodus.standardAtlas);
         } else if (avgPtyHlth > 400) {
-            randId += rand.nextInt(6);
+            cr = Exodus.creatures.getInstance(Utils.getRandomBetween(10, 15), Exodus.standardAtlas);
         } else if (avgPtyHlth > 300) {
-            randId += rand.nextInt(4);
+            cr = Exodus.creatures.getInstance(Utils.getRandomBetween(10, 14), Exodus.standardAtlas);
         } else {
-            randId += rand.nextInt(2);
+            cr = Exodus.creatures.getInstance(Utils.getRandomBetween(10, 13), Exodus.standardAtlas);
         }
-
-        Creature cr = Exodus.creatures.getInstance(randId, Exodus.standardAtlas);
 
         return cr;
     }
@@ -979,7 +954,7 @@ public class GameScreen extends BaseScreen {
         Iterator<Drawable> iter = context.getCurrentMap().getObjects().iterator();
         while (iter.hasNext()) {
             Drawable d = iter.next();
-            if ("ship".equals(d.getTile().getName()) && d.getCx() == x && d.getCy() == y) {
+            if ("frigate".equals(d.getTile().getName()) && d.getCx() == x && d.getCy() == y) {
                 iter.remove();
                 log("Board Frigate!");
                 if (context.getLastShip() != d) {
@@ -1212,8 +1187,8 @@ public class GameScreen extends BaseScreen {
             log("Thy ship sinks!");
             killAll = true;
         } else if (context.getTransport() == Transport.FOOT && map.getTile(x, y).getIndex() == 0) {
-            log("Trapped at sea without thy ship, thou dost drown!");
-            killAll = true;
+            //log("Trapped at sea without thy ship, thou dost drown!");
+            //killAll = true;
         }
 
         if (killAll) {

@@ -71,11 +71,6 @@
         <portal name="WHIRLPOOL" x="32" y="58" destmapid="0" startx="1" starty="1" />
     </map>
     
-    <map id="55" type="shrine" fname="shrine.con" width="11" height="11" levels="1" borderbehavior="fixed" music="ALIVE" />
-    <map id="56" type="shrine" fname="shrine.con" width="11" height="11" levels="1" borderbehavior="fixed" music="ALIVE" />
-    <map id="57" type="shrine" fname="shrine.con" width="11" height="11" levels="1" borderbehavior="fixed" music="ALIVE" />
-    <map id="58" type="shrine" fname="shrine.con" width="11" height="11" levels="1" borderbehavior="fixed" music="ALIVE" />
-    
     <map id="14" type="dungeon" fname="perinian.ult" width="16" height="16" levels="8" borderbehavior="exit" music="DUNGEON">
         <label name="MARK_KINGS" x="15" y="11" z="0" />
         <label name="MARK_KINGS" x="11" y="15" z="0" />
@@ -193,4 +188,8 @@
     <map id="40" type="combat" fname="CNFLCT_R.ULT" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   
     <map id="41" type="combat" fname="CNFLCT_S.ULT" width="11" height="11" levels="1" borderbehavior="fixed" nolineofsight="true" music="COMBAT" tileset="base" tilemap="base" />   
      
+    <map id="55" type="shrine" fname="shrine.con" width="11" height="11" levels="1" borderbehavior="fixed" music="ALIVE" />
+    <map id="56" type="shrine" fname="shrine.con" width="11" height="11" levels="1" borderbehavior="fixed" music="ALIVE" />
+    <map id="57" type="shrine" fname="shrine.con" width="11" height="11" levels="1" borderbehavior="fixed" music="ALIVE" />
+    <map id="58" type="shrine" fname="shrine.con" width="11" height="11" levels="1" borderbehavior="fixed" music="ALIVE" />
 </maps>

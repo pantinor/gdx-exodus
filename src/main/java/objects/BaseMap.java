@@ -281,6 +281,13 @@ public class BaseMap implements Constants {
         return null;
     }
 
+    public void removeObject(Drawable obj) {
+        if (obj == null) {
+            return;
+        }
+        objects.remove(obj);
+    }
+
     public void setMoongates(List<Moongate> moongate) {
         this.moongates = moongate;
     }
@@ -675,12 +682,10 @@ public class BaseMap implements Constants {
         TileRule rule = tile.getRule();
         boolean canmove = false;
         if (rule != null) {
-            canmove = cr != null
-                    ? canCreatureMoveOn(rule, cr)
-                    : canAvatarMoveOn(context, rule, x, y);
+            canmove = cr != null ? canCreatureMoveOn(rule, cr) : canAvatarMoveOn(context, rule, x, y);
         }
 
-        if (cr != null && isBlockedForCreature(tile, cr, x, y, avatarX, avatarY)) {
+        if (cr != null && avatarX == x && avatarY == y && !cr.getCanMoveOntoAvatar()) {
             canmove = false;
         }
 
@@ -738,11 +743,6 @@ public class BaseMap implements Constants {
             }
         }
         return true;
-    }
-
-    private boolean isBlockedForCreature(Tile tile, Creature cr, int x, int y, int avatarX, int avatarY) {
-        return (tile.getIndex() == 73 && !cr.getIncorporeal())
-                || (avatarX == x && avatarY == y && !cr.getCanMoveOntoAvatar());
     }
 
     private boolean hasBlockingPersonAt(int x, int y) {
