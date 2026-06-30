@@ -22,7 +22,6 @@ public class Creature implements Constants, Comparable {
     private boolean isWalkableOver;
     private String casts;
     private boolean divides;
-    private int encounterSize;
     private int exp;
     private boolean flies;
     private boolean forceOfNature;
@@ -36,7 +35,6 @@ public class Creature implements Constants, Comparable {
     private String name;
 
     private boolean incorporeal;
-    private int leader;
     private int level;
     private boolean leavestile;
     private boolean nochest;
@@ -78,7 +76,6 @@ public class Creature implements Constants, Comparable {
         this.isWalkableOver = clone.isWalkableOver;
         this.casts = clone.casts;
         this.divides = clone.divides;
-        this.encounterSize = clone.encounterSize;
         this.exp = clone.exp;
         this.flies = clone.flies;
         this.forceOfNature = clone.forceOfNature;
@@ -89,7 +86,6 @@ public class Creature implements Constants, Comparable {
         this.id = clone.id;
 
         this.incorporeal = clone.incorporeal;
-        this.leader = clone.leader;
         this.level = clone.level;
         this.leavestile = clone.leavestile;
         this.name = clone.name;
@@ -147,11 +143,6 @@ public class Creature implements Constants, Comparable {
     }
 
     @XmlAttribute
-    public int getEncounterSize() {
-        return encounterSize;
-    }
-
-    @XmlAttribute
     public int getExp() {
         return exp;
     }
@@ -181,10 +172,6 @@ public class Creature implements Constants, Comparable {
         return incorporeal;
     }
 
-    @XmlAttribute
-    public int getLeader() {
-        return leader;
-    }
 
     @XmlAttribute
     public int getLevel() {
@@ -299,10 +286,6 @@ public class Creature implements Constants, Comparable {
         this.divides = divides;
     }
 
-    public void setEncounterSize(int encounterSize) {
-        this.encounterSize = encounterSize;
-    }
-
     public void setExp(int exp) {
         this.exp = exp;
     }
@@ -325,10 +308,6 @@ public class Creature implements Constants, Comparable {
 
     public void setIncorporeal(boolean incorporeal) {
         this.incorporeal = incorporeal;
-    }
-
-    public void setLeader(int leader) {
-        this.leader = leader;
     }
 
     public void setLevel(int level) {
@@ -542,7 +521,7 @@ public class Creature implements Constants, Comparable {
 
     @Override
     public String toString() {
-        return String.format("%d\t%s\t\t%s\t\t%d\texp:%d\tldr: %d", id, tile, name, basehp, exp, leader);
+        return String.format("%d\t%s\t\t%s\t\t%d\texp:%d", id, tile, name, basehp, exp);
     }
     
 

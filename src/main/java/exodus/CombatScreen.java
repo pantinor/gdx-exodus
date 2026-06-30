@@ -180,50 +180,25 @@ public class CombatScreen extends BaseScreen {
         for (int i = 0; i < numCreatures; i++) {
             String current = baseType;
 
-            /* find a free spot in the creature table */
             int j = 0;
             do {
                 j = rand.nextInt(AREA_CREATURES);
             } while (crSlots[j] != null);
 
-            /* see if creature is a leader */
-            if (cr.getLeader() != 0) {
-                Creature leader = Exodus.creatures.getInstance(cr.getLeader(), Exodus.standardAtlas);
-                if (leader.getId() != cr.getId() && i != (numCreatures - 1)) {
-                    if (rand.nextInt(8) == 0) { // leader
-                        current = leader.getTile();
-                    }
-                }
-            }
-
-            /* place this creature in the creature table */
             crSlots[j] = current;
         }
 
     }
 
     private int getNumberOfCreatures(Creature cr) {
-        int ncreatures = 0;
+        int maxCreatures = party.getMembers().size() * 2;
 
         if ("guard".equals(cr.getTile())) {
-            ncreatures = party.getMembers().size() * 2;
-        } else {
-            ncreatures = rand.nextInt(8) + 1;
-
-            if (ncreatures == 1) {
-                if (cr.getEncounterSize() > 0) {
-                    ncreatures = rand.nextInt(cr.getEncounterSize()) + cr.getEncounterSize() + 1;
-                } else {
-                    ncreatures = 8;
-                }
-            }
-
-            while (ncreatures > 2 * party.getMembers().size()) {
-                ncreatures = rand.nextInt(16) + 1;
-            }
+            return maxCreatures;
         }
 
-        return ncreatures;
+        maxCreatures = Math.min(8, maxCreatures);
+        return rand.nextInt(maxCreatures) + 1;
     }
 
     @Override
