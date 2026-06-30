@@ -42,7 +42,8 @@ public interface Constants {
     public static final int MAX_CREATURES_ON_MAP = 10;
     public static final int MAX_WANDERING_CREATURES_IN_DUNGEON = 2;
     public static final int MAX_CREATURE_DISTANCE = 24;
-
+    public static final float FRAME_RATE = 0.5f;
+    
     public enum Maps {
 
         SOSARIA(0, "Sosaria"),

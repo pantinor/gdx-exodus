@@ -1,8 +1,6 @@
 package exodus;
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.forever;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.removeActor;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
@@ -22,10 +20,6 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
@@ -39,7 +33,6 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
@@ -55,8 +48,6 @@ public class CombatScreen extends BaseScreen {
     public static int AREA_PLAYERS = 8;
 
     private String[] crSlots;
-
-    private CursorActor cursor;
 
     public Maps contextMap;
     public BaseMap combatMap;
@@ -101,10 +92,6 @@ public class CombatScreen extends BaseScreen {
 
         stage = new Stage();
         stage.setViewport(mapViewPort);
-
-        cursor = new CursorActor();
-        stage.addActor(cursor);
-        cursor.addAction(forever(sequence(fadeOut(1), fadeIn(1))));
 
         batch = new SpriteBatch();
 
@@ -155,9 +142,6 @@ public class CombatScreen extends BaseScreen {
 
             party.getMember(index).combatCr = c;
 
-            if (index == 0) {
-                cursor.setPos(c.currentPos);
-            }
         }
 
         combatMap.setCombatPlayers(party.getMembers());
@@ -287,11 +271,16 @@ public class CombatScreen extends BaseScreen {
                 continue;
             }
 
+            boolean active = p == party.getActivePartyMember();
+            float alpha = active ? .25f + .75f * Math.abs((float) Math.sin(time * Math.PI)) : 1f;
+
+            renderer.getBatch().setColor(1f, 1f, 1f, alpha);
             if (p.getPlayer().status != StatusType.DEAD) {
                 renderer.getBatch().draw(p.combatCr.getAnim().getKeyFrame(time, true), p.combatCr.currentPos.x, p.combatCr.currentPos.y, SCALED_DIM, SCALED_DIM);
             } else {
                 renderer.getBatch().draw(Exodus.corpse, p.combatCr.currentPos.x, p.combatCr.currentPos.y, SCALED_DIM, SCALED_DIM);
             }
+            renderer.getBatch().setColor(Color.WHITE);
         }
 
         renderer.getBatch().end();
@@ -467,7 +456,6 @@ public class CombatScreen extends BaseScreen {
 //                } else {
 //                    int ni = party.getNextActiveIndex();
 //                    Creature nextActivePlayer = party.getMember(ni).combatCr;
-//                    cursor.setPos(nextActivePlayer.currentPos);
 //                }
 //            }
         } else {
@@ -495,14 +483,7 @@ public class CombatScreen extends BaseScreen {
 
         boolean roundIsDone = party.isRoundDone() || combatMap.getCreatures().isEmpty();
 
-        PartyMember next = party.getAndSetNextActivePlayer();
-        if (next != null) {
-            cursor.setVisible(true);
-            Creature nextActivePlayer = next.combatCr;
-            cursor.setPos(nextActivePlayer.currentPos);
-        } else {
-            cursor.setVisible(false);
-        }
+        party.getAndSetNextActivePlayer();
 
         if (roundIsDone) {
             finishTurn(0, 0);
@@ -651,15 +632,15 @@ public class CombatScreen extends BaseScreen {
         TileEffect effect = TileEffect.NONE;
         Color col = Color.WHITE;
 
-        if (attacker.rangedAttackIs("poison_field")) {
+        if (attacker.rangedAttackIs("poison")) {
             effect = TileEffect.POISON;
             col = Color.GREEN;
-        } else if (attacker.rangedAttackIs("magic_flash")) {
+        } else if (attacker.rangedAttackIs("magic")) {
             col = Color.CYAN;
-        } else if (attacker.rangedAttackIs("fire_field")) {
+        } else if (attacker.rangedAttackIs("fire")) {
             effect = TileEffect.FIRE;
             col = Color.RED;
-        } else if (attacker.rangedAttackIs("energy_field")) {
+        } else if (attacker.rangedAttackIs("energy")) {
             effect = TileEffect.ELECTRICITY;
             col = Color.BLUE;
         } else if (attacker.rangedAttackIs("rocks")) {
@@ -998,49 +979,6 @@ public class CombatScreen extends BaseScreen {
         }
 
         return false;
-    }
-
-    private Texture getCursorTexture() {
-        Pixmap pixmap = new Pixmap(SCALED_DIM, SCALED_DIM, Format.RGBA8888);
-        pixmap.setColor(Color.YELLOW);
-        int w = 4;
-        pixmap.fillRectangle(0, 0, w, SCALED_DIM);
-        pixmap.fillRectangle(SCALED_DIM - w, 0, w, SCALED_DIM);
-        pixmap.fillRectangle(w, 0, SCALED_DIM - 2 * w, w);
-        pixmap.fillRectangle(w, SCALED_DIM - w, SCALED_DIM - 2 * w, w);
-        return new Texture(pixmap);
-    }
-
-    class CursorActor extends Actor {
-
-        Texture texture;
-        boolean visible = true;
-
-        CursorActor() {
-            texture = getCursorTexture();
-        }
-
-        void setPos(Vector3 v) {
-            setX(v.x);
-            setY(v.y);
-        }
-
-        @Override
-        public void setVisible(boolean v) {
-            this.visible = v;
-        }
-
-        @Override
-        public void draw(Batch batch, float parentAlpha) {
-
-            Color color = getColor();
-            batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
-
-            if (visible) {
-                batch.draw(texture, getX(), getY());
-            }
-        }
-
     }
 
     public class ReadyWearInputAdapter extends InputAdapter {

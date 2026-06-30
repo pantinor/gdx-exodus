@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.utils.Array;
+import static exodus.Constants.FRAME_RATE;
 
 @XmlRootElement(name = "creatures")
 public class CreatureSet {
@@ -67,8 +68,7 @@ public class CreatureSet {
                     return null;
                 }
 
-                float frameDuration = "whirlpool".equals(type) ? 0.3f : 0.2f;
-                newCr.setAnim(new Animation<TextureRegion>(frameDuration, regions));
+                newCr.setAnim(new Animation<TextureRegion>(FRAME_RATE, regions));
 
                 TextureRegion region = regions.get(0);
                 Decal decal = Decal.newDecal(region, true);

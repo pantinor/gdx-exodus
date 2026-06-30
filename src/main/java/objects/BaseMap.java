@@ -389,9 +389,7 @@ public class BaseMap implements Constants {
                 p.setTextureRegion(arr.first());
 
                 if (arr.size > 1) {
-                    //random rate between 1 and 4
-                    int frameRate = Utils.getRandomBetween(1, 4);
-                    p.setAnim(new Animation(frameRate, arr));
+                    p.setAnim(new Animation(FRAME_RATE, arr));
                 }
 
                 Vector3 pixelPos = screen.getMapPixelCoords(p.getStart_x(), p.getStart_y());

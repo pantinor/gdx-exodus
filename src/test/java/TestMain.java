@@ -84,10 +84,10 @@ public class TestMain extends Game {
             sg.players[3].weapon = WeaponType.EXOTIC;
             sg.players[3].armor = ArmorType.EXOTIC;
 
-            Maps m = Maps.CONFLICT_SHIP_TOP;
+            Maps m = Maps.CONFLICT_SHORE;
 
             TiledMap tmap = new UltimaTiledMapLoader(m, Exodus.standardAtlas, m.getMap().getWidth(), m.getMap().getHeight(), TILE_DIM, TILE_DIM).load();
-            CombatScreen sc = new CombatScreen(null, context, Maps.SOSARIA, m.getMap(), tmap, "pirate", Exodus.creatures);
+            CombatScreen sc = new CombatScreen(null, context, Maps.SOSARIA, m.getMap(), tmap, "serpent", Exodus.creatures);
 
             setScreen(sc);
 

@@ -529,15 +529,15 @@ public class Creature implements Constants, Comparable {
     }
 
     private void adjustHealthBar(int current) {
-        double percent = (double) current / 100;
-        double bar = percent * (double) 32;
-        if (current < 0) {
-            bar = 0;
+        int bar = 0;
+        if (current > 0 && basehp > 0) {
+            double percent = (double) current / (double) basehp;
+            bar = (int) Math.ceil(percent * 32);
         }
         if (bar > 32) {
             bar = 32;
         }
-        getHealthBar().setRegion(0, 0, (int) bar, 3);
+        getHealthBar().setRegion(0, 0, bar, 3);
     }
 
     @Override

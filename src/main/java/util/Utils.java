@@ -669,7 +669,7 @@ public class Utils implements Constants {
 
         final AttackVector av = Utils.attack(scr.combatMap, attacker, dir, x, y, range);
 
-        boolean magicHit = attacker.getPlayer().weapon.getWeapon().getHittile().equals("magic_flash");
+        boolean magicHit = attacker.getPlayer().weapon.getWeapon().getHittile().equals("magic");
 
         final ProjectileActor p = new ProjectileActor(scr, magicHit ? Color.CYAN : Color.RED, x, y, av.result);
 
