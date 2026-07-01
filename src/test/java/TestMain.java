@@ -92,7 +92,7 @@ public class TestMain extends Game {
             TiledMap tmap = new UltimaTiledMapLoader(m, Exodus.standardAtlas, m.getMap().getWidth(), m.getMap().getHeight(), TILE_DIM, TILE_DIM).load();
             //CombatScreen sc = new CombatScreen(null, context, Maps.SOSARIA, m.getMap(), tmap, "serpent", Exodus.creatures);
             //ShrineScreen sc = new ShrineScreen(m, null, context.getParty(), tmap, Exodus.standardAtlas, Exodus.standardAtlas);
-            FinalScreen sc = new FinalScreen(sg);
+            FinalScreen sc = new FinalScreen();
             setScreen(sc);
 
             batch2 = new SpriteBatch();

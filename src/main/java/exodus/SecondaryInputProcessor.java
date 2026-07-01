@@ -719,7 +719,7 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                 seq.addAction(new Action() {
                     @Override
                     public boolean act(float delta) {
-                        Exodus.mainGame.setScreen(new FinalScreen(sg));
+                        Exodus.mainGame.setScreen(new FinalScreen());
                         return true;
                     }
                 });
