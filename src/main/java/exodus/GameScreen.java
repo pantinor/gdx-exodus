@@ -222,7 +222,7 @@ public class GameScreen extends BaseScreen {
             Party party = new Party(sg);
             context.setParty(party);
 
-            
+            /*
             for (PartyMember pm : party.getMembers()) {
                 pm.getPlayer().torches = 5;
                 pm.getPlayer().keys = 50;
@@ -255,7 +255,7 @@ public class GameScreen extends BaseScreen {
                 pm.getPlayer().mana = 375;
                 
             }
-             
+             */
             //load the surface world first
             loadNextMap(Maps.SOSARIA, sg.partyX, sg.partyY);
             //loadNextMap(Maps.SOSARIA, 40, 212);
