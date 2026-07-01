@@ -23,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import static exodus.Constants.SCALED_DIM;
 import objects.SaveGame.CharacterRecord;
 
 public class ShrineScreen extends BaseScreen {
@@ -60,7 +61,7 @@ public class ShrineScreen extends BaseScreen {
         Vector3 v4 = getMapPixelCoords(5, 7);
         Vector3 v5 = getMapPixelCoords(5, 6);
 
-        avatar = new AvatarActor(a1.findRegion("avatar"));
+        avatar = new AvatarActor(a1.findRegion("ranger"));
         avatar.setPos(v1);
         stage.addActor(avatar);
 
@@ -173,7 +174,7 @@ public class ShrineScreen extends BaseScreen {
         public void draw(Batch batch, float parentAlpha) {
             Color color = getColor();
             batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
-            batch.draw(texture, getX(), getY());
+            batch.draw(texture, getX(), getY(), SCALED_DIM, SCALED_DIM);
         }
 
     }
@@ -218,8 +219,8 @@ public class ShrineScreen extends BaseScreen {
                 log("Shazam!");
                 Sounds.play(Sound.DIVINE_INTERVENTION);
 
-                c.adjustGold(amt * 100);
-
+                c.adjustGold(-(amt * 100));
+                
                 switch (map) {
                     case SHRINE_OF_WISDOM:
                         c.wis += amt;
@@ -256,7 +257,7 @@ public class ShrineScreen extends BaseScreen {
     }
 
     @Override
-    public Vector3 getMapPixelCoords(int x, int y) {
+    public final Vector3 getMapPixelCoords(int x, int y) {
         Vector3 v = new Vector3(x * SCALED_DIM, mapPixelHeight - SCALED_DIM - y * SCALED_DIM, 0);
         return v;
     }

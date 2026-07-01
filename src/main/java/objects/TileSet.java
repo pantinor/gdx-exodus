@@ -63,9 +63,13 @@ public class TileSet {
             } else if (t.getName().equals("locked_door")) {
                 t.setCombatMap(Maps.CONFLICT_BRICK_FLOOR);
             } else if (t.getName().equals("water")) {
-                t.setCombatMap(Maps.CONFLICT_BOTH_SHIPS);    
+                t.setCombatMap(Maps.CONFLICT_BOTH_SHIPS);
             } else if (t.getName().equals("sea")) {
-                t.setCombatMap(Maps.CONFLICT_BOTH_SHIPS);             
+                t.setCombatMap(Maps.CONFLICT_BOTH_SHIPS);
+            } else if (t.getName().equals("energy_field")) {
+                t.setCombatMap(Maps.CONFLICT_BRICK_FLOOR);
+            } else if (t.getName().equals("lava")) {
+                t.setCombatMap(Maps.CONFLICT_BRICK_FLOOR);
             } else {
                 //System.err.printf("could not find combat map for %s\n",t.getName());
             }

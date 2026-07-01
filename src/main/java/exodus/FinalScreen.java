@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package exodus;
 
 import com.badlogic.gdx.Gdx;
@@ -20,10 +15,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.Align;
 import objects.SaveGame;
 
-/**
- *
- * @author Paul
- */
 public class FinalScreen extends InputAdapter implements Screen {
 
     private final SpriteBatch spriteBatch;
@@ -35,15 +26,12 @@ public class FinalScreen extends InputAdapter implements Screen {
     private final SaveGame saveGame;
     private final float scrollSpeed = 0.3f; //unit per second
 
-    public static final String FINAL_TEXT = "Congratulations!\n\nThou hast compleated Exodus: Ultima 3 in %d moves.\nReport thy feat!\n\n"
-            + "And so it came to pass that on this day EXODUS,\nhell-born incarnate of evil,\nwas vanquished from Sosaria.\n\n"
-            + "What now lies ahead in the ULTIMA saga can only be pure speculation!\n\n"
-            + "Onward to ULTIMA IV!";
+    public static final String FINAL_TEXT = "And so it came to pass\n\nthat on this day\n\nEXODUS,\n\nhell-born incarnate of evil,\n\nwas vanquished from Sosaria.\n\nWhat now lies ahead\n\nin the ULTIMA saga\n\ncan only be pure speculation!\n\nOnward to ULTIMA IV!";
 
     public FinalScreen(SaveGame sg) {
         spriteBatch = new SpriteBatch();
         this.saveGame = sg;
-        
+
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.classpath("assets/fonts/gnuolane.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 12;
@@ -75,9 +63,11 @@ public class FinalScreen extends InputAdapter implements Screen {
         cam3d.lookAt(0.0f, 0.0f, 0.0f);
         cam3d.update(true);
 
-        layout = new GlyphLayout(bitmapFont, String.format(FINAL_TEXT,saveGame.moves), Color.YELLOW, cam3d.viewportWidth, Align.center, true);
-        
-        Exodus.music.stop();
+        layout = new GlyphLayout(bitmapFont, String.format(FINAL_TEXT, saveGame.moves), Color.YELLOW, cam3d.viewportWidth, Align.center, true);
+
+        if (Exodus.music != null) {
+            Exodus.music.stop();
+        }
         Exodus.music = Sounds.play(Sound.ALIVE, Exodus.musicVolume);
     }
 

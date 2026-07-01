@@ -17,7 +17,9 @@ import static exodus.Constants.TILE_DIM;
 import exodus.Constants.WeaponType;
 import exodus.Context;
 import exodus.Exodus;
+import exodus.FinalScreen;
 import exodus.Party;
+import exodus.ShrineScreen;
 import util.UltimaTiledMapLoader;
 
 public class TestMain extends Game {
@@ -84,11 +86,13 @@ public class TestMain extends Game {
             sg.players[3].weapon = WeaponType.EXOTIC;
             sg.players[3].armor = ArmorType.EXOTIC;
 
-            Maps m = Maps.CONFLICT_SHORE;
+            //Maps m = Maps.CONFLICT_SHORE;
+            Maps m = Maps.SHRINE_OF_DEXTERITY;
 
             TiledMap tmap = new UltimaTiledMapLoader(m, Exodus.standardAtlas, m.getMap().getWidth(), m.getMap().getHeight(), TILE_DIM, TILE_DIM).load();
-            CombatScreen sc = new CombatScreen(null, context, Maps.SOSARIA, m.getMap(), tmap, "serpent", Exodus.creatures);
-
+            //CombatScreen sc = new CombatScreen(null, context, Maps.SOSARIA, m.getMap(), tmap, "serpent", Exodus.creatures);
+            //ShrineScreen sc = new ShrineScreen(m, null, context.getParty(), tmap, Exodus.standardAtlas, Exodus.standardAtlas);
+            FinalScreen sc = new FinalScreen(sg);
             setScreen(sc);
 
             batch2 = new SpriteBatch();

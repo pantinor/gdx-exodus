@@ -222,7 +222,7 @@ public class GameScreen extends BaseScreen {
             Party party = new Party(sg);
             context.setParty(party);
 
-/*
+            
             for (PartyMember pm : party.getMembers()) {
                 pm.getPlayer().torches = 5;
                 pm.getPlayer().keys = 50;
@@ -248,15 +248,14 @@ public class GameScreen extends BaseScreen {
                 pm.getPlayer().weapon = WeaponType.EXOTIC;
                 pm.getPlayer().armor = ArmorType.EXOTIC;
 
-                pm.getPlayer().health = 500;
-                pm.getPlayer().exp = 350;
-                pm.getPlayer().intell = 75;
-                pm.getPlayer().wis = 75;
-                pm.getPlayer().mana = 75;
-                break;
+                pm.getPlayer().health = 1500;
+                pm.getPlayer().exp = 750;
+                pm.getPlayer().intell = 175;
+                pm.getPlayer().wis = 175;
+                pm.getPlayer().mana = 375;
+                
             }
-*/
-
+             
             //load the surface world first
             loadNextMap(Maps.SOSARIA, sg.partyX, sg.partyY);
             //loadNextMap(Maps.SOSARIA, 40, 212);
@@ -268,9 +267,6 @@ public class GameScreen extends BaseScreen {
                 newMapPixelCoords = getMapPixelCoords(p.getX(), p.getY());
                 recalcFOV(context.getCurrentMap(), p.getX(), p.getY());
                 loadNextMap(Maps.get(sg.location), sg.partyX, sg.partyY, sg.partyX, sg.partyY, sg.dnglevel, Direction.getByValue(sg.orientation), true);
-                //loadNextMap(Maps.DOOM, 0, 0, 3, 1, 1, Direction.WEST, true);
-                //loadNextMap(Maps.DESTARD, 0, 0, 3, 5, 3, Direction.SOUTH, true);
-                //loadNextMap(Maps.DELVE_SORROWS, 0, 0, 3, 19, 1, Direction.EAST, true);
             }
 
             context.setTransport(Transport.values()[sg.transport]);
@@ -302,16 +298,16 @@ public class GameScreen extends BaseScreen {
 
             //set exodus cards insertion status
             if ((sg.exodusCardsStatus & 0x1) > 0) {
-                Maps.EXODUS.getMap().setTile(Exodus.baseTileSet.getTileByName("brick_floor"), 30, 12);
+                Maps.EXODUS.getMap().setTile(Exodus.baseTileSet.getTileByName("floor"), 30, 11);
             }
             if ((sg.exodusCardsStatus & 0x2) > 0) {
-                Maps.EXODUS.getMap().setTile(Exodus.baseTileSet.getTileByName("brick_floor"), 31, 12);
+                Maps.EXODUS.getMap().setTile(Exodus.baseTileSet.getTileByName("floor"), 31, 11);
             }
             if ((sg.exodusCardsStatus & 0x4) > 0) {
-                Maps.EXODUS.getMap().setTile(Exodus.baseTileSet.getTileByName("brick_floor"), 32, 12);
+                Maps.EXODUS.getMap().setTile(Exodus.baseTileSet.getTileByName("floor"), 32, 11);
             }
             if ((sg.exodusCardsStatus & 0x8) > 0) {
-                Maps.EXODUS.getMap().setTile(Exodus.baseTileSet.getTileByName("brick_floor"), 33, 12);
+                Maps.EXODUS.getMap().setTile(Exodus.baseTileSet.getTileByName("floor"), 33, 11);
             }
         }
 
@@ -1122,11 +1118,11 @@ public class GameScreen extends BaseScreen {
         public PeerGemInputAdapter() {
             try {
                 Texture t = null;
+                Vector3 v = getCurrentMapCoords();
                 if (context.getCurrentMap().getId() == Maps.SOSARIA.getId()) {
-                    Vector3 v = getCurrentMapCoords();
                     t = Utils.peerGem(context.getCurrentMap(), (int) v.x, (int) v.y, Exodus.standardAtlas);
                 } else {
-                    t = Utils.peerGem(Maps.get(context.getCurrentMap().getId()), Exodus.standardAtlas);
+                    t = Utils.peerGem(Maps.get(context.getCurrentMap().getId()), (int) v.x, (int) v.y, Exodus.standardAtlas);
                 }
                 img = new Image(t);
                 img.setX(0);
@@ -1163,7 +1159,7 @@ public class GameScreen extends BaseScreen {
                 Maps map = Maps.get(keycode - Keys.A + 1);
                 log(Keys.toString(keycode).toUpperCase() + " - " + map.getLabel());
                 try {
-                    Texture t = Utils.peerGem(map, Exodus.standardAtlas);
+                    Texture t = Utils.peerGem(map, -1, -1, Exodus.standardAtlas);
                     img = new Image(t);
                     img.setX(0);
                     img.setY(0);

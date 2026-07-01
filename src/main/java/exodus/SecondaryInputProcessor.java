@@ -542,11 +542,11 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
                     case "EVOCARE":
                         Tile north = bm.getTile(currentX, currentY - 1);
                         Tile south = bm.getTile(currentX, currentY + 1);
-                        if (north.getName().startsWith("GreatEarthSerpent") || south.getName().startsWith("GreatEarthSerpent")) {
+                        if (north.getName().startsWith("snake") || south.getName().startsWith("snake")) {
                             if (pm.getPlayer().marks[2] > 0) {
                                 Sounds.play(Sound.ROCKS);
-                                this.screen.replaceTile("water", 41, 230);
-                                this.screen.replaceTile("water", 41, 231);
+                                this.screen.replaceTile("water", 10, 57);
+                                this.screen.replaceTile("water", 10, 58);
                             } else {
                                 Sounds.play(Sound.NEGATIVE_EFFECT);
                                 screen.log("No effect.");
@@ -656,14 +656,14 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
 
             try {
 
-                if (keycode == Keys.D) {
-                    insertCard(0, 33, 0x8);
+                if (keycode == Keys.L) {
+                    insertCard(3, 30, 0x1);//love           
                 } else if (keycode == Keys.S) {
-                    insertCard(1, 31, 0x2);
-                } else if (keycode == Keys.L) {
-                    insertCard(3, 30, 0x1);
+                    insertCard(1, 31, 0x2);//sol
                 } else if (keycode == Keys.M) {
-                    insertCard(2, 32, 0x4);
+                    insertCard(2, 32, 0x4);//moons
+                } else if (keycode == Keys.D) {
+                    insertCard(0, 33, 0x8);//death
                 } else {
                     screen.log("What?");
                 }
@@ -709,7 +709,7 @@ public class SecondaryInputProcessor extends InputAdapter implements Constants {
             seq.addAction(new Action() {
                 @Override
                 public boolean act(float delta) {
-                    screen.replaceTile("lava", x, y);
+                    screen.replaceTile("floor", x, y);
                     return true;
                 }
             });

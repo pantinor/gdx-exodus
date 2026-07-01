@@ -31,7 +31,7 @@
     <tile index="29" name="dragon" rule="monster" />
     <tile index="30" name="balron" rule="monster" />
     <tile index="31" name="exodus" rule="solid" />
-    <tile index="32" name="energy_field" rule="energy_field" />
+    <tile index="32" name="energy_field" rule="energy" />
     <tile index="33" name="lava" rule="lava" />
     <tile index="34" name="moongate" rule="solid" />
     <tile index="35" name="wall" opaque="true" rule="walls" />
@@ -59,12 +59,16 @@
     <tile index="57" name="T" rule="signs" />
     <tile index="58" name="snake1" rule="snake" />
     <tile index="59" name="snake2" rule="snake" />
-    <tile index="60" name="magic" rule="magic" />
+    <tile index="60" name="magic" rule="energy" />
     <tile index="61" name="fire" rule="fire" />
-    <tile index="62" name="shrine" rule="shrine" />
-    <tile index="63" name="ranger" rule="ranger" />
+    <tile index="62" name="shrine" rule="none" />
+    <tile index="63" name="ranger" rule="person" />
     
     <tile index="100" name="locked_door" rule="locked_door" />
+    <tile index="101" name="ankh" rule="none" />
+    <tile index="102" name="boulders" rule="mountains" />    
+    <tile index="103" name="altar" rule="none" />
+
 
 </tileset>
 

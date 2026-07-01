@@ -736,11 +736,11 @@ public class BaseMap implements Constants {
 
     private boolean partyHasMarkOfForce(Context context) {
         for (PartyMember pm : context.getParty().getMembers()) {
-            if (pm.getPlayer().marks[3] == 0) {
-                return false;
+            if (pm.getPlayer().marks[3] == 1) {
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     private boolean hasBlockingPersonAt(int x, int y) {

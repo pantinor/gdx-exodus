@@ -161,13 +161,22 @@ public class Utils implements Constants {
                 for (int x = 0; x < map.getWidth(); x++) {
                     int index = bytes[pos] & 0xff;
                     pos++;
+                    if (index == 4) {
+                        index = 1;
+                    }
+                    if (index == 57) {
+                        index = 102;
+                    }
+                    if (index == 55) {
+                        index = 102;
+                    }
+                    if (index == 61) {
+                        index = 101;
+                    }
+                    if (index == 31) {
+                        index = 103;
+                    }
                     Tile tile = ts.getTileByIndex(index);
-                    if (tile == null) {
-                        tile = ts.getTileByIndex(36);
-                    }
-                    if (tile.getIndex() == 63) { //avatar position
-                        tile = ts.getTileByIndex(4);
-                    }
                     tiles[x + y * map.getWidth()] = tile;
                 }
             }
@@ -853,7 +862,7 @@ public class Utils implements Constants {
     }
 
     //used for telescope viewing or in towns
-    public static Texture peerGem(Maps map, TextureAtlas atlas) throws Exception {
+    public static Texture peerGem(Maps map, int avatarX, int avatarY, TextureAtlas atlas) throws Exception {
 
         Texture t = null;
 
@@ -911,6 +920,15 @@ public class Utils implements Constants {
                                 dstTileSize);
                     }
                 }
+            }
+
+            if (avatarX != -1) {
+                p.setColor(Color.YELLOW);
+                p.fillRectangle(
+                        offsetX + avatarX * dstTileSize,
+                        offsetY + avatarY * dstTileSize,
+                        dstTileSize,
+                        dstTileSize);
             }
 
             t = new Texture(p);

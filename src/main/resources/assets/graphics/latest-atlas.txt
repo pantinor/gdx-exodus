@@ -870,3 +870,24 @@ locked_door
   orig: 16, 16
   offset: 0, 0
   index: 1
+ankh
+  rotate: false
+  xy: 208, 48
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 1
+boulders
+  rotate: false
+  xy: 144, 48
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 1
+altar
+  rotate: false
+  xy: 160, 64
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 1
