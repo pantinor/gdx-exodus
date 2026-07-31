@@ -35,7 +35,6 @@ public class ManagePartyScreen implements Screen, Constants {
     Batch batch;
     BitmapFont font;
     Texture bkgnd;
-    Texture bkgnd2;
 
     List<RosterIndex> registry;
     List<PartyIndex> partyFormation;
@@ -73,8 +72,7 @@ public class ManagePartyScreen implements Screen, Constants {
 
         font = Exodus.font;
 
-        bkgnd = new Texture(Gdx.files.classpath("assets/graphics/roster.png"));
-        bkgnd2 = new Texture(Gdx.files.classpath("assets/graphics/manage.png"));
+        bkgnd = new Texture(Gdx.files.classpath("assets/graphics/warrior.png"));
 
         try {
             saveGame.read(PARTY_SAV_BASE_FILENAME);
@@ -351,7 +349,7 @@ public class ManagePartyScreen implements Screen, Constants {
         sp2.setX(80);
         sp2.setY(Exodus.SCREEN_HEIGHT - 528 - 16);
         sp2.setWidth(160);
-        sp2.setHeight(464);
+        sp2.setHeight(484);
 
         nameField = new TextField("", skin);
         strEdit = new Slider(5, 25, 1, false, skin);
@@ -436,7 +434,6 @@ public class ManagePartyScreen implements Screen, Constants {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
-        batch.draw(bkgnd2, 0, 0);
         batch.draw(bkgnd, 0, 0);
 
         int viewY = Exodus.SCREEN_HEIGHT - 96;

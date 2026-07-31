@@ -258,7 +258,7 @@ public class GameScreen extends BaseScreen {
              */
             //load the surface world first
             loadNextMap(Maps.SOSARIA, sg.partyX, sg.partyY);
-            //loadNextMap(Maps.SOSARIA, 40, 212);
+            //loadNextMap(Maps.SOSARIA, 45, 19);
             //sg.transport = Transport.SHIP.ordinal();
 
             //load the dungeon if save game starts in dungeon

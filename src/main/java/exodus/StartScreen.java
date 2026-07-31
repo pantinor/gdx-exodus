@@ -40,7 +40,8 @@ public class StartScreen implements Screen, Constants {
     OrthographicCamera camera;
     Viewport viewPort;
     Stage stage;
-    Texture title;
+    Texture background;
+    Texture border;
     IntroAnim animator = new IntroAnim();
     TiledMap splashMap;
 
@@ -52,7 +53,8 @@ public class StartScreen implements Screen, Constants {
 
     public StartScreen() {
 
-        title = new Texture(Gdx.files.classpath("assets/graphics/splash.png"));
+        background = new Texture(Gdx.files.classpath("assets/graphics/demon.png"));
+        border = new Texture(Gdx.files.classpath("assets/graphics/splash_border.png"));
 
         exodusFont = new BitmapFont(Gdx.files.classpath("assets/fonts/exodus.fnt"));
 
@@ -160,17 +162,18 @@ public class StartScreen implements Screen, Constants {
 
         camera.position.set(SCALED_DIM * 10, SCALED_DIM * 8, 0);
 
-        splashRenderer.setView(camera.combined, 0, 0, 19 * SCALED_DIM, 8 * SCALED_DIM);
-        splashRenderer.render();
-
         batch.begin();
-        batch.draw(title, 0, 0);
+        batch.draw(background, 0, 0);
+        batch.draw(border, 175, 111);
         exodusFont.draw(batch, "EXODUS", 320, Exodus.SCREEN_HEIGHT - 140);
         Exodus.ultimaFont.draw(batch, "Ultima III", 315, Exodus.SCREEN_HEIGHT - 240);
         Exodus.largeFont.draw(batch, "From the depths of hell...he comes for VENGEANCE!", 300, Exodus.SCREEN_HEIGHT - 342);
         Exodus.largeFont.draw(batch, "LIBGDX Conversion by Paul Antinori", 350, 84);
         Exodus.largeFont.draw(batch, "Copyright 1983 Lord British", 375, 48);
         batch.end();
+
+        splashRenderer.setView(camera.combined, 0, 0, 19 * SCALED_DIM, 8 * SCALED_DIM);
+        splashRenderer.render();
 
         stage.act();
         stage.draw();
