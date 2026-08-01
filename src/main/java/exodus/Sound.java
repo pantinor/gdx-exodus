@@ -40,21 +40,17 @@ public enum Sound {
     WAVE("chaowave.ogg", false, 0.3f),
     GIGGLE("giggle.mp3", false, 0.3f),
     //music
-    SPLASH("Exodus.mp3", true, 0.1f),
-    OUTSIDE("Wander.mp3", true, 0.1f),
-    TOWNS("Towns.mp3", true, 0.1f),
-    SHOPPING("Shopping.mp3", true, 0.1f),
-    RULEBRIT("Rule Brittania.mp3", true, 0.1f),
-    FANFARE("Fanfare.mp3", true, 0.1f),
-    DUNGEON("Dungeon.mp3", true, 0.1f),
-    COMBAT("Combat.mp3", true, 0.1f),
-    ALIVE("Alive.mp3", true, 0.1f),
-    CASTLES("Castles.mp3", true, 0.1f),
-    EXODUS("Exodus.mp3", true, 0.1f),
-
-    M1("music1.ogg", true, 0.1f),
-    M2("music2.ogg", true, 0.1f),
-    M3("music3.ogg", true, 0.1f);
+    SPLASH("Exodus.mid", true, 0.1f),
+    OUTSIDE("Wander.mid", true, 0.1f),
+    TOWNS("Towns.mid", true, 0.1f),
+    SHOPPING("Shopping.mid", true, 0.1f),
+    RULEBRIT("Rule Brittania.mid", true, 0.1f),
+    FANFARE("Fanfare.mid", true, 0.1f),
+    DUNGEON("Dungeon.mid", true, 0.1f),
+    COMBAT("Combat.mid", true, 0.1f),
+    ALIVE("Alive.mid", true, 0.1f),
+    CASTLES("Castles.mid", true, 0.1f),
+    EXODUS("Exodus.mid", true, 0.1f);
 
     String file;
     boolean looping;

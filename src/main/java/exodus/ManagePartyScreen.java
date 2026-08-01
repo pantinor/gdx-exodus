@@ -423,7 +423,7 @@ public class ManagePartyScreen implements Screen, Constants {
             if (Exodus.music != null) {
                 Exodus.music.stop();
             }
-            Sound snd = Sound.M2;
+            Sound snd = Sound.DUNGEON;
             Exodus.music = Sounds.play(snd, Exodus.musicVolume);
         }
     }
